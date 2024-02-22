@@ -1,12 +1,12 @@
 #!/bin/bash
 
-$ENV_NAME=$Env:ENVIRONMENT_NAME
+$CTRL_CTRL_ENV_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_NAME
 $ARM_TENANT_ID = $Env:ARM_TENANT_ID
 $ARM_SUBSCRIPTION_ID = $Env:ARM_SUBSCRIPTION_ID
 $SERVICE_PRINCIPAL_NAME = $Env:SERVICE_PRINCIPAL_NAME
 
-$RESOURCE_GROUP_NAME = $ENV_NAME + "-RG"
-$STORAGE_ACCOUNT_NAME=$ENV_NAME.ToLower() + "tstate" + $ENV_NAME.ToLower()
+$RESOURCE_GROUP_NAME = $CTRL_ENV_NAME + "-RG"
+$STORAGE_ACCOUNT_NAME=$CTRL_ENV_NAME.ToLower() + "tstate" + $CTRL_ENV_NAME.ToLower()
 $CONTAINER_NAME= "tfstate"
 $ACR_NAME = "bgprintingacr"
 
@@ -67,7 +67,7 @@ az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administ
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
-  Remove-Item $REPO_PATH -Recurse -Force
+  Remove-Item "ubiquitous-fishstick" -Recurse -Force
 }
 
 # Clone the git repository

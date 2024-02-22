@@ -1,10 +1,10 @@
-$Env:ENVIRONMENT_NAME="DEV"
+$Env:CONTROL_PLANE_ENVIRONMENT_NAME="DEV"
 $Env:ARM_TENANT_ID = "c01abe72-ffef-4ecc-bda0-937975b49e6b"
 $Env:ARM_SUBSCRIPTION_ID = "d6c8e3b6-467e-452e-97c9-49d9de9e37da"
 
 
-$Env:RESOURCE_GROUP_NAME = $ENVIRONMENT_NAME + "-RG"
-$Env:STORAGE_ACCOUNT_NAME=$ENVIRONMENT_NAME.ToLower() + "tstatebgprinting"
+$Env:RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_NAME + "-RG"
+$Env:STORAGE_ACCOUNT_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_NAME.ToLower() + "tstatebgprinting"
 $Env:CONTAINER_NAME= "tfstate"
 
 $UniqueIdentifier = Read-Host "Please provide an identifier that makes the service principal names unique, for instance a project code"
