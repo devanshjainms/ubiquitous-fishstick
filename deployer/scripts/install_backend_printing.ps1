@@ -95,7 +95,7 @@ az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOU
 $ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP_NAME --account-name $STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
 
 $terraform_key = $CTRL_ENV_NAME + ".terraform.tfstate"
-$var_file = "../tfvariables.tfvars"
+$var_file = "tfvariables.tfvars"
 $terraform_directory = "./deployer/terraform"
 
 $Env:TF_VAR_tenant_id=$ARM_TENANT_ID
