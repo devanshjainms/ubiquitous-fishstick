@@ -1,6 +1,6 @@
 #!/bin/bash
 
-$CTRL_CTRL_ENV_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_CODE
+$CTRL_ENV_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_CODE
 $ARM_TENANT_ID = $Env:ARM_TENANT_ID
 $ARM_SUBSCRIPTION_ID = $Env:ARM_SUBSCRIPTION_ID
 $SERVICE_PRINCIPAL_NAME = $Env:SERVICE_PRINCIPAL_NAME
@@ -66,7 +66,7 @@ az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administ
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
-  Remove-Item "ubiquitous-fishstick" -Recurse -Force
+  Remove-Item "./ubiquitous-fishstick" -Recurse -Force
 }
 
 # Clone the git repository
@@ -76,7 +76,7 @@ git checkout experimental
 git pull
 
 # Create the Azure container registry
-az acr create ==resource_group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
+az acr create --resource_group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
 az acr login --name $ACR_NAME --expose-token --only-show-errors
 
 # Create resource group
@@ -94,18 +94,29 @@ az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOU
 # Get the storage account key
 $ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP_NAME --account-name $STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
 
-$terraform_key = $ENV + ".terraform.tfstate"
-$var_file = "tfvariables.tfvars"
+$terraform_key = $CTRL_ENV_NAME + ".terraform.tfstate"
+$var_file = "../tfvariables.tfvars"
 $terraform_directory = "./deployer/terraform"
 
 # Initialize the backend
 terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
+
+$Env:TF_VAR_tenant_id=$ARM_TENANT_ID
+$Env:TF_VAR_subscription_id=$ARM_SUBSCRIPTION_ID
+$Env:TF_VAR_client_id=$ARM_CLIENT_ID
+$Env:TF_VAR_client_secret=$ARM_CLIENT_SECRET
+$Env:TF_VAR_object_id=$ARM_OBJECT_ID
+$Env:TF_VAR_location=$Env:LOCATION
+$Env:TF_VAR_envrionment=$Env:SAP_ENVIRONMENT
+$Env:TF_VAR_virtual_network_id=$Env:VIRTUAL_NETWORK_ID
+$Env:TF_VAR_subnet_address_prefixes=$Env:SUBNET_ADDRESS_PREFIX
+
 # Refresh the terraform
-terraform -chdir="$terraform_directory"  refresh -var-file="${var_file}" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID" -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "object_id=$ARM_OBJECT_ID" -var "location=$Env:LOCATION" -var "virtual_network_id=$Env:VIRTUAL_NETWORK_ID" -var "subnet_address_prefix=$Env:SUBNET_ADDRESS_PREFIX" -var "environment=$Env:SAP_ENVIRONMENT"
+terraform -chdir="$terraform_directory"  refresh -var-file="${var_file}"
 
 # Plan the terraform
-terraform -chdir="$terraform_directory"  plan  -var-file="${var_file}" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID" -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "object_id=$ARM_OBJECT_ID" -var "location=$Env:LOCATION" -var "virtual_network_id=$Env:VIRTUAL_NETWORK_ID" -var "subnet_address_prefix=$Env:SUBNET_ADDRESS_PREFIX" -var "environment=$Env:SAP_ENVIRONMENT" -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate 
+terraform -chdir="$terraform_directory"  plan  -var-file="${var_file}" -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate 
 
 # Apply the terraform
-terraform -chdir="$terraform_directory"  apply -parallelism="10" -var-file="${var_file}" -json -auto-approve -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID" -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "object_id=$ARM_OBJECT_ID" -var "location=$Env:LOCATION" -var "virtual_network_id=$Env:VIRTUAL_NETWORK_ID" -var "subnet_address_prefix=$Env:SUBNET_ADDRESS_PREFIX" -var "environment=$Env:SAP_ENVIRONMENT" -compact-warnings -json -no-color -parallelism=5
+terraform -chdir="$terraform_directory"  apply -parallelism="10" -var-file="${var_file}" -json -auto-approve -compact-warnings -json -no-color -parallelism=5
