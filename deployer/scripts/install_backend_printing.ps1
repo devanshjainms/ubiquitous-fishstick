@@ -1,16 +1,14 @@
 #!/bin/bash
 
-$ENV_NAME="DEV"
-$ARM_TENANT_ID = "c01abe72-ffef-4ecc-bda0-937975b49e6b"
-$ARM_SUBSCRIPTION_ID = "d6c8e3b6-467e-452e-97c9-49d9de9e37da"
+$ENV_NAME=$Env:ENVIRONMENT_NAME
+$ARM_TENANT_ID = $Env:ARM_TENANT_ID
+$ARM_SUBSCRIPTION_ID = $Env:ARM_SUBSCRIPTION_ID
+$SERVICE_PRINCIPAL_NAME = $Env:SERVICE_PRINCIPAL_NAME
+
 $RESOURCE_GROUP_NAME = $ENV_NAME + "-RG"
 $STORAGE_ACCOUNT_NAME=$ENV_NAME.ToLower() + "tstate" + $ENV_NAME.ToLower()
 $CONTAINER_NAME= "tfstate"
-$SERVICE_PRINCIPAL_NAME = "DEVANSH-BGPRINTING-SPN1"
-
-# Logout and then login to Azure
-az logout
-az account clear
+$ACR_NAME = "bgprintingacr"
 
 if ($ARM_TENANT_ID.Length -eq 0) {
   az login --output none --only-show-errors
@@ -68,8 +66,8 @@ az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subsc
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
 # Create the Azure container registry
-az acr create ==resource_group $RESOURCE_GROUP_NAME --name "bgprintingacr" --sku Basic --only-show-errors
-az acr login --name "bgprintingacr" --only-show-errors
+az acr create ==resource_group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
+az acr login --name $ACR_NAME --only-show-errors
 
 # Create resource group
 az group create --name $RESOURCE_GROUP_NAME --location eastus --only-show-errors
