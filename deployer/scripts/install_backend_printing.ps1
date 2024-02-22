@@ -76,7 +76,7 @@ git checkout experimental
 git pull
 
 # Create the Azure container registry
-az acr create --resource_group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
+az acr create --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
 az acr login --name $ACR_NAME --expose-token --only-show-errors
 
 # Create resource group
@@ -98,10 +98,6 @@ $terraform_key = $CTRL_ENV_NAME + ".terraform.tfstate"
 $var_file = "../tfvariables.tfvars"
 $terraform_directory = "./deployer/terraform"
 
-# Initialize the backend
-terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
-
-
 $Env:TF_VAR_tenant_id=$ARM_TENANT_ID
 $Env:TF_VAR_subscription_id=$ARM_SUBSCRIPTION_ID
 $Env:TF_VAR_client_id=$ARM_CLIENT_ID
@@ -112,11 +108,14 @@ $Env:TF_VAR_envrionment=$Env:SAP_ENVIRONMENT
 $Env:TF_VAR_virtual_network_id=$Env:VIRTUAL_NETWORK_ID
 $Env:TF_VAR_subnet_address_prefixes=$Env:SUBNET_ADDRESS_PREFIX
 
+# Initialize the backend
+terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+
 # Refresh the terraform
 terraform -chdir="$terraform_directory"  refresh -var-file="${var_file}"
 
 # Plan the terraform
-terraform -chdir="$terraform_directory"  plan  -var-file="${var_file}" -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate 
+terraform -chdir="$terraform_directory" plan -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate 
 
 # Apply the terraform
-terraform -chdir="$terraform_directory"  apply -parallelism="10" -var-file="${var_file}" -json -auto-approve -compact-warnings -json -no-color -parallelism=5
+terraform -chdir="$terraform_directory" apply -auto-approve  -compact-warnings -json -no-color -parallelism=5
