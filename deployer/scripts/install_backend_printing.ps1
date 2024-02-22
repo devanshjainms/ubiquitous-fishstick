@@ -65,9 +65,15 @@ Write-Host "Service Principal Name:" $SERVICE_PRINCIPAL_NAME
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
+# Clone the git repository
+git clone https://github.com/devanshjainms/ubiquitous-fishstick.git
+git checkout experimental
+
+cd ubiquitous-fishstick
+
 # Create the Azure container registry
 az acr create ==resource_group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
-az acr login --name $ACR_NAME --only-show-errors
+az acr login --name $ACR_NAME --expose-token --only-show-errors
 
 # Create resource group
 az group create --name $RESOURCE_GROUP_NAME --location eastus --only-show-errors
@@ -86,7 +92,7 @@ $ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP_NAM
 
 $terraform_key = $ENV + ".terraform.tfstate"
 $var_file = "tfvariables.tfvars"
-$terraform_directory = "../terraform"
+$terraform_directory = "./ubiquitous-fishstick/deployer/terraform"
 
 # Initialize the backend
 terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
