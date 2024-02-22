@@ -65,9 +65,15 @@ Write-Host "Service Principal Name:" $SERVICE_PRINCIPAL_NAME
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
+# check if the repository exists
+if (Test-Path "ubiquitous-fishstick") {
+  Remove-Item $REPO_PATH -Recurse -Force
+}
+
 # Clone the git repository
 git clone https://github.com/devanshjainms/ubiquitous-fishstick.git
 git checkout experimental
+git pull
 
 cd ubiquitous-fishstick
 
