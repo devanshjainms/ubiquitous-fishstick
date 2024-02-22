@@ -1,11 +1,9 @@
-$Env:CONTROL_PLANE_ENVIRONMENT_NAME="DEV"
-$Env:ARM_TENANT_ID = "c01abe72-ffef-4ecc-bda0-937975b49e6b"
-$Env:ARM_SUBSCRIPTION_ID = "d6c8e3b6-467e-452e-97c9-49d9de9e37da"
-
-
-$Env:RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_NAME + "-RG"
-$Env:STORAGE_ACCOUNT_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_NAME.ToLower() + "tstatebgprinting"
-$Env:CONTAINER_NAME= "tfstate"
+$Env:CONTROL_PLANE_ENVIRONMENT_CODE="CTRL"
+$Env:LOCATION="eastus2"
+$Env:ARM_TENANT_ID = "0000000-0000-0000-0000-000000000000"
+$Env:ARM_SUBSCRIPTION_ID = "0000000-0000-0000-0000-000000000000"
+$Env:VIRTUAL_NETWORK_ID = "/subscriptions/0000000-0000-0000-0000-000000000000/resourceGroups/RG/providers/Microsoft.Network/virtualNetworks/VNET"
+$Env:SUBNET_ADDRESS_PREFIX = "10.19.4.0/28"
 
 $UniqueIdentifier = Read-Host "Please provide an identifier that makes the service principal names unique, for instance a project code"
 
