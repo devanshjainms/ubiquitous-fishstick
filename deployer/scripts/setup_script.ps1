@@ -35,8 +35,8 @@ else {
 
 Set-Location -Path $bgprint_path
 
-if ( Test-Path "setup_script.ps1") {
-    remove-item .\setup_script.ps1
+if ( Test-Path "install_backend_printing.ps1") {
+    remove-item .\install_backend_printing.ps1
 }
 
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/devanshjainms/ubiquitous-fishstick/experimental/deployer/scripts/install_backend_printing.ps1 -OutFile .\install_backend_printing.ps1 ; .\install_backend_printing.ps1
