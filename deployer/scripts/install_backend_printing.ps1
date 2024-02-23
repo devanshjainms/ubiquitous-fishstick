@@ -98,14 +98,24 @@ $terraform_key = $CTRL_ENV_NAME + ".terraform.tfstate"
 $var_file = "tfvariables.tfvars"
 $terraform_directory = "./deployer/terraform"
 
+$Env:TF_VAR_tenant_id = $ARM_TENANT_ID
+$Env:TF_VAR_subscription_id = $ARM_SUBSCRIPTION_ID
+$Env:TF_VAR_client_id = $ARM_CLIENT_ID
+$Env:TF_VAR_client_secret = $ARM_CLIENT_SECRET
+$Env:TF_VAR_object_id = $ARM_OBJECT_ID
+$Env:TF_VAR_location = $Env:LOCATION
+$Env:TF_VAR_environment = $Env:SAP_ENVIRONMENT
+$Env:TF_VAR_virtual_network_id = $Env:VIRTUAL_NETWORK_ID
+$Env:TF_VAR_subnet_address_prefixes = $Env:SUBNET_ADDRESS_PREFIX
+
 # Initialize the backend
-terraform -chdir="$terraform_directory" init -var-file=$var_file -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
 # Refresh the terraform
 terraform -chdir="$terraform_directory"  refresh
 
 # Plan the terraform
-terraform -chdir="$terraform_directory" plan -var-file=$var_file -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate -var="tenant_id=$ARM_TENANT_ID" -var="subscription_id=$ARM_SUBSCRIPTION_ID" -var="client_id=$ARM_CLIENT_ID" -var="client_secret=$ARM_CLIENT_SECRET" -var="object_id=$ARM_OBJECT_ID" -var="location=$Env:LOCATION" -var="environment=$Env:SAP_ENVIRONMENT" -var="virtual_network_id=$Env:VIRTUAL_NETWORK_ID" -var="subnet_address_prefixes=$Env:SUBNET_ADDRESS_PREFIX"
+terraform -chdir="$terraform_directory" plan -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate 
 
 # Apply the terraform
-terraform -chdir="$terraform_directory" apply -var-file=$var_file -auto-approve  -compact-warnings -json -no-color -parallelism=5 -var="tenant_id=$ARM_TENANT_ID" -var="subscription_id=$ARM_SUBSCRIPTION_ID" -var="client_id=$ARM_CLIENT_ID" -var="client_secret=$ARM_CLIENT_SECRET" -var="object_id=$ARM_OBJECT_ID" -var="location=$Env:LOCATION" -var="environment=$Env:SAP_ENVIRONMENT" -var="virtual_network_id=$Env:VIRTUAL_NETWORK_ID" -var="subnet_address_prefixes=$Env:SUBNET_ADDRESS_PREFIX"
+terraform -chdir="$terraform_directory" apply -auto-approve -compact-warnings -json -no-color -parallelism=5
