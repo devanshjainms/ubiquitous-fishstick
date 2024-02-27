@@ -23,5 +23,8 @@ resource "azurerm_linux_function_app" "function_app" {
     app_settings                = {
         "FUNCTIONS_WORKER_RUNTIME" = "python"
         "WEBSITE_NODE_DEFAULT_VERSION" = "14"
+        "AZURE_CLIENT_ID" = var.client_id
+        "AZURE_CLIENT_SECRET" = var.client_secret
+        "AZURE_TENANT_ID" = var.tenant_id
     }
 }
