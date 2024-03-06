@@ -22,6 +22,20 @@ resource "azurerm_resource_group_template_deployment" "name" {
         "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
         "variables": {},
+        "parameteres": {
+            "customApis_UPGraphAPIConnector_name": {
+                "type": "string"
+            },
+            "location": {
+                "type": "string"
+            },
+            "tenantId": {
+                "type": "string"
+            },
+            "clientId": {
+                "type": "string"
+            }
+        }
         "resources": [
             {
                 "type": "Microsoft.Web/customApis",
