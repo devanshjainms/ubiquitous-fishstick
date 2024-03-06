@@ -1,6 +1,6 @@
 # Logic app custom connector
 resource "azurerm_resource_group_template_deployment" "name" {
-    name                = "deploymentname"
+    name                = format("%s-%s", "customapi", lower(var.location))
     resource_group_name = azurerm_resource_group.rg.name
     deployment_mode     = "Incremental"
     parameters_content  = jsonencode({
