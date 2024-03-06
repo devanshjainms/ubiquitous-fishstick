@@ -1,14 +1,23 @@
 # Logic app custom connector
-resource "azurerm_template_deployment" "name" {
+resource "azurerm_resource_group_template_deployment" "name" {
     name                = "deploymentname"
     resource_group_name = azurerm_resource_group.rg.name
     deployment_mode     = "Incremental"
-    parameters          = {
-        customApis_UPGraphAPIConnector_name = "CustomAPIConnector"
-        location                            = var.location
-    }
-    template_body       = <<DEPLOY
-    
+    parameters_content  = jsonencode({  
+        "customApis_UPGraphAPIConnector_name" = {
+            value : "CustomAPIConnector"
+        },
+        "location"                            = {
+            value: var.location
+        },
+        "tenantId"                            = {
+            value: var.tenant_id
+        },
+        "clientId"                            = {
+            value: var.client_id
+        }
+    })
+    template_content = <<TEMPLATE
         {
         "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
@@ -25,7 +34,7 @@ resource "azurerm_template_deployment" "name" {
                             "type": "oauthSetting",
                             "oAuthSettings": {
                                 "identityProvider": "aad",
-                                "clientId": "341292a1-95e2-440e-96e5-731c03d21132",
+                                "clientId": "[parameters('clientId')]",
                                 "scopes": [],
                                 "properties": {},
                                 "customParameters": {
@@ -33,7 +42,7 @@ resource "azurerm_template_deployment" "name" {
                                         "value": "https://login.microsoftonline.com"
                                     },
                                     "tenantId": {
-                                        "value": "common"
+                                        "value": "[parameters('tenantId')]"
                                     },
                                     "resourceUri": {
                                         "value": "https://graph.microsoft.com"
@@ -55,5 +64,5 @@ resource "azurerm_template_deployment" "name" {
             }
         ]
     }
-    DEPLOY
+    TEMPLATE
 }
