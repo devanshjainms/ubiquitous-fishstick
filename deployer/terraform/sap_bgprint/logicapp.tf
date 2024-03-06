@@ -5,16 +5,16 @@ resource "azurerm_resource_group_template_deployment" "name" {
     deployment_mode     = "Incremental"
     parameters_content  = jsonencode({  
         "customApis_UPGraphAPIConnector_name" = {
-            value : "CustomAPIConnector"
+            value = "CustomAPIConnector"
         },
         "location"                            = {
-            value: var.location
+            value = var.location
         },
         "tenantId"                            = {
-            value: var.tenant_id
+            value = var.tenant_id
         },
         "clientId"                            = {
-            value: var.client_id
+            value = var.client_id
         }
     })
     template_content = <<TEMPLATE
