@@ -3,7 +3,7 @@ resource "azurerm_resource_group_template_deployment" "name" {
     name                = "deploymentname"
     resource_group_name = azurerm_resource_group.rg.name
     deployment_mode     = "Incremental"
-    parameters_content  = jsonencode({  
+    parameters_content  = jsonencode({
         "customApis_UPGraphAPIConnector_name" = {
             value = "CustomAPIConnector"
         },
@@ -19,10 +19,10 @@ resource "azurerm_resource_group_template_deployment" "name" {
     })
     template_content = <<TEMPLATE
         {
-        "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
         "variables": {},
-        "parameteres": {
+        "parameters": {
             "customApis_UPGraphAPIConnector_name": {
                 "type": "string"
             },
