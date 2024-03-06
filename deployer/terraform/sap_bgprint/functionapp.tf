@@ -26,5 +26,8 @@ resource "azurerm_linux_function_app" "function_app" {
         "AZURE_CLIENT_ID" = var.client_id
         "AZURE_CLIENT_SECRET" = var.client_secret
         "AZURE_TENANT_ID" = var.tenant_id
+        "STORAGE_ACCESS_KEY" = azurerm_storage_account.storage_account.primary_access_key
+        "STORAGE_QUEUE_NAME" = azurerm_storage_queue.queue.name
+        "STORAGE_CONTAINER_NAME" = azurerm_storage_container.container.name
     }
 }
