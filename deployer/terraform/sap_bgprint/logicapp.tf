@@ -40,7 +40,96 @@ resource "azapi_resource" "symbolicname" {
             swagger = {
                 host = var.graph_resource_uri
                 basePath = "/"
-            }
+                consumes = []
+                parameters = []
+                produces = []
+
+                schemes = [
+                    "https"
+                ]
+                swagger = "2.0"
+                definitions = {
+                    "microsoft.graph.printer" = {
+                        type = "object"
+                        properties = {
+                            id = {
+                                type = "string"
+                            },
+                            displayName = {
+                                type = "string"
+                            },
+                            manufacturer = {
+                                type = "string"
+                            },
+                            model = {
+                                type = "string"
+                            },
+                            physicalDeviceId = {
+                                type = "string"
+                            },
+                            physicalDeviceLocation = {
+                                type = "string"
+                            },
+                            physicalDeviceName = {
+                                type = "string"
+                            },
+                            physicalDeviceType = {
+                                type = "string"
+                            },
+                            status = {
+                                type = "string"
+                            }
+                        }
+                    }
+                }
+                paths = {
+                    "/v1.0/print/shares" = {
+                        get = {
+                            description = "Get printers"
+                            operationId = "Printers_Get"
+                            parameters = [
+                                {
+                                    name = "operation"
+                                    in = "path"
+                                    required = true
+                                    type = "string"
+                                },
+                                {
+                                    name = "body"
+                                    in = "body"
+                                    required = true
+                                    schema = {
+                                        type = "object"
+                                    }
+                                }
+                            ]
+                            responses = {
+                                "200": {
+                                    "description": "List of printers",
+                                    "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/microsoft.graph.printer"
+                                    }
+                                    }
+                                },
+                                "400": {
+                                    "description": "BadRequest"
+                                },
+                                "401": {
+                                    "description": "Unauthorized"
+                                },
+                                "403": {
+                                    "description": "Forbidden"
+                                },
+                                "500": {
+                                    "description": "InternalServerError"
+                                }
+                            }
+                        }
+                    }
+                }
+                }
             backendService= {
                 serviceUrl= var.graph_resource_uri
             }
