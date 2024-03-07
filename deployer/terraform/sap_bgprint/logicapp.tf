@@ -1,6 +1,6 @@
 # Logic app custom connector
 resource "azurerm_resource_group_template_deployment" "name" {
-    name                = format("%s-%s", "customapi", lower(var.location))
+    name                = format("%s-%s", "customap", lower(var.location))
     resource_group_name = azurerm_resource_group.rg.name
     deployment_mode     = "Incremental"
     parameters_content  = jsonencode({
@@ -73,7 +73,7 @@ resource "azurerm_resource_group_template_deployment" "name" {
                     "displayName": "[parameters('customApis_UPGraphAPIConnector_name')]",
                     "iconUri": "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
                     "apiType": "Rest",
-                    "apiDefinition": {
+                    "apiDefinitions": {
                         "swagger": "2.0",
                         "info": {
                             "title": "[parameters('customApis_UPGraphAPIConnector_name')]",
