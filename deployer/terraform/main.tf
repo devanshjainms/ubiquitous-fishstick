@@ -4,7 +4,11 @@ terraform {
 }
 
 module "sap_bgprint" {
-    source                 = "./sap_bgprint"
+    source                  = "./sap_bgprint"
+    providers               = {
+                                azurerm.main           = azurerm.main
+                                azapi.api              = azapi.api
+                            }
 
     client_id               = var.client_id
     client_secret           = var.client_secret
