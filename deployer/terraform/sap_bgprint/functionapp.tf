@@ -19,6 +19,7 @@ resource "azurerm_linux_function_app" "function_app" {
     https_only                  = true
     site_config {
         vnet_route_all_enabled  = true
+        elastic_instance_minimum = 1
     }
     auth_settings {
         enabled                 = true
