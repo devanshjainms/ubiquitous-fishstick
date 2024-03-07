@@ -62,7 +62,6 @@ resource "azapi_resource" "symbolicname" {
                 }
             },
             apiDefinitions = {
-                modifiedSwaggerUrl = "https://raw.githubusercontent.com/devanshjainms/ubiquitous-fishstick/experimental/deployer/scripts/swagger.json"
                 originalSwaggerUrl = "https://raw.githubusercontent.com/devanshjainms/ubiquitous-fishstick/experimental/deployer/scripts/swagger.json"
             }
         }
