@@ -3,7 +3,7 @@ resource "azapi_resource" "symbolicname" {
     type                = "Microsoft.Web/customApis@2016-06-01"
     name                = format("%s-%s", lower(random_string.random.result), lower(var.location))
     location            = var.location
-    parent_id           = azurerm_resource_group.rg[0].id 
+    parent_id           = azurerm_resource_group.rg.id 
     body                = jsonencode({
         properties= {
             connectionParameters= {
