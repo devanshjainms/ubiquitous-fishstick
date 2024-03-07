@@ -55,3 +55,21 @@ variable "subnet_address_prefixes" {
     description = "The address prefixes for the subnet"
     type        = string
 }
+
+variable "microsoft_login_uri" {
+    description = "The login uri for the Microsoft connector"
+    type        = string
+    default     = "https://login.microsoftonline.com"
+}
+
+variable "graph_resource_uri" {
+    description = "The resource uri for the Microsoft Graph API"
+    type        = string
+    default     = "https://graph.microsoft.com"
+}
+
+variable "connector_description" {
+    description = "The description for the custom connector"
+    type        = string
+    default     = "Microsoft Universal Print connector"
+}
