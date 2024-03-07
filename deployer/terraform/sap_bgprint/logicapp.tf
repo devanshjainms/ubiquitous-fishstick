@@ -72,7 +72,31 @@ resource "azurerm_resource_group_template_deployment" "name" {
                     "description": "Microsoft Universal Print connector",
                     "displayName": "[parameters('customApis_UPGraphAPIConnector_name')]",
                     "iconUri": "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
-                    "apiType": "Rest"
+                    "apiType": "Rest",
+                    "apiDefinition": {
+                        "swagger": "2.0",
+                        "info": {
+                            "title": "[parameters('customApis_UPGraphAPIConnector_name')]",
+                            "version": "1.0.0"
+                        },
+                        "host": "graph.microsoft.com",
+                        "schemes": [
+                            "https"
+                        ],
+                        "paths": {
+                            "/v1.0/me": {
+                                "get": {
+                                    "operationId": "GetMyProfile",
+                                    "description": "Get my profile",
+                                    "responses": {
+                                        "200": {
+                                            "description": "Success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         ]
