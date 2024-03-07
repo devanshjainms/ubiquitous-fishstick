@@ -37,30 +37,6 @@ resource "azapi_resource" "symbolicname" {
             displayName = format("%s-%s", lower(random_string.random.result), lower(var.location)),
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
             apiType = "Rest",
-            swagger = {
-                swagger = "2.0",
-                info = {
-                    title = format("%s-%s", lower(random_string.random.result), lower(var.location)),
-                    version = "1.0.0"
-                },
-                host = "https://graph.microsoft.com",
-                schemes = [
-                    "https"
-                ],
-                paths = {
-                    "/v1.0/me" = {
-                        get = {
-                            operationId = "GetMyProfile",
-                            description = "Get my profile",
-                            responses = {
-                                "200" = {
-                                    description = "Success"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             apiDefinitions = {
                 originalSwaggerUrl = "https://raw.githubusercontent.com/devanshjainms/ubiquitous-fishstick/experimental/deployer/scripts/swagger.json"
             }
