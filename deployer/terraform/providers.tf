@@ -15,7 +15,3 @@ terraform {
 provider "azurerm" {
     features {}
 }
-
-provider "azapi" {
-    alias = "api"
-}
