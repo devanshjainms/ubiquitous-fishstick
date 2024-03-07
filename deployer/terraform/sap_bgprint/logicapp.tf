@@ -79,7 +79,7 @@ resource "azurerm_resource_group_template_deployment" "name" {
                             "title": "[parameters('customApis_UPGraphAPIConnector_name')]",
                             "version": "1.0.0"
                         },
-                        "host": "graph.microsoft.com",
+                        "host": "https://graph.microsoft.com",
                         "schemes": [
                             "https"
                         ],
