@@ -1,105 +1,89 @@
 # Logic app custom connector
-resource "azurerm_resource_group_template_deployment" "name" {
+resource "azapi_resource" "symbolicname" {
+    type                = "Microsoft.Web/customApis@2016-06-01"
     name                = format("%s-%s", lower(random_string.random.result), lower(var.location))
-    resource_group_name = azurerm_resource_group.rg.name
-    deployment_mode     = "Incremental"
-    parameters_content  = jsonencode({
-        "customApis_UPGraphAPIConnector_name" = {
-            value = "CustomAPIConnector"
-        },
-        "location"                            = {
-            value = var.location
-        },
-        "tenantId"                            = {
-            value = var.tenant_id
-        },
-        "clientId"                            = {
-            value = var.client_id
-        }
-    })
-    template_content = <<TEMPLATE
-    {
-        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-        "contentVersion": "1.0.0.0",
-        "variables": {},
-        "parameters": {
-            "customApis_UPGraphAPIConnector_name": {
-                "type": "string"
+    location            = var.location
+    parent_id           = azurerm_resource_group.rg[0].id 
+    body                = jsonencode({
+        properties= {
+            connectionParameters= {
+                token= {
+                    type= "oauthSetting",
+                    oAuthSettings= {
+                        identityProvider= "aad",
+                        clientId = var.client_id,
+                        scopes = [],
+                        properties = {},
+                        customParameters = {
+                            loginUri = {
+                                value = "https://login.microsoftonline.com"
+                            },
+                            tenantId = {
+                                value = var.tenant_id
+                            },
+                            resourceUri = {
+                                value = "https://graph.microsoft.com"
+                            },
+                            enableOnbehalfOfLogin = {
+                                value = "true"
+                            }
+                        }
+                    }
+                }
             },
-            "location": {
-                "type": "string"
-            },
-            "tenantId": {
-                "type": "string"
-            },
-            "clientId": {
-                "type": "string"
-            }
-        },
-        "resources": [
-            {
-                "type": "Microsoft.Web/customApis",
-                "apiVersion": "2016-06-01",
-                "name": "[parameters('customApis_UPGraphAPIConnector_name')]",
-                "location": "[parameters('location')]",
-                "properties": {
-                    "connectionParameters": {
-                        "token": {
-                            "type": "oauthSetting",
-                            "oAuthSettings": {
-                                "identityProvider": "aad",
-                                "clientId": "[parameters('clientId')]",
-                                "scopes": [],
-                                "properties": {},
-                                "customParameters": {
-                                    "loginUri": {
-                                        "value": "https://login.microsoftonline.com"
-                                    },
-                                    "tenantId": {
-                                        "value": "[parameters('tenantId')]"
-                                    },
-                                    "resourceUri": {
-                                        "value": "https://graph.microsoft.com"
-                                    },
-                                    "enableOnbehalfOfLogin": {
-                                        "value": "true"
-                                    }
+            capabilities = [],
+            description = "Microsoft Universal Print connector",
+            displayName = format("%s-%s", lower(random_string.random.result), lower(var.location)),
+            iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
+            apiType = "Rest",
+            swagger = {
+                swagger = "2.0",
+                info = {
+                    title = format("%s-%s", lower(random_string.random.result), lower(var.location)),
+                    version = "1.0.0"
+                },
+                host = "https://graph.microsoft.com",
+                schemes = [
+                    "https"
+                ],
+                paths = {
+                    "/v1.0/me" = {
+                        get = {
+                            operationId = "GetMyProfile",
+                            description = "Get my profile",
+                            responses = {
+                                "200" = {
+                                    description = "Success"
                                 }
                             }
                         }
-                    },
-                    "capabilities": [],
-                    "description": "Microsoft Universal Print connector",
-                    "displayName": "[parameters('customApis_UPGraphAPIConnector_name')]",
-                    "iconUri": "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
-                    "apiType": "Rest",
-                    "apiDefinitions": {
-                        "swagger": "2.0",
-                        "info": {
-                            "title": "[parameters('customApis_UPGraphAPIConnector_name')]",
-                            "version": "1.0.0"
-                        },
-                        "host": "https://graph.microsoft.com",
-                        "schemes": [
-                            "https"
-                        ],
-                        "paths": {
-                            "/v1.0/me": {
-                                "get": {
-                                    "operationId": "GetMyProfile",
-                                    "description": "Get my profile",
-                                    "responses": {
-                                        "200": {
-                                            "description": "Success"
-                                        }
-                                    }
+                    }
+                }
+            },
+            apiDefinitions = {
+                swagger = "2.0",
+                info = {
+                    title = format("%s-%s", lower(random_string.random.result), lower(var.location)),
+                    version = "1.0.0"
+                },
+                host = "https://graph.microsoft.com",
+                schemes = [
+                    "https"
+                ],
+                paths = {
+                    "/v1.0/me" = {
+                        get = {
+                            operationId = "GetMyProfile",
+                            description = "Get my profile",
+                            responses = {
+                                "200" = {
+                                    description = "Success"
                                 }
                             }
                         }
                     }
                 }
             }
-        ]
-    }
-    TEMPLATE
+        }
+    })
 }
