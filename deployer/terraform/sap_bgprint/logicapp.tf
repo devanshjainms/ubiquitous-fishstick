@@ -40,49 +40,52 @@ resource "azapi_resource" "symbolicname" {
             displayName = format("%s-%s", lower("upconnector"), lower(var.location)),
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
             apiType = "Rest"
+            # apiDefinition = {
+            #     type = "swagger",
+            #     specification = {
+            #         type = "openapi",
+            #         definition = <<DEFINITION
+            #             {
+            #                 "swagger": "2.0",
+            #                 "info": {
+            #                     "title": "Microsoft Graph",
+            #                     "version": "v1.0"
+            #                 },
+            #                 "host": "graph.microsoft.com",
+            #                 "schemes": [
+            #                     "https"
+            #                 ],
+            #                 "paths": {
+            #                     "/me": {
+            #                         "get": {
+            #                             "operationId": "GetMyProfile",
+            #                             "responses": {
+            #                                 "200": {
+            #                                     "description": "Success"
+            #                                 }
+            #                             }
+            #                         }
+            #                     }
+            #                 },
+            #                 "definitions": {
+            #                     "User": {
+            #                         "type": "object",
+            #                         "properties": {
+            #                             "id": {
+            #                                 "type": "string"
+            #                             },
+            #                             "displayName": {
+            #                                 "type": "string"
+            #                             }
+            #                         }
+            #                     }
+            #                 }
+            #             }
+            #         DEFINITION
+            #     }
+            # }
             apiDefinition = {
-                type = "swagger",
-                specification = {
-                    type = "openapi",
-                    definition = <<DEFINITION
-                        {
-                            "swagger": "2.0",
-                            "info": {
-                                "title": "Microsoft Graph",
-                                "version": "v1.0"
-                            },
-                            "host": "graph.microsoft.com",
-                            "schemes": [
-                                "https"
-                            ],
-                            "paths": {
-                                "/me": {
-                                    "get": {
-                                        "operationId": "GetMyProfile",
-                                        "responses": {
-                                            "200": {
-                                                "description": "Success"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "definitions": {
-                                "User": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string"
-                                        },
-                                        "displayName": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    DEFINITION
-                }
+                originalSwaggerUrl = "https://ctrltstatebgprinting.blob.core.windows.net/swagger/UniversalPrintGraphSwagger.json"
             }
             
         }
