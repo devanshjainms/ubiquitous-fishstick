@@ -7,6 +7,9 @@ resource "azapi_resource" "symbolicname" {
     parent_id           = azurerm_resource_group.rg.id 
     body                = jsonencode({
         properties= {
+            backendService= {
+                serviceUrl= var.graph_resource_uri
+            }
             connectionParameters= {
                 token= {
                     type= "oauthSetting",
@@ -36,102 +39,52 @@ resource "azapi_resource" "symbolicname" {
             description = var.connector_description,
             displayName = format("%s-%s", lower("upconnector"), lower(var.location)),
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
-            apiType = "Rest",
-            swagger = {
-                host = var.graph_resource_uri
-                basePath = "/"
-                consumes = []
-                parameters = []
-                produces = []
-                schemes = [
-                    "https"
-                ]
-                swagger = "2.0"
-                definitions = {
-                    "microsoft.graph.printer" = {
-                        type = "object"
-                        properties = {
-                            id = {
-                                type = "string"
-                            }
-                            displayName = {
-                                type = "string"
-                            }
-                            manufacturer = {
-                                type = "string"
-                            }
-                            model = {
-                                type = "string"
-                            }
-                            physicalDeviceId = {
-                                type = "string"
-                            }
-                            physicalDeviceLocation = {
-                                type = "string"
-                            }
-                            physicalDeviceName = {
-                                type = "string"
-                            }
-                            physicalDeviceType = {
-                                type = "string"
-                            }
-                            status = {
-                                type = "string"
-                            }
-                        }
-                    }
-                }
-                paths = {
-                    "/v1.0/print/shares" = {
-                        get = {
-                            description = "Get printers"
-                            operationId = "Printers_Get"
-                            parameters = [
-                                {
-                                    name = "operation"
-                                    in = "path"
-                                    required = true
-                                    type = "string"
-                                },
-                                {
-                                    name = "body"
-                                    in = "body"
-                                    required = true
-                                    schema = {
-                                        type = "object"
-                                    }
-                                }
-                            ]
-                            responses = {
-                                200 = {
-                                    description = "List of printers",
-                                    schema = {
-                                        type = "array",
-                                        items = {
-                                            ref = "#/definitions/microsoft.graph.printer"
+            apiType = "Rest"
+            apiDefinition = {
+                type = "swagger",
+                specification = {
+                    type = "openapi",
+                    definition = <<DEFINITION
+                        {
+                            "swagger": "2.0",
+                            "info": {
+                                "title": "Microsoft Graph",
+                                "version": "v1.0"
+                            },
+                            "host": "graph.microsoft.com",
+                            "schemes": [
+                                "https"
+                            ],
+                            "paths": {
+                                "/me": {
+                                    "get": {
+                                        "operationId": "GetMyProfile",
+                                        "responses": {
+                                            "200": {
+                                                "description": "Success"
+                                            }
                                         }
                                     }
                                 }
-                                400 = {
-                                    description = "BadRequest"
-                                }
-                                401 = {
-                                    description = "Unauthorized"
-                                } 
-                                403 = {
-                                    description = "Forbidden"
-                                }
-                                500 = {
-                                    description = "InternalServerError"
+                            },
+                            "definitions": {
+                                "User": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "displayName": {
+                                            "type": "string"
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
+                    DEFINITION
                 }
             }
-            backendService= {
-                serviceUrl= var.graph_resource_uri
-            }
+            
         }
     })
 }
