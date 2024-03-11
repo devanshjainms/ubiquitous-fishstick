@@ -43,9 +43,9 @@ resource "azapi_resource" "symbolicname" {
             apiDefinitions = {
                 openapi = "3.0.1",
                 info = {
-                    "title": "Microsoft Graph Rest APIs for Universal Print",
-                    "description": "Microsoft Graph Rest APIs for Universal Print",
-                    "version": "v1.0"
+                    title= "Microsoft Graph Rest APIs for Universal Print",
+                    description= "Microsoft Graph Rest APIs for Universal Print",
+                    version= "v1.0"
                 },
                 servers = [
                     {
