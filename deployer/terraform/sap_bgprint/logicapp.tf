@@ -43,58 +43,61 @@ resource "azapi_resource" "symbolicname" {
             swagger = {
                 "swagger" : "2.0",
                 "info": {
-                    "title": "Microsoft Graph Rest APIs for Universal Print",
-                    "description": "Microsoft Graph Rest APIs for Universal Print",
-                    "version": "v1.0"
+                "title": "Microsoft Graph Rest APIs for Universal Print",
+                "description": "Microsoft Graph Rest APIs for Universal Print",
+                "version": "v1.0"
                 },
                 "servers": [
                     {
-                        "url": "https://graph.microsoft.com/"
+                    "url": "https://graph.microsoft.com/"
                     }
                 ],
                 "paths": {
                     "/v1.0/print/shares/{printerShareId}": {
-                        "get": {
-                            "summary": "Get printer share by id",
-                            "description": "Get printer share by id",
-                            "operationId": "PrinterShares_GetPrinterShare",
-                            "parameters": [
-                                {
-                                    "name": "printerShareId",
-                                    "in": "path",
-                                    "description": "printer share Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                }
-                            ],
-                            "responses": {
-                                "400": {
-                                    "description": "BadRequest"
-                                },
-                                "401": {
-                                    "description": "Unauthorized"
-                                },
-                                "403": {
-                                    "description": "Forbidden"
-                                },
-                                "500": {
-                                    "description": "InternalServerError"
-                                },
-                                "200": {
-                                    "description": "Get printer share by id",
-                                    "content": {
-                                        "application/json": {
-                                            "schema": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
+                    "get": {
+                        "summary": "Get printer share by id",
+                        "description": "Get printer share by id",
+                        "operationId": "PrinterShares_GetPrinterShare",
+                        "parameters": [
+                        {
+                            "name": "printerShareId",
+                            "in": "path",
+                            "description": "printer share Id",
+                            "required": true,
+                            "schema": {
+                            "type": "string"
                             }
                         }
+                        ],
+                        "responses": {
+                        "200": {
+                            "description": "Get printer share by id",
+                            "content": {
+                            "application/json": {
+                                "schema": {
+                                "type": "string"
+                                }
+                            }
+                            }
+                        },
+                        "400": {
+                            "description": "BadRequest"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        },
+                        "403": {
+                            "description": "Forbidden"
+                        },
+                        "500": {
+                            "description": "InternalServerError"
+                        }
+                        }
                     }
+                    }
+                },
+                "components": {
+                    "schemas": {}
                 }
             }
         }
