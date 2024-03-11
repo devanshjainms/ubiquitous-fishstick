@@ -41,7 +41,7 @@ resource "azapi_resource" "symbolicname" {
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
             apiType = "Rest",
             swagger = {
-                "openapi": "3.0.1",
+                "openapi": "3.0.0",
                 "info": {
                     "title": "Microsoft Graph Rest APIs for Universal Print",
                     "description": "Microsoft Graph Rest APIs for Universal Print",
