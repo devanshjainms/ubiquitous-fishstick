@@ -40,19 +40,19 @@ resource "azapi_resource" "symbolicname" {
             displayName = "Microsoft Universal Print Custom Connector",
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
             apiType = "Rest",
-            apiDefinitions = {
-                swagger = "2.0",
-                info = {
-                    title= "Microsoft Graph Rest APIs for Universal Print",
-                    description= "Microsoft Graph Rest APIs for Universal Print",
-                    version= "v1.0"
+            swagger = {
+                "swagger" : "2.0",
+                "info": {
+                    "title": "Microsoft Graph Rest APIs for Universal Print",
+                    "description": "Microsoft Graph Rest APIs for Universal Print",
+                    "version": "v1.0"
                 },
-                servers = [
+                "servers": [
                     {
                         "url": "https://graph.microsoft.com/"
                     }
                 ],
-                paths = {
+                "paths": {
                     "/v1.0/print/shares/{printerShareId}": {
                         "get": {
                             "summary": "Get printer share by id",
