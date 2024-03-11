@@ -9,7 +9,7 @@ resource "azapi_resource" "symbolicname" {
         properties= {
             backendService= {
                 serviceUrl= var.graph_resource_uri
-            }
+            },
             connectionParameters= {
                 token= {
                     type= "oauthSetting",
@@ -39,8 +39,8 @@ resource "azapi_resource" "symbolicname" {
             description = var.connector_description,
             displayName = "Microsoft Universal Print Custom Connector",
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
-            apiType = "Rest"
-            apiDefinition = {
+            apiType = "Rest",
+            apiDefinitions = {
                 "openapi": "3.0.1",
                 "info": {
                     "title": "Microsoft Graph Rest APIs for Universal Print",
