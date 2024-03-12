@@ -7,7 +7,7 @@ resource "azurerm_logic_app_workflow" "logic_app" {
     parameters          = {
         "$connections"  = jsonencode({
             "${azurerm_resource_group_template_deployment.apiconnection.name}" = {
-                connectionId    = "${azurerm_resource_group_template_deployment.apiconnection.id}"
+                connectionId    = "${jsondecode(azurerm_resource_group_template_deployment.apiconnection.output_content).id}"
                 connectionName  = "${azurerm_resource_group_template_deployment.apiconnection.name}"
                 id              = "${azapi_resource.symbolicname.id}"
             }
@@ -58,6 +58,30 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" 
             "path": "/v1.0/print/shares/@{encodeURIComponent('')}"
         },
         "runAfter": {},
+        "type": "ApiConnection"
+    }
+    BODY
+}
+
+resource "azurerm_logic_app_action_custom" "logic_app_action_create_print_job" {
+    name                = "CreatePrintJob"
+    logic_app_id        = azurerm_logic_app_workflow.logic_app.id
+    body                = <<BODY
+    {
+        "inputs": {
+            "host": {
+                "connection": {
+                    "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
+                }
+            },
+            "method": "post",
+            "path": "/v1.0/print/shares/@{encodeURIComponent('')}/jobs"
+        },
+        "runAfter": {
+            "${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name}": [
+                "Succeeded"
+            ]
+        },
         "type": "ApiConnection"
     }
     BODY
