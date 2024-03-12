@@ -4,6 +4,21 @@ resource "azurerm_logic_app_workflow" "logic_app" {
     resource_group_name = azurerm_resource_group.rg.name
     workflow_version    =  "1.0.0.0"
     workflow_schema     = "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+    parameters          = {
+        "$connections"  = jsonencode({
+            "${azurerm_resource_group_template_deployment.apiconnection.name}" = {
+                connectionId    = "${azurerm_resource_group_template_deployment.apiconnection.id}"
+                connectionName  = "${azurerm_resource_group_template_deployment.apiconnection.name}"
+                id              = "${azapi_resource.symbolicname.id}"
+            }
+        })
+    }
+    workflow_parameters     = {
+        "$connections"      = jsonencode({
+            defaultValue    = {}
+            type            = "Object"
+        })
+    }
 }
 
 resource "azurerm_logic_app_trigger_http_request" "logic_app_trigger" {
@@ -33,10 +48,16 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" 
     body                = <<BODY
     {
         "inputs": {
-            "method": "GET",
-            "uri": "https://api.printer.com/share"
+            "host": {
+                "connection": {
+                    "name": "@parameters('$connections')[${azurerm_resource_group_template_deployment.apiconnection.name}]['connectionId']"
+                }
+            },
+            "method": "get",
+            "path": "/v1.0/print/shares/@{encodeURIComponent('')}"
         },
         "runAfter": {},
+        "type": "ApiConnection",
         "metadata": {
             "flowSystemMetadata": {
                 "swaggerOperationId": "GetPrinterShare"
