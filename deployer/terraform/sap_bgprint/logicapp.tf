@@ -7,7 +7,7 @@ resource "azurerm_logic_app_workflow" "logic_app" {
     parameters          = {
         "$connections"  = jsonencode({
             "${azurerm_resource_group_template_deployment.apiconnection.name}" = {
-                connectionId    = "${azurerm_resource_group_template_deployment.apiconnection.id}"
+                connectionId    = "${jsondecode(azurerm_resource_group_template_deployment.apiconnection.output_content).apiConnectionId.value}"
                 connectionName  = "${azurerm_resource_group_template_deployment.apiconnection.name}"
                 id              = "${azapi_resource.symbolicname.id}"
             }
@@ -19,6 +19,7 @@ resource "azurerm_logic_app_workflow" "logic_app" {
             type            = "Object"
         })
     }
+    depends_on              = [ azurerm_resource_group_template_deployment.apiconnection ]
 }
 
 resource "azurerm_logic_app_trigger_http_request" "logic_app_trigger" {
@@ -50,7 +51,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" 
         "inputs": {
             "host": {
                 "connection": {
-                    "name": "${azurerm_resource_group_template_deployment.apiconnection.id}"
+                    "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
                 }
             },
             "method": "get",

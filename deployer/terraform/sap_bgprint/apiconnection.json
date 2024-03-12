@@ -37,5 +37,11 @@
                 "testLinks": []
             }
         }
-    ]
+    ],
+    "outputs": {
+        "apiConnectionId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Web/connections', parameters('api_connection_name'))]"
+        }
+    }
 }
