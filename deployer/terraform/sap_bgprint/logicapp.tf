@@ -26,3 +26,22 @@ resource "azurerm_logic_app_trigger_http_request" "logic_app_trigger" {
     }
     SCHEMA 
 }
+
+resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" {
+    name                = "GetPrinterShare"
+    logic_app_id        = azurerm_logic_app_workflow.logic_app.id
+    body                = <<BODY
+    {
+        "inputs": {
+            "method": "GET",
+            "uri": "https://api.printer.com/share"
+        },
+        "runAfter": {},
+        "metadata": {
+            "flowSystemMetadata": {
+                "swaggerOperationId": "GetPrinterShare"
+            }
+        }
+    }
+    BODY
+}

@@ -3024,15 +3024,6 @@ resource "azapi_resource" "symbolicname" {
     })
 }
 
-resource "azuread_application_redirect_uris" "web_uris" {
-    application_id      = format("/applications/%s", var.object_id)
-    type                = "Web"
-    redirect_uris       = [
-        "https://global.consent.azure-apim.net/redirect",
-        format("https://logic-apis-%s.consent.azure-apim.net/redirect", var.location)
-    ]
-}
-
 data "local_file" "apiconnection" {
     filename            = "${path.module}/apiconnection.json"
 }

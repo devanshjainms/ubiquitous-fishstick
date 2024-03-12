@@ -64,6 +64,10 @@ Write-Host "Service Principal Name:" $SERVICE_PRINCIPAL_NAME
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
+#add redirect uri to the app registration
+az ad app update --id $ARM_CLIENT_ID --reply-urls "https://global.consent.azure-apim.net/redirect"
+az ad app update --id $ARM_CLIENT_ID --reply-urls "https://logic-apis-eastus2.consent.azure-apim.net/redirect"
+
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
   Remove-Item "./ubiquitous-fishstick" -Recurse -Force
@@ -88,7 +92,7 @@ az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_
 # Enable limited access to the storage account
 az storage account update --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --https-only true --allow-blob-public-access false --only-show-errors
 
-# Create blob container
+# Create blob container for tfstate
 az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --only-show-errors
 
 # Get the storage account key
