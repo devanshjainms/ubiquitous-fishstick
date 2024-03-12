@@ -50,19 +50,14 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" 
         "inputs": {
             "host": {
                 "connection": {
-                    "name": "@parameters('$connections')[${azurerm_resource_group_template_deployment.apiconnection.name}]['connectionId']"
+                    "name": "${azurerm_resource_group_template_deployment.apiconnection.id}"
                 }
             },
             "method": "get",
             "path": "/v1.0/print/shares/@{encodeURIComponent('')}"
         },
         "runAfter": {},
-        "type": "ApiConnection",
-        "metadata": {
-            "flowSystemMetadata": {
-                "swaggerOperationId": "GetPrinterShare"
-            }
-        }
+        "type": "ApiConnection"
     }
     BODY
 }

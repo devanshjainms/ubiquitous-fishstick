@@ -65,8 +65,8 @@ az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subsc
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
 #add redirect uri to the app registration
-az ad app update --id $ARM_CLIENT_ID --reply-urls "https://global.consent.azure-apim.net/redirect"
-az ad app update --id $ARM_CLIENT_ID --reply-urls "https://logic-apis-eastus2.consent.azure-apim.net/redirect"
+az ad app update --id $ARM_CLIENT_ID --web-redirect-uris "https://global.consent.azure-apim.net/redirect"
+az ad app update --id $ARM_CLIENT_ID --web-redirect-uris "https://logic-apis-eastus2.consent.azure-apim.net/redirect"
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
