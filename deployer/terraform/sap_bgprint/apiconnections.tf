@@ -3046,8 +3046,8 @@ resource "azurerm_resource_group_template_deployment" "apiconnection" {
     deployment_mode = "Incremental"
 }
 
-resource "azuread_application_redirect_uris" "web_uris" {
-    application_id      = var.client_id
-    type                = "web"
-    redirect_uris       = [azapi_resource.symbolicname.properties.connectionParameters.token.oAuthSettings.redirectUrl]
-}
+# resource "azuread_application_redirect_uris" "web_uris" {
+#     application_id      = var.client_id
+#     type                = "web"
+#     redirect_uris       = [data.azapi_resource.symbolicname]
+# }

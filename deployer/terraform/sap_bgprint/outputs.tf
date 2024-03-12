@@ -12,3 +12,8 @@ output "key_vault_id" {
     description = "The id of the key vault"
     value       = azurerm_key_vault.kv.id
 }
+
+output "custom_connector" {
+    description = "The id of the custom connector"
+    value       = azapi_resource.symbolicname
+}
