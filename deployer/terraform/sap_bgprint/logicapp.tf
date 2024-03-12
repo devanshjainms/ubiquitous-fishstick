@@ -1,9 +1,3 @@
-data "azurerm_resource_group_template_deployment" "apiconnection" {
-    name                = "apiconnection"
-    resource_group_name = azurerm_resource_group.rg.name
-    depends_on          = [ azurerm_resource_group_template_deployment.apiconnection ]
-}
-
 resource "azurerm_logic_app_workflow" "logic_app" {
     name                = format("%s%s-logicapp", lower(var.environment), lower(var.location))
     location            = azurerm_resource_group.rg.location
@@ -13,7 +7,7 @@ resource "azurerm_logic_app_workflow" "logic_app" {
     parameters          = {
         "$connections"  = jsonencode({
             "${azurerm_resource_group_template_deployment.apiconnection.name}" = {
-                connectionId    = "${data.azurerm_resource_group_template_deployment.apiconnection.output_content.apiConnectionId.value}"
+                connectionId    = "${azurerm_resource_group_template_deployment.apiconnection.id}"
                 connectionName  = "${azurerm_resource_group_template_deployment.apiconnection.name}"
                 id              = "${azapi_resource.symbolicname.id}"
             }
