@@ -1,3 +1,9 @@
+data "azurerm_resource_group_template_deployment" "apiconnection" {
+    name                = "apiconnection"
+    resource_group_name = azurerm_resource_group.rg.name
+    depends_on          = [ azurerm_resource_group_template_deployment.apiconnection ]
+}
+
 resource "azurerm_logic_app_workflow" "logic_app" {
     name                = format("%s%s-logicapp", lower(var.environment), lower(var.location))
     location            = azurerm_resource_group.rg.location
@@ -7,7 +13,7 @@ resource "azurerm_logic_app_workflow" "logic_app" {
     parameters          = {
         "$connections"  = jsonencode({
             "${azurerm_resource_group_template_deployment.apiconnection.name}" = {
-                connectionId    = "${jsondecode(azurerm_resource_group_template_deployment.apiconnection.output_content).apiConnectionId.value}"
+                connectionId    = "${data.azurerm_resource_group_template_deployment.apiconnection.output_content.apiConnectionId.value}"
                 connectionName  = "${azurerm_resource_group_template_deployment.apiconnection.name}"
                 id              = "${azapi_resource.symbolicname.id}"
             }
@@ -23,10 +29,10 @@ resource "azurerm_logic_app_workflow" "logic_app" {
 }
 
 resource "azurerm_logic_app_trigger_http_request" "logic_app_trigger" {
-    name                = "FunctionAppCallee"
-    logic_app_id        = azurerm_logic_app_workflow.logic_app.id 
-    method              = "POST"
-    schema              = <<SCHEMA
+    name                    = "FunctionAppCallee"
+    logic_app_id            = azurerm_logic_app_workflow.logic_app.id 
+    method                  = "POST"
+    schema                  = <<SCHEMA
     {
         "type": "object",
         "properties": {
