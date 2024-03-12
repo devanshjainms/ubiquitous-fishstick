@@ -3024,6 +3024,15 @@ resource "azapi_resource" "symbolicname" {
     })
 }
 
+resource "azuread_application_redirect_uris" "web_uris" {
+    application_id      = var.client_id
+    type                = "web"
+    redirect_uris       = [
+        "https://global.consent.azure-apim.net/redirect",
+        format("https://logic-apis-%s.consent.azure-apim.net/redirect", var.location)
+    ]
+}
+
 data "local_file" "apiconnection" {
     filename            = "${path.module}/apiconnection.json"
 }
@@ -3046,8 +3055,3 @@ resource "azurerm_resource_group_template_deployment" "apiconnection" {
     deployment_mode = "Incremental"
 }
 
-# resource "azuread_application_redirect_uris" "web_uris" {
-#     application_id      = var.client_id
-#     type                = "web"
-#     redirect_uris       = [data.azapi_resource.symbolicname]
-# }
