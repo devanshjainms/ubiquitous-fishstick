@@ -7,10 +7,10 @@ resource "azurerm_resource_group_template_deployment" "apiconnection" {
     resource_group_name = azurerm_resource_group.rg.name
     template_content    = data.local_file.apiconnection.content
     parameters_content  = jsonencode({
-        "apiconnection_name" = {
+        "api_connection_name" = {
             value       = format("%s%s", "upgraph-connection", lower(random_string.random.result))
         },
-        "customapiResourceId" = {
+        "custom_api_resourceid" = {
             value       = azapi_resource.symbolicname.id
         },
         "location"      = {
