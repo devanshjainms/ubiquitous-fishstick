@@ -7,7 +7,7 @@ resource "azurerm_logic_app_workflow" "logic_app" {
     parameters          = {
         "$connections"  = jsonencode({
             "${azurerm_resource_group_template_deployment.apiconnection.name}" = {
-                connectionId    = "${jsondecode(azurerm_resource_group_template_deployment.apiconnection.output_content).id}"
+                connectionId    = "${jsondecode(azurerm_resource_group_template_deployment.apiconnection.output_content).apiConnectionId.value}"
                 connectionName  = "${azurerm_resource_group_template_deployment.apiconnection.name}"
                 id              = "${azapi_resource.symbolicname.id}"
             }
