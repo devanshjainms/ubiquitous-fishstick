@@ -41,1067 +41,2969 @@ resource "azapi_resource" "symbolicname" {
             iconUri = "https://content.powerapps.com/resource/makerx/static/media/default-connection-icon.74fb37fa.svg",
             apiType = "Rest",
             swagger = {
-                "openapi": "3.0.0",
+                "swagger": "2.0",
                 "info": {
                     "title": "Microsoft Graph Rest APIs for Universal Print",
                     "description": "Microsoft Graph Rest APIs for Universal Print",
                     "version": "v1.0"
                 },
-                "servers": [
-                    {
-                        "url": "https://graph.microsoft.com/"
-                    }
+                "host": "graph.microsoft.com",
+                "basePath": "/",
+                "schemes": [
+                    "https"
                 ],
+                "consumes": [],
+                "produces": [],
                 "paths": {
                     "/v1.0/print/shares/{printerShareId}": {
-                        "get": {
-                            "summary": "Get printer share by id",
+                    "get": {
+                        "summary": "Get printer share by id",
+                        "description": "Get printer share by id",
+                        "operationId": "PrinterShares_GetPrinterShare",
+                        "produces": [
+                        "application/json"
+                        ],
+                        "parameters": [
+                        {
+                            "in": "path",
+                            "name": "printerShareId",
+                            "description": "printer share Id",
+                            "required": true,
+                            "type": "string"
+                        }
+                        ],
+                        "responses": {
+                        "200": {
                             "description": "Get printer share by id",
-                            "operationId": "PrinterShares_GetPrinterShare",
-                            "parameters": [
-                                {
-                                    "name": "printerShareId",
-                                    "in": "path",
-                                    "description": "printer share Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                }
-                            ],
-                            "responses": {
-                                "400": {
-                                    "description": "BadRequest"
-                                },
-                                "401": {
-                                    "description": "Unauthorized"
-                                },
-                                "403": {
-                                    "description": "Forbidden"
-                                },
-                                "500": {
-                                    "description": "InternalServerError"
-                                },
-                                "200": {
-                                    "description": "Get printer share by id",
-                                    "content": {
-                                        "application/json": {
-                                            "schema": {
-                                                "type": "array",
-                                                "items": {
-                                                    "$ref": "#/components/schemas/microsoft.graph.PrinterShare"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "/v1.0/print/shares/{printerShareId}/jobs": {
-                        "post": {
-                            "summary": "Create printer job from printer share",
-                            "description": "Create printer job from printer share",
-                            "operationId": "PrinterShares_PostToJobsFromPrinterShare",
-                            "parameters": [
-                                {
-                                    "name": "printerShareId",
-                                    "in": "path",
-                                    "description": "printer share Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                }
-                            ],
-                            "requestBody": {
-                                "content": {
-                                    "application/json": {
-                                        "schema": {
-                                            "$ref": "#/components/schemas/microsoft.graph.printJob"
-                                        }
-                                    }
-                                },
-                                "required": true
-                            },
-                            "responses": {
-                                "400": {
-                                    "description": "BadRequest"
-                                },
-                                "401": {
-                                    "description": "Unauthorized"
-                                },
-                                "403": {
-                                    "description": "Forbidden"
-                                },
-                                "500": {
-                                    "description": "InternalServerError"
-                                },
-                                "200": {
-                                    "description": "Create printer job from printer share",
-                                    "content": {
-                                        "application/json": {
-                                            "schema": {
-                                                "type": "array",
-                                                "items": {
-                                                    "$ref": "#/components/schemas/microsoft.graph.printJob"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "/v1.0/print/shares/{printerShareId}/jobs/{jobId}/start": {
-                        "post": {
-                            "summary": "Start printer job",
-                            "description": "Start printer job",
-                            "operationId": "PrinterShares_StartPrintJob",
-                            "parameters": [
-                                {
-                                    "name": "printerShareId",
-                                    "in": "path",
-                                    "description": "printer share Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                },
-                                {
-                                    "name": "jobId",
-                                    "in": "path",
-                                    "description": "job Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                }
-                            ],
-                            "responses": {
-                                "400": {
-                                    "description": "BadRequest"
-                                },
-                                "401": {
-                                    "description": "Unauthorized"
-                                },
-                                "403": {
-                                    "description": "Forbidden"
-                                },
-                                "500": {
-                                    "description": "InternalServerError"
-                                },
-                                "200": {
-                                    "description": "Start printer job",
-                                    "content": {
-                                        "application/json": {
-                                            "schema": {
-                                                "type": "array",
-                                                "items": {
-                                                    "$ref": "#/components/schemas/microsoft.graph.printJobStatus"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "/v1.0/print/shares/{printerShareId}/jobs/{jobId}/documents/{documentId}/createUploadSession": {
-                        "post": {
-                            "summary": "Create upload session for printer share",
-                            "description": "Create upload session for printer share",
-                            "operationId": "PrinterShares_CreateUploadSession",
-                            "parameters": [
-                                {
-                                    "name": "printerShareId",
-                                    "in": "path",
-                                    "description": "printer share Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                },
-                                {
-                                    "name": "jobId",
-                                    "in": "path",
-                                    "description": "job Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                },
-                                {
-                                    "name": "documentId",
-                                    "in": "path",
-                                    "description": "document Id",
-                                    "required": true,
-                                    "schema": {
-                                        "type": "string"
-                                    }
-                                }
-                            ],
-                            "requestBody": {
-                                "content": {
-                                    "application/json": {
-                                        "schema": {
-                                            "$ref": "#/components/schemas/microsoft.graph.PrintDocumentUploadProperties"
-                                        }
-                                    }
-                                },
-                                "required": true
-                            },
-                            "responses": {
-                                "400": {
-                                    "description": "BadRequest"
-                                },
-                                "401": {
-                                    "description": "Unauthorized"
-                                },
-                                "403": {
-                                    "description": "Forbidden"
-                                },
-                                "500": {
-                                    "description": "InternalServerError"
-                                },
-                                "200": {
-                                    "description": "Create upload session for printer share",
-                                    "content": {
-                                        "application/json": {
-                                            "schema": {
-                                                "type": "array",
-                                                "items": {
-                                                    "$ref": "#/components/schemas/microsoft.graph.UploadSession"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "components": {
-                    "schemas": {
-                        "microsoft.graph.PrinterShare": {
-                            "properties": {
+                            "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
                                 "viewPoint": {
-                                    "$ref": "#/components/schemas/microsoft.graph.PrinterShareViewpoint"
+                                    "type": "object",
+                                    "properties": {
+                                    "lastUsedDateTime": {
+                                        "description": "lastUsedDateTime",
+                                        "type": "string"
+                                    }
+                                    }
                                 },
                                 "allowAllUsers": {
-                                    "type": "boolean",
-                                    "description": "allowAllUsers"
+                                    "description": "allowAllUsers",
+                                    "type": "boolean"
                                 },
                                 "createdDateTime": {
-                                    "type": "string",
-                                    "description": "createdDateTime"
+                                    "description": "createdDateTime",
+                                    "type": "string"
                                 },
                                 "id": {
-                                    "type": "string",
-                                    "description": "id"
+                                    "description": "id",
+                                    "type": "string"
                                 },
                                 "name": {
-                                    "type": "string",
-                                    "description": "name"
+                                    "description": "name",
+                                    "type": "string"
                                 },
                                 "displayName": {
-                                    "type": "string",
-                                    "description": "displayName"
+                                    "description": "displayName",
+                                    "type": "string"
                                 },
                                 "manufacturer": {
-                                    "type": "string",
-                                    "description": "manufacturer"
+                                    "description": "manufacturer",
+                                    "type": "string"
                                 },
                                 "model": {
-                                    "type": "string",
-                                    "description": "model"
+                                    "description": "model",
+                                    "type": "string"
                                 },
                                 "status": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printerStatus"
+                                    "type": "object",
+                                    "properties": {
+                                    "processingState": {
+                                        "description": "processingState",
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "description": "state",
+                                        "type": "string"
+                                    },
+                                    "processingStateReasons": {
+                                        "description": "processingStateReasons",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "details": {
+                                        "description": "details",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "processingStateDescription": {
+                                        "description": "processingStateDescription",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "description",
+                                        "type": "string"
+                                    }
+                                    }
                                 },
                                 "location": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printerLocation"
+                                    "type": "object",
+                                    "properties": {
+                                    "latitude": {
+                                        "description": "latitude",
+                                        "type": "number"
+                                    },
+                                    "longitude": {
+                                        "description": "longitude",
+                                        "type": "number"
+                                    },
+                                    "altitudeInMeters": {
+                                        "description": "altitudeInMeters",
+                                        "type": "integer"
+                                    },
+                                    "streetAddress": {
+                                        "description": "streetAddress",
+                                        "type": "string"
+                                    },
+                                    "subunit": {
+                                        "description": "subunit",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "city": {
+                                        "description": "city",
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "description": "region",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "postalCode": {
+                                        "description": "postalCode",
+                                        "type": "string"
+                                    },
+                                    "country": {
+                                        "description": "country",
+                                        "type": "string"
+                                    },
+                                    "site": {
+                                        "description": "site",
+                                        "type": "string"
+                                    },
+                                    "building": {
+                                        "description": "building",
+                                        "type": "string"
+                                    },
+                                    "floorNumber": {
+                                        "description": "floorNumber",
+                                        "type": "integer"
+                                    },
+                                    "floor": {
+                                        "description": "floor",
+                                        "type": "string"
+                                    },
+                                    "floorDescription": {
+                                        "description": "floorDescription",
+                                        "type": "string"
+                                    },
+                                    "roomNumber": {
+                                        "description": "roomNumber",
+                                        "type": "integer"
+                                    },
+                                    "roomName": {
+                                        "description": "roomName",
+                                        "type": "string"
+                                    },
+                                    "roomDescription": {
+                                        "description": "roomDescription",
+                                        "type": "string"
+                                    },
+                                    "organization": {
+                                        "description": "organization",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "subdivision": {
+                                        "description": "subdivision",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "stateOrProvince": {
+                                        "description": "stateOrProvince",
+                                        "type": "string"
+                                    },
+                                    "countryOrRegion": {
+                                        "description": "countryOrRegion",
+                                        "type": "string"
+                                    }
+                                    }
                                 },
                                 "isAcceptingJobs": {
-                                    "type": "boolean",
-                                    "description": "isAcceptingJobs"
+                                    "description": "isAcceptingJobs",
+                                    "type": "boolean"
                                 },
                                 "defaults": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printerDefaults"
+                                    "type": "object",
+                                    "properties": {
+                                    "copiesPerJob": {
+                                        "description": "copiesPerJob",
+                                        "type": "integer"
+                                    },
+                                    "finishings": {
+                                        "description": "finishings",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "mediaColor": {
+                                        "description": "mediaColor",
+                                        "type": "string"
+                                    },
+                                    "mediaType": {
+                                        "description": "mediaType",
+                                        "type": "string"
+                                    },
+                                    "mediaSize": {
+                                        "description": "mediaSize",
+                                        "type": "string"
+                                    },
+                                    "pagesPerSheet": {
+                                        "description": "pagesPerSheet",
+                                        "type": "integer"
+                                    },
+                                    "orientation": {
+                                        "description": "orientation",
+                                        "type": "string"
+                                    },
+                                    "outputBin": {
+                                        "description": "outputBin",
+                                        "type": "string"
+                                    },
+                                    "inputBin": {
+                                        "description": "inputBin",
+                                        "type": "string"
+                                    },
+                                    "documentMimeType": {
+                                        "description": "documentMimeType",
+                                        "type": "string"
+                                    },
+                                    "pdfFitToPage": {
+                                        "description": "pdfFitToPage",
+                                        "type": "boolean"
+                                    },
+                                    "duplexConfiguration": {
+                                        "description": "duplexConfiguration",
+                                        "type": "string"
+                                    },
+                                    "presentationDirection": {
+                                        "description": "presentationDirection",
+                                        "type": "string"
+                                    },
+                                    "printColorConfiguration": {
+                                        "description": "printColorConfiguration",
+                                        "type": "string"
+                                    },
+                                    "printQuality": {
+                                        "description": "printQuality",
+                                        "type": "string"
+                                    },
+                                    "contentType": {
+                                        "description": "contentType",
+                                        "type": "string"
+                                    },
+                                    "fitPdfToPage": {
+                                        "description": "fitPdfToPage",
+                                        "type": "boolean"
+                                    },
+                                    "multipageLayout": {
+                                        "description": "multipageLayout",
+                                        "type": "string"
+                                    },
+                                    "colorMode": {
+                                        "description": "colorMode",
+                                        "type": "string"
+                                    },
+                                    "quality": {
+                                        "description": "quality",
+                                        "type": "string"
+                                    },
+                                    "duplexMode": {
+                                        "description": "duplexMode",
+                                        "type": "string"
+                                    },
+                                    "dpi": {
+                                        "description": "dpi",
+                                        "type": "integer"
+                                    },
+                                    "scaling": {
+                                        "description": "scaling",
+                                        "type": "string"
+                                    }
+                                    }
                                 },
                                 "capabilities": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printerCapabilities"
-                                }
-                            }
-                        },
-                        "microsoft.graph.PrinterShareViewpoint": {
-                            "properties": {
-                                "lastUsedDateTime": {
-                                    "type": "string",
-                                    "description": "lastUsedDateTime"
-                                }
-                            }
-                        },
-                        "microsoft.graph.printerStatus": {
-                            "properties": {
-                                "processingState": {
-                                    "type": "string",
-                                    "description": "processingState"
-                                },
-                                "state": {
-                                    "type": "string",
-                                    "description": "state"
-                                },
-                                "processingStateReasons": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
+                                    "type": "object",
+                                    "properties": {
+                                    "isColorPrintingSupported": {
+                                        "description": "isColorPrintingSupported",
+                                        "type": "boolean"
                                     },
-                                    "description": "processingStateReasons"
-                                },
-                                "details": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
+                                    "supportsFitPdfToPage": {
+                                        "description": "supportsFitPdfToPage",
+                                        "type": "boolean"
                                     },
-                                    "description": "details"
-                                },
-                                "processingStateDescription": {
-                                    "type": "string",
-                                    "description": "processingStateDescription"
-                                },
-                                "description": {
-                                    "type": "string",
-                                    "description": "description"
-                                }
-                            }
-                        },
-                        "microsoft.graph.printerLocation": {
-                            "properties": {
-                                "latitude": {
-                                    "type": "number",
-                                    "description": "latitude"
-                                },
-                                "longitude": {
-                                    "type": "number",
-                                    "description": "longitude"
-                                },
-                                "altitudeInMeters": {
-                                    "type": "integer",
-                                    "description": "altitudeInMeters"
-                                },
-                                "streetAddress": {
-                                    "type": "string",
-                                    "description": "streetAddress"
-                                },
-                                "subunit": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
+                                    "supportedCopiesPerJob": {
+                                        "type": "object",
+                                        "properties": {
+                                        "start": {
+                                            "description": "start",
+                                            "type": "integer"
+                                        },
+                                        "end": {
+                                            "description": "end",
+                                            "type": "integer"
+                                        },
+                                        "minimum": {
+                                            "description": "minimum",
+                                            "type": "integer"
+                                        },
+                                        "maximum": {
+                                            "description": "maximum",
+                                            "type": "integer"
+                                        }
+                                        }
                                     },
-                                    "description": "subunit"
-                                },
-                                "city": {
-                                    "type": "string",
-                                    "description": "city"
-                                },
-                                "region": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedDocumentMimeTypes": {
+                                        "description": "supportedDocumentMimeTypes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "region"
-                                },
-                                "postalCode": {
-                                    "type": "string",
-                                    "description": "postalCode"
-                                },
-                                "country": {
-                                    "type": "string",
-                                    "description": "country"
-                                },
-                                "site": {
-                                    "type": "string",
-                                    "description": "site"
-                                },
-                                "building": {
-                                    "type": "string",
-                                    "description": "building"
-                                },
-                                "floorNumber": {
-                                    "type": "integer",
-                                    "description": "floorNumber"
-                                },
-                                "floor": {
-                                    "type": "string",
-                                    "description": "floor"
-                                },
-                                "floorDescription": {
-                                    "type": "string",
-                                    "description": "floorDescription"
-                                },
-                                "roomNumber": {
-                                    "type": "integer",
-                                    "description": "roomNumber"
-                                },
-                                "roomName": {
-                                    "type": "string",
-                                    "description": "roomName"
-                                },
-                                "roomDescription": {
-                                    "type": "string",
-                                    "description": "roomDescription"
-                                },
-                                "organization": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedFinishings": {
+                                        "description": "supportedFinishings",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "organization"
-                                },
-                                "subdivision": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedMediaColors": {
+                                        "description": "supportedMediaColors",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "subdivision"
-                                },
-                                "stateOrProvince": {
-                                    "type": "string",
-                                    "description": "stateOrProvince"
-                                },
-                                "countryOrRegion": {
-                                    "type": "string",
-                                    "description": "countryOrRegion"
-                                }
-                            }
-                        },
-                        "microsoft.graph.printerDefaults": {
-                            "properties": {
-                                "copiesPerJob": {
-                                    "type": "integer",
-                                    "description": "copiesPerJob"
-                                },
-                                "finishings": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedMediaTypes": {
+                                        "description": "supportedMediaTypes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "finishings"
-                                },
-                                "mediaColor": {
-                                    "type": "string",
-                                    "description": "mediaColor"
-                                },
-                                "mediaType": {
-                                    "type": "string",
-                                    "description": "mediaType"
-                                },
-                                "mediaSize": {
-                                    "type": "string",
-                                    "description": "mediaSize"
-                                },
-                                "pagesPerSheet": {
-                                    "type": "integer",
-                                    "description": "pagesPerSheet"
-                                },
-                                "orientation": {
-                                    "type": "string",
-                                    "description": "orientation"
-                                },
-                                "outputBin": {
-                                    "type": "string",
-                                    "description": "outputBin"
-                                },
-                                "inputBin": {
-                                    "type": "string",
-                                    "description": "inputBin"
-                                },
-                                "documentMimeType": {
-                                    "type": "string",
-                                    "description": "documentMimeType"
-                                },
-                                "pdfFitToPage": {
-                                    "type": "boolean",
-                                    "description": "pdfFitToPage"
-                                },
-                                "duplexConfiguration": {
-                                    "type": "string",
-                                    "description": "duplexConfiguration"
-                                },
-                                "presentationDirection": {
-                                    "type": "string",
-                                    "description": "presentationDirection"
-                                },
-                                "printColorConfiguration": {
-                                    "type": "string",
-                                    "description": "printColorConfiguration"
-                                },
-                                "printQuality": {
-                                    "type": "string",
-                                    "description": "printQuality"
-                                },
-                                "contentType": {
-                                    "type": "string",
-                                    "description": "contentType"
-                                },
-                                "fitPdfToPage": {
-                                    "type": "boolean",
-                                    "description": "fitPdfToPage"
-                                },
-                                "multipageLayout": {
-                                    "type": "string",
-                                    "description": "multipageLayout"
-                                },
-                                "colorMode": {
-                                    "type": "string",
-                                    "description": "colorMode"
-                                },
-                                "quality": {
-                                    "type": "string",
-                                    "description": "quality"
-                                },
-                                "duplexMode": {
-                                    "type": "string",
-                                    "description": "duplexMode"
-                                },
-                                "dpi": {
-                                    "type": "integer",
-                                    "description": "dpi"
-                                },
-                                "scaling": {
-                                    "type": "string",
-                                    "description": "scaling"
-                                }
-                            }
-                        },
-                        "microsoft.graph.printerCapabilities": {
-                            "properties": {
-                                "isColorPrintingSupported": {
-                                    "type": "boolean",
-                                    "description": "isColorPrintingSupported"
-                                },
-                                "supportsFitPdfToPage": {
-                                    "type": "boolean",
-                                    "description": "supportsFitPdfToPage"
-                                },
-                                "supportedCopiesPerJob": {
-                                    "$ref": "#/components/schemas/microsoft.graph.integerRange"
-                                },
-                                "supportedDocumentMimeTypes": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedMediaSizes": {
+                                        "description": "supportedMediaSizes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedDocumentMimeTypes"
-                                },
-                                "supportedFinishings": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedPagesPerSheet": {
+                                        "type": "object",
+                                        "properties": {
+                                        "start": {
+                                            "description": "start",
+                                            "type": "integer"
+                                        },
+                                        "end": {
+                                            "description": "end",
+                                            "type": "integer"
+                                        },
+                                        "minimum": {
+                                            "description": "minimum",
+                                            "type": "integer"
+                                        },
+                                        "maximum": {
+                                            "description": "maximum",
+                                            "type": "integer"
+                                        }
+                                        }
+                                    },
+                                    "supportedOrientations": {
+                                        "description": "supportedOrientations",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedFinishings"
-                                },
-                                "supportedMediaColors": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedOutputBins": {
+                                        "description": "supportedOutputBins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedMediaColors"
-                                },
-                                "supportedMediaTypes": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedDuplexConfigurations": {
+                                        "description": "supportedDuplexConfigurations",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedMediaTypes"
-                                },
-                                "supportedMediaSizes": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedPresentationDirections": {
+                                        "description": "supportedPresentationDirections",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedMediaSizes"
-                                },
-                                "supportedPagesPerSheet": {
-                                    "$ref": "#/components/schemas/microsoft.graph.integerRange"
-                                },
-                                "supportedOrientations": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedColorConfigurations": {
+                                        "description": "supportedColorConfigurations",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedOrientations"
-                                },
-                                "supportedOutputBins": {
-                                    "type": "array",
-                                    "items": {
+                                    "supportedPrintQualities": {
+                                        "description": "supportedPrintQualities",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedOutputBins"
-                                },
-                                "supportedDuplexConfigurations": {
-                                    "type": "array",
-                                    "items": {
+                                    "contentTypes": {
+                                        "description": "contentTypes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedDuplexConfigurations"
-                                },
-                                "supportedPresentationDirections": {
-                                    "type": "array",
-                                    "items": {
+                                    "feedOrientations": {
+                                        "description": "feedOrientations",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedPresentationDirections"
-                                },
-                                "supportedColorConfigurations": {
-                                    "type": "array",
-                                    "items": {
+                                    "feedDirections": {
+                                        "description": "feedDirections",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedColorConfigurations"
-                                },
-                                "supportedPrintQualities": {
-                                    "type": "array",
-                                    "items": {
+                                    "isPageRangeSupported": {
+                                        "description": "isPageRangeSupported",
+                                        "type": "boolean"
+                                    },
+                                    "qualities": {
+                                        "description": "qualities",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "supportedPrintQualities"
-                                },
-                                "contentTypes": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "contentTypes"
-                                },
-                                "feedOrientations": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "feedOrientations"
-                                },
-                                "feedDirections": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "feedDirections"
-                                },
-                                "isPageRangeSupported": {
-                                    "type": "boolean",
-                                    "description": "isPageRangeSupported"
-                                },
-                                "qualities": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "qualities"
-                                },
-                                "dpis": {
-                                    "type": "array",
-                                    "items": {
+                                    "dpis": {
+                                        "description": "dpis",
+                                        "type": "array",
+                                        "items": {
                                         "type": "integer"
+                                        }
                                     },
-                                    "description": "dpis"
-                                },
-                                "duplexModes": {
-                                    "type": "array",
-                                    "items": {
+                                    "duplexModes": {
+                                        "description": "duplexModes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "duplexModes"
-                                },
-                                "copiesPerJob": {
-                                    "$ref": "#/components/schemas/microsoft.graph.integerRange"
-                                },
-                                "finishings": {
-                                    "type": "array",
-                                    "items": {
+                                    "copiesPerJob": {
+                                        "type": "object",
+                                        "properties": {
+                                        "start": {
+                                            "description": "start",
+                                            "type": "integer"
+                                        },
+                                        "end": {
+                                            "description": "end",
+                                            "type": "integer"
+                                        },
+                                        "minimum": {
+                                            "description": "minimum",
+                                            "type": "integer"
+                                        },
+                                        "maximum": {
+                                            "description": "maximum",
+                                            "type": "integer"
+                                        }
+                                        }
+                                    },
+                                    "finishings": {
+                                        "description": "finishings",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "finishings"
-                                },
-                                "mediaColors": {
-                                    "type": "array",
-                                    "items": {
+                                    "mediaColors": {
+                                        "description": "mediaColors",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "mediaColors"
-                                },
-                                "mediaTypes": {
-                                    "type": "array",
-                                    "items": {
+                                    "mediaTypes": {
+                                        "description": "mediaTypes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "mediaTypes"
-                                },
-                                "mediaSizes": {
-                                    "type": "array",
-                                    "items": {
+                                    "mediaSizes": {
+                                        "description": "mediaSizes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "mediaSizes"
-                                },
-                                "pagesPerSheet": {
-                                    "type": "array",
-                                    "items": {
+                                    "pagesPerSheet": {
+                                        "description": "pagesPerSheet",
+                                        "type": "array",
+                                        "items": {
                                         "type": "integer"
+                                        }
                                     },
-                                    "description": "pagesPerSheet"
-                                },
-                                "orientations": {
-                                    "type": "array",
-                                    "items": {
+                                    "orientations": {
+                                        "description": "orientations",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "orientations"
-                                },
-                                "outputBins": {
-                                    "type": "array",
-                                    "items": {
+                                    "outputBins": {
+                                        "description": "outputBins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "outputBins"
-                                },
-                                "multipageLayouts": {
-                                    "type": "array",
-                                    "items": {
+                                    "multipageLayouts": {
+                                        "description": "multipageLayouts",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "multipageLayouts"
-                                },
-                                "colorModes": {
-                                    "type": "array",
-                                    "items": {
+                                    "colorModes": {
+                                        "description": "colorModes",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "colorModes"
-                                },
-                                "inputBins": {
-                                    "type": "array",
-                                    "items": {
+                                    "inputBins": {
+                                        "description": "inputBins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
+                                        }
                                     },
-                                    "description": "inputBins"
-                                },
-                                "topMargins": {
-                                    "type": "array",
-                                    "items": {
+                                    "topMargins": {
+                                        "description": "topMargins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "integer"
+                                        }
                                     },
-                                    "description": "topMargins"
-                                },
-                                "bottomMargins": {
-                                    "type": "array",
-                                    "items": {
+                                    "bottomMargins": {
+                                        "description": "bottomMargins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "integer"
+                                        }
                                     },
-                                    "description": "bottomMargins"
-                                },
-                                "rightMargins": {
-                                    "type": "array",
-                                    "items": {
+                                    "rightMargins": {
+                                        "description": "rightMargins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "integer"
+                                        }
                                     },
-                                    "description": "rightMargins"
-                                },
-                                "leftMargins": {
-                                    "type": "array",
-                                    "items": {
+                                    "leftMargins": {
+                                        "description": "leftMargins",
+                                        "type": "array",
+                                        "items": {
                                         "type": "integer"
+                                        }
                                     },
-                                    "description": "leftMargins"
-                                },
-                                "collation": {
-                                    "type": "boolean",
-                                    "description": "collation"
-                                },
-                                "scalings": {
-                                    "type": "array",
-                                    "items": {
+                                    "collation": {
+                                        "description": "collation",
+                                        "type": "boolean"
+                                    },
+                                    "scalings": {
+                                        "description": "scalings",
+                                        "type": "array",
+                                        "items": {
                                         "type": "string"
-                                    },
-                                    "description": "scalings"
+                                        }
+                                    }
+                                    }
                                 }
+                                }
+                            }
                             }
                         },
-                        "microsoft.graph.printJob": {
-                            "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "description": "id"
-                                },
-                                "createdBy": {
-                                    "$ref": "#/components/schemas/microsoft.graph.UserIdentity"
-                                },
-                                "createdDateTime": {
-                                    "type": "string",
-                                    "description": "createdDateTime"
-                                },
-                                "isFetchable": {
-                                    "type": "boolean",
-                                    "description": "isFetchable"
-                                },
-                                "status": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printJobStatus"
-                                },
-                                "redirectedFrom": {
-                                    "type": "string",
-                                    "description": "redirectedFrom"
-                                },
-                                "redirectedTo": {
-                                    "type": "string",
-                                    "description": "redirectedTo"
-                                },
-                                "configuration": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printJobConfiguration"
-                                },
-                                "displayName": {
-                                    "type": "string",
-                                    "description": "displayName"
-                                },
-                                "errorCode": {
-                                    "type": "integer",
-                                    "description": "errorCode"
-                                },
-                                "acknowledgedDateTime": {
-                                    "type": "string",
-                                    "description": "acknowledgedDateTime"
-                                },
-                                "completedDateTime": {
-                                    "type": "string",
-                                    "description": "completedDateTime"
-                                }
-                            }
+                        "400": {
+                            "description": "BadRequest"
                         },
-                        "microsoft.graph.printJobStatus": {
-                            "properties": {
-                                "processingState": {
-                                    "type": "string",
-                                    "description": "processingState"
-                                },
-                                "state": {
-                                    "type": "string",
-                                    "description": "state"
-                                },
-                                "processingStateDescription": {
-                                    "type": "string",
-                                    "description": "processingStateDescription"
-                                },
-                                "description": {
-                                    "type": "string",
-                                    "description": "description"
-                                },
-                                "wasJobAcquiredByPrinter": {
-                                    "type": "boolean",
-                                    "description": "wasJobAcquiredByPrinter"
-                                },
-                                "isAcquiredByPrinter": {
-                                    "type": "boolean",
-                                    "description": "isAcquiredByPrinter"
-                                },
-                                "details": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "details"
-                                }
-                            }
+                        "401": {
+                            "description": "Unauthorized"
                         },
-                        "microsoft.graph.PrintDocumentUploadProperties": {
-                            "properties": {
-                                "contentType": {
-                                    "type": "string",
-                                    "description": "contentType"
-                                },
-                                "documentName": {
-                                    "type": "string",
-                                    "description": "documentName"
-                                },
-                                "size": {
-                                    "type": "integer",
-                                    "description": "size"
-                                }
-                            }
+                        "403": {
+                            "description": "Forbidden"
                         },
-                        "microsoft.graph.UploadSession": {
-                            "properties": {
-                                "expirationDateTime": {
-                                    "type": "string",
-                                    "description": "expirationDateTime"
-                                },
-                                "nextExpectedRanges": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "nextExpectedRanges"
-                                },
-                                "uploadUrl": {
-                                    "type": "string",
-                                    "description": "uploadUrl"
-                                },
-                                "oDataType": {
-                                    "type": "string",
-                                    "description": "oDataType"
-                                }
-                            }
-                        },
-                        "microsoft.graph.printJobConfiguration": {
-                            "properties": {
-                                "pageRanges": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/microsoft.graph.integerRange"
-                                    },
-                                    "description": "pageRanges"
-                                },
-                                "quality": {
-                                    "type": "string",
-                                    "description": "quality"
-                                },
-                                "dpi": {
-                                    "type": "integer",
-                                    "description": "dpi"
-                                },
-                                "feedOrientation": {
-                                    "type": "string",
-                                    "description": "feedOrientation"
-                                },
-                                "orientation": {
-                                    "type": "string",
-                                    "description": "orientation"
-                                },
-                                "duplexMode": {
-                                    "type": "string",
-                                    "description": "duplexMode"
-                                },
-                                "copies": {
-                                    "type": "integer",
-                                    "description": "copies"
-                                },
-                                "colorMode": {
-                                    "type": "string",
-                                    "description": "colorMode"
-                                },
-                                "inputBin": {
-                                    "type": "string",
-                                    "description": "inputBin"
-                                },
-                                "outputBin": {
-                                    "type": "string",
-                                    "description": "outputBin"
-                                },
-                                "mediaSize": {
-                                    "type": "string",
-                                    "description": "mediaSize"
-                                },
-                                "margin": {
-                                    "$ref": "#/components/schemas/microsoft.graph.printMargin"
-                                },
-                                "mediaType": {
-                                    "type": "string",
-                                    "description": "mediaType"
-                                },
-                                "finishings": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "finishings"
-                                },
-                                "pagesPerSheet": {
-                                    "type": "integer",
-                                    "description": "pagesPerSheet"
-                                },
-                                "multipageLayout": {
-                                    "type": "string",
-                                    "description": "multipageLayout"
-                                },
-                                "collate": {
-                                    "type": "boolean",
-                                    "description": "collate"
-                                },
-                                "scaling": {
-                                    "type": "string",
-                                    "description": "scaling"
-                                },
-                                "fitPdfToPage": {
-                                    "type": "boolean",
-                                    "description": "fitPdfToPage"
-                                }
-                            }
-                        },
-                        "microsoft.graph.integerRange": {
-                            "properties": {
-                                "start": {
-                                    "type": "integer",
-                                    "description": "start"
-                                },
-                                "end": {
-                                    "type": "integer",
-                                    "description": "end"
-                                },
-                                "minimum": {
-                                    "type": "integer",
-                                    "description": "minimum"
-                                },
-                                "maximum": {
-                                    "type": "integer",
-                                    "description": "maximum"
-                                }
-                            }
-                        },
-                        "microsoft.graph.printMargin": {
-                            "properties": {
-                                "top": {
-                                    "type": "integer",
-                                    "description": "top"
-                                },
-                                "bottom": {
-                                    "type": "integer",
-                                    "description": "bottom"
-                                },
-                                "left": {
-                                    "type": "integer",
-                                    "description": "left"
-                                },
-                                "right": {
-                                    "type": "integer",
-                                    "description": "right"
-                                }
-                            }
-                        },
-                        "microsoft.graph.UserIdentity": {
-                            "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "description": "id"
-                                },
-                                "displayName": {
-                                    "type": "string",
-                                    "description": "displayName"
-                                },
-                                "ipAddress": {
-                                    "type": "string",
-                                    "description": "ipAddress"
-                                },
-                                "userPrincipalName": {
-                                    "type": "string",
-                                    "description": "userPrincipalName"
-                                },
-                                "oDataType": {
-                                    "type": "string",
-                                    "description": "oDataType"
-                                }
-                            }
+                        "500": {
+                            "description": "InternalServerError"
+                        }
                         }
                     }
-                }
+                    },
+                    "/v1.0/print/shares/{printerShareId}/jobs": {
+                    "post": {
+                        "summary": "Create printer job from printer share",
+                        "description": "Create printer job from printer share",
+                        "operationId": "PrinterShares_PostToJobsFromPrinterShare",
+                        "consumes": [
+                        "application/json"
+                        ],
+                        "produces": [
+                        "application/json"
+                        ],
+                        "parameters": [
+                        {
+                            "in": "path",
+                            "name": "printerShareId",
+                            "description": "printer share Id",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "in": "body",
+                            "name": "body",
+                            "required": true,
+                            "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                "description": "id",
+                                "type": "string"
+                                },
+                                "createdBy": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                    "description": "id",
+                                    "type": "string"
+                                    },
+                                    "displayName": {
+                                    "description": "displayName",
+                                    "type": "string"
+                                    },
+                                    "ipAddress": {
+                                    "description": "ipAddress",
+                                    "type": "string"
+                                    },
+                                    "userPrincipalName": {
+                                    "description": "userPrincipalName",
+                                    "type": "string"
+                                    },
+                                    "oDataType": {
+                                    "description": "oDataType",
+                                    "type": "string"
+                                    }
+                                }
+                                },
+                                "createdDateTime": {
+                                "description": "createdDateTime",
+                                "type": "string"
+                                },
+                                "isFetchable": {
+                                "description": "isFetchable",
+                                "type": "boolean"
+                                },
+                                "status": {
+                                "type": "object",
+                                "properties": {
+                                    "processingState": {
+                                    "description": "processingState",
+                                    "type": "string"
+                                    },
+                                    "state": {
+                                    "description": "state",
+                                    "type": "string"
+                                    },
+                                    "processingStateDescription": {
+                                    "description": "processingStateDescription",
+                                    "type": "string"
+                                    },
+                                    "description": {
+                                    "description": "description",
+                                    "type": "string"
+                                    },
+                                    "wasJobAcquiredByPrinter": {
+                                    "description": "wasJobAcquiredByPrinter",
+                                    "type": "boolean"
+                                    },
+                                    "isAcquiredByPrinter": {
+                                    "description": "isAcquiredByPrinter",
+                                    "type": "boolean"
+                                    },
+                                    "details": {
+                                    "description": "details",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                    }
+                                }
+                                },
+                                "redirectedFrom": {
+                                "description": "redirectedFrom",
+                                "type": "string"
+                                },
+                                "redirectedTo": {
+                                "description": "redirectedTo",
+                                "type": "string"
+                                },
+                                "configuration": {
+                                "type": "object",
+                                "properties": {
+                                    "pageRanges": {
+                                    "description": "pageRanges",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                        "start": {
+                                            "description": "start",
+                                            "type": "integer"
+                                        },
+                                        "end": {
+                                            "description": "end",
+                                            "type": "integer"
+                                        },
+                                        "minimum": {
+                                            "description": "minimum",
+                                            "type": "integer"
+                                        },
+                                        "maximum": {
+                                            "description": "maximum",
+                                            "type": "integer"
+                                        }
+                                        }
+                                    }
+                                    },
+                                    "quality": {
+                                    "description": "quality",
+                                    "type": "string"
+                                    },
+                                    "dpi": {
+                                    "description": "dpi",
+                                    "type": "integer"
+                                    },
+                                    "feedOrientation": {
+                                    "description": "feedOrientation",
+                                    "type": "string"
+                                    },
+                                    "orientation": {
+                                    "description": "orientation",
+                                    "type": "string"
+                                    },
+                                    "duplexMode": {
+                                    "description": "duplexMode",
+                                    "type": "string"
+                                    },
+                                    "copies": {
+                                    "description": "copies",
+                                    "type": "integer"
+                                    },
+                                    "colorMode": {
+                                    "description": "colorMode",
+                                    "type": "string"
+                                    },
+                                    "inputBin": {
+                                    "description": "inputBin",
+                                    "type": "string"
+                                    },
+                                    "outputBin": {
+                                    "description": "outputBin",
+                                    "type": "string"
+                                    },
+                                    "mediaSize": {
+                                    "description": "mediaSize",
+                                    "type": "string"
+                                    },
+                                    "margin": {
+                                    "type": "object",
+                                    "properties": {
+                                        "top": {
+                                        "description": "top",
+                                        "type": "integer"
+                                        },
+                                        "bottom": {
+                                        "description": "bottom",
+                                        "type": "integer"
+                                        },
+                                        "left": {
+                                        "description": "left",
+                                        "type": "integer"
+                                        },
+                                        "right": {
+                                        "description": "right",
+                                        "type": "integer"
+                                        }
+                                    }
+                                    },
+                                    "mediaType": {
+                                    "description": "mediaType",
+                                    "type": "string"
+                                    },
+                                    "finishings": {
+                                    "description": "finishings",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                    },
+                                    "pagesPerSheet": {
+                                    "description": "pagesPerSheet",
+                                    "type": "integer"
+                                    },
+                                    "multipageLayout": {
+                                    "description": "multipageLayout",
+                                    "type": "string"
+                                    },
+                                    "collate": {
+                                    "description": "collate",
+                                    "type": "boolean"
+                                    },
+                                    "scaling": {
+                                    "description": "scaling",
+                                    "type": "string"
+                                    },
+                                    "fitPdfToPage": {
+                                    "description": "fitPdfToPage",
+                                    "type": "boolean"
+                                    }
+                                }
+                                },
+                                "displayName": {
+                                "description": "displayName",
+                                "type": "string"
+                                },
+                                "errorCode": {
+                                "description": "errorCode",
+                                "type": "integer"
+                                },
+                                "acknowledgedDateTime": {
+                                "description": "acknowledgedDateTime",
+                                "type": "string"
+                                },
+                                "completedDateTime": {
+                                "description": "completedDateTime",
+                                "type": "string"
+                                }
+                            }
+                            }
+                        }
+                        ],
+                        "responses": {
+                        "200": {
+                            "description": "Create printer job from printer share",
+                            "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                "id": {
+                                    "description": "id",
+                                    "type": "string"
+                                },
+                                "createdBy": {
+                                    "type": "object",
+                                    "properties": {
+                                    "id": {
+                                        "description": "id",
+                                        "type": "string"
+                                    },
+                                    "displayName": {
+                                        "description": "displayName",
+                                        "type": "string"
+                                    },
+                                    "ipAddress": {
+                                        "description": "ipAddress",
+                                        "type": "string"
+                                    },
+                                    "userPrincipalName": {
+                                        "description": "userPrincipalName",
+                                        "type": "string"
+                                    },
+                                    "oDataType": {
+                                        "description": "oDataType",
+                                        "type": "string"
+                                    }
+                                    }
+                                },
+                                "createdDateTime": {
+                                    "description": "createdDateTime",
+                                    "type": "string"
+                                },
+                                "isFetchable": {
+                                    "description": "isFetchable",
+                                    "type": "boolean"
+                                },
+                                "status": {
+                                    "type": "object",
+                                    "properties": {
+                                    "processingState": {
+                                        "description": "processingState",
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "description": "state",
+                                        "type": "string"
+                                    },
+                                    "processingStateDescription": {
+                                        "description": "processingStateDescription",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "description",
+                                        "type": "string"
+                                    },
+                                    "wasJobAcquiredByPrinter": {
+                                        "description": "wasJobAcquiredByPrinter",
+                                        "type": "boolean"
+                                    },
+                                    "isAcquiredByPrinter": {
+                                        "description": "isAcquiredByPrinter",
+                                        "type": "boolean"
+                                    },
+                                    "details": {
+                                        "description": "details",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    }
+                                    }
+                                },
+                                "redirectedFrom": {
+                                    "description": "redirectedFrom",
+                                    "type": "string"
+                                },
+                                "redirectedTo": {
+                                    "description": "redirectedTo",
+                                    "type": "string"
+                                },
+                                "configuration": {
+                                    "type": "object",
+                                    "properties": {
+                                    "pageRanges": {
+                                        "description": "pageRanges",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "start": {
+                                            "description": "start",
+                                            "type": "integer"
+                                            },
+                                            "end": {
+                                            "description": "end",
+                                            "type": "integer"
+                                            },
+                                            "minimum": {
+                                            "description": "minimum",
+                                            "type": "integer"
+                                            },
+                                            "maximum": {
+                                            "description": "maximum",
+                                            "type": "integer"
+                                            }
+                                        }
+                                        }
+                                    },
+                                    "quality": {
+                                        "description": "quality",
+                                        "type": "string"
+                                    },
+                                    "dpi": {
+                                        "description": "dpi",
+                                        "type": "integer"
+                                    },
+                                    "feedOrientation": {
+                                        "description": "feedOrientation",
+                                        "type": "string"
+                                    },
+                                    "orientation": {
+                                        "description": "orientation",
+                                        "type": "string"
+                                    },
+                                    "duplexMode": {
+                                        "description": "duplexMode",
+                                        "type": "string"
+                                    },
+                                    "copies": {
+                                        "description": "copies",
+                                        "type": "integer"
+                                    },
+                                    "colorMode": {
+                                        "description": "colorMode",
+                                        "type": "string"
+                                    },
+                                    "inputBin": {
+                                        "description": "inputBin",
+                                        "type": "string"
+                                    },
+                                    "outputBin": {
+                                        "description": "outputBin",
+                                        "type": "string"
+                                    },
+                                    "mediaSize": {
+                                        "description": "mediaSize",
+                                        "type": "string"
+                                    },
+                                    "margin": {
+                                        "type": "object",
+                                        "properties": {
+                                        "top": {
+                                            "description": "top",
+                                            "type": "integer"
+                                        },
+                                        "bottom": {
+                                            "description": "bottom",
+                                            "type": "integer"
+                                        },
+                                        "left": {
+                                            "description": "left",
+                                            "type": "integer"
+                                        },
+                                        "right": {
+                                            "description": "right",
+                                            "type": "integer"
+                                        }
+                                        }
+                                    },
+                                    "mediaType": {
+                                        "description": "mediaType",
+                                        "type": "string"
+                                    },
+                                    "finishings": {
+                                        "description": "finishings",
+                                        "type": "array",
+                                        "items": {
+                                        "type": "string"
+                                        }
+                                    },
+                                    "pagesPerSheet": {
+                                        "description": "pagesPerSheet",
+                                        "type": "integer"
+                                    },
+                                    "multipageLayout": {
+                                        "description": "multipageLayout",
+                                        "type": "string"
+                                    },
+                                    "collate": {
+                                        "description": "collate",
+                                        "type": "boolean"
+                                    },
+                                    "scaling": {
+                                        "description": "scaling",
+                                        "type": "string"
+                                    },
+                                    "fitPdfToPage": {
+                                        "description": "fitPdfToPage",
+                                        "type": "boolean"
+                                    }
+                                    }
+                                },
+                                "displayName": {
+                                    "description": "displayName",
+                                    "type": "string"
+                                },
+                                "errorCode": {
+                                    "description": "errorCode",
+                                    "type": "integer"
+                                },
+                                "acknowledgedDateTime": {
+                                    "description": "acknowledgedDateTime",
+                                    "type": "string"
+                                },
+                                "completedDateTime": {
+                                    "description": "completedDateTime",
+                                    "type": "string"
+                                }
+                                }
+                            }
+                            }
+                        },
+                        "400": {
+                            "description": "BadRequest"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        },
+                        "403": {
+                            "description": "Forbidden"
+                        },
+                        "500": {
+                            "description": "InternalServerError"
+                        }
+                        }
+                    }
+                    },
+                    "/v1.0/print/shares/{printerShareId}/jobs/{jobId}/start": {
+                    "post": {
+                        "summary": "Start printer job",
+                        "description": "Start printer job",
+                        "operationId": "PrinterShares_StartPrintJob",
+                        "produces": [
+                        "application/json"
+                        ],
+                        "parameters": [
+                        {
+                            "in": "path",
+                            "name": "printerShareId",
+                            "description": "printer share Id",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "in": "path",
+                            "name": "jobId",
+                            "description": "job Id",
+                            "required": true,
+                            "type": "string"
+                        }
+                        ],
+                        "responses": {
+                        "200": {
+                            "description": "Start printer job",
+                            "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                "processingState": {
+                                    "description": "processingState",
+                                    "type": "string"
+                                },
+                                "state": {
+                                    "description": "state",
+                                    "type": "string"
+                                },
+                                "processingStateDescription": {
+                                    "description": "processingStateDescription",
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "description": "description",
+                                    "type": "string"
+                                },
+                                "wasJobAcquiredByPrinter": {
+                                    "description": "wasJobAcquiredByPrinter",
+                                    "type": "boolean"
+                                },
+                                "isAcquiredByPrinter": {
+                                    "description": "isAcquiredByPrinter",
+                                    "type": "boolean"
+                                },
+                                "details": {
+                                    "description": "details",
+                                    "type": "array",
+                                    "items": {
+                                    "type": "string"
+                                    }
+                                }
+                                }
+                            }
+                            }
+                        },
+                        "400": {
+                            "description": "BadRequest"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        },
+                        "403": {
+                            "description": "Forbidden"
+                        },
+                        "500": {
+                            "description": "InternalServerError"
+                        }
+                        }
+                    }
+                    },
+                    "/v1.0/print/shares/{printerShareId}/jobs/{jobId}/documents/{documentId}/createUploadSession": {
+                    "post": {
+                        "summary": "Create upload session for printer share",
+                        "description": "Create upload session for printer share",
+                        "operationId": "PrinterShares_CreateUploadSession",
+                        "consumes": [
+                        "application/json"
+                        ],
+                        "produces": [
+                        "application/json"
+                        ],
+                        "parameters": [
+                        {
+                            "in": "path",
+                            "name": "printerShareId",
+                            "description": "printer share Id",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "in": "path",
+                            "name": "jobId",
+                            "description": "job Id",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "in": "path",
+                            "name": "documentId",
+                            "description": "document Id",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "in": "body",
+                            "name": "body",
+                            "required": true,
+                            "schema": {
+                            "type": "object",
+                            "properties": {
+                                "contentType": {
+                                "description": "contentType",
+                                "type": "string"
+                                },
+                                "documentName": {
+                                "description": "documentName",
+                                "type": "string"
+                                },
+                                "size": {
+                                "description": "size",
+                                "type": "integer"
+                                }
+                            }
+                            }
+                        }
+                        ],
+                        "responses": {
+                        "200": {
+                            "description": "Create upload session for printer share",
+                            "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                "expirationDateTime": {
+                                    "description": "expirationDateTime",
+                                    "type": "string"
+                                },
+                                "nextExpectedRanges": {
+                                    "description": "nextExpectedRanges",
+                                    "type": "array",
+                                    "items": {
+                                    "type": "string"
+                                    }
+                                },
+                                "uploadUrl": {
+                                    "description": "uploadUrl",
+                                    "type": "string"
+                                },
+                                "oDataType": {
+                                    "description": "oDataType",
+                                    "type": "string"
+                                }
+                                }
+                            }
+                            }
+                        },
+                        "400": {
+                            "description": "BadRequest"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        },
+                        "403": {
+                            "description": "Forbidden"
+                        },
+                        "500": {
+                            "description": "InternalServerError"
+                        }
+                        }
+                    }
+                    }
+                },
+                "definitions": {
+                    "microsoft.graph.PrinterShare": {
+                    "type": "object",
+                    "properties": {
+                        "viewPoint": {
+                        "type": "object",
+                        "properties": {
+                            "lastUsedDateTime": {
+                            "description": "lastUsedDateTime",
+                            "type": "string"
+                            }
+                        }
+                        },
+                        "allowAllUsers": {
+                        "description": "allowAllUsers",
+                        "type": "boolean"
+                        },
+                        "createdDateTime": {
+                        "description": "createdDateTime",
+                        "type": "string"
+                        },
+                        "id": {
+                        "description": "id",
+                        "type": "string"
+                        },
+                        "name": {
+                        "description": "name",
+                        "type": "string"
+                        },
+                        "displayName": {
+                        "description": "displayName",
+                        "type": "string"
+                        },
+                        "manufacturer": {
+                        "description": "manufacturer",
+                        "type": "string"
+                        },
+                        "model": {
+                        "description": "model",
+                        "type": "string"
+                        },
+                        "status": {
+                        "type": "object",
+                        "properties": {
+                            "processingState": {
+                            "description": "processingState",
+                            "type": "string"
+                            },
+                            "state": {
+                            "description": "state",
+                            "type": "string"
+                            },
+                            "processingStateReasons": {
+                            "description": "processingStateReasons",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "details": {
+                            "description": "details",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "processingStateDescription": {
+                            "description": "processingStateDescription",
+                            "type": "string"
+                            },
+                            "description": {
+                            "description": "description",
+                            "type": "string"
+                            }
+                        }
+                        },
+                        "location": {
+                        "type": "object",
+                        "properties": {
+                            "latitude": {
+                            "description": "latitude",
+                            "type": "number"
+                            },
+                            "longitude": {
+                            "description": "longitude",
+                            "type": "number"
+                            },
+                            "altitudeInMeters": {
+                            "description": "altitudeInMeters",
+                            "type": "integer"
+                            },
+                            "streetAddress": {
+                            "description": "streetAddress",
+                            "type": "string"
+                            },
+                            "subunit": {
+                            "description": "subunit",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "city": {
+                            "description": "city",
+                            "type": "string"
+                            },
+                            "region": {
+                            "description": "region",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "postalCode": {
+                            "description": "postalCode",
+                            "type": "string"
+                            },
+                            "country": {
+                            "description": "country",
+                            "type": "string"
+                            },
+                            "site": {
+                            "description": "site",
+                            "type": "string"
+                            },
+                            "building": {
+                            "description": "building",
+                            "type": "string"
+                            },
+                            "floorNumber": {
+                            "description": "floorNumber",
+                            "type": "integer"
+                            },
+                            "floor": {
+                            "description": "floor",
+                            "type": "string"
+                            },
+                            "floorDescription": {
+                            "description": "floorDescription",
+                            "type": "string"
+                            },
+                            "roomNumber": {
+                            "description": "roomNumber",
+                            "type": "integer"
+                            },
+                            "roomName": {
+                            "description": "roomName",
+                            "type": "string"
+                            },
+                            "roomDescription": {
+                            "description": "roomDescription",
+                            "type": "string"
+                            },
+                            "organization": {
+                            "description": "organization",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "subdivision": {
+                            "description": "subdivision",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "stateOrProvince": {
+                            "description": "stateOrProvince",
+                            "type": "string"
+                            },
+                            "countryOrRegion": {
+                            "description": "countryOrRegion",
+                            "type": "string"
+                            }
+                        }
+                        },
+                        "isAcceptingJobs": {
+                        "description": "isAcceptingJobs",
+                        "type": "boolean"
+                        },
+                        "defaults": {
+                        "type": "object",
+                        "properties": {
+                            "copiesPerJob": {
+                            "description": "copiesPerJob",
+                            "type": "integer"
+                            },
+                            "finishings": {
+                            "description": "finishings",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "mediaColor": {
+                            "description": "mediaColor",
+                            "type": "string"
+                            },
+                            "mediaType": {
+                            "description": "mediaType",
+                            "type": "string"
+                            },
+                            "mediaSize": {
+                            "description": "mediaSize",
+                            "type": "string"
+                            },
+                            "pagesPerSheet": {
+                            "description": "pagesPerSheet",
+                            "type": "integer"
+                            },
+                            "orientation": {
+                            "description": "orientation",
+                            "type": "string"
+                            },
+                            "outputBin": {
+                            "description": "outputBin",
+                            "type": "string"
+                            },
+                            "inputBin": {
+                            "description": "inputBin",
+                            "type": "string"
+                            },
+                            "documentMimeType": {
+                            "description": "documentMimeType",
+                            "type": "string"
+                            },
+                            "pdfFitToPage": {
+                            "description": "pdfFitToPage",
+                            "type": "boolean"
+                            },
+                            "duplexConfiguration": {
+                            "description": "duplexConfiguration",
+                            "type": "string"
+                            },
+                            "presentationDirection": {
+                            "description": "presentationDirection",
+                            "type": "string"
+                            },
+                            "printColorConfiguration": {
+                            "description": "printColorConfiguration",
+                            "type": "string"
+                            },
+                            "printQuality": {
+                            "description": "printQuality",
+                            "type": "string"
+                            },
+                            "contentType": {
+                            "description": "contentType",
+                            "type": "string"
+                            },
+                            "fitPdfToPage": {
+                            "description": "fitPdfToPage",
+                            "type": "boolean"
+                            },
+                            "multipageLayout": {
+                            "description": "multipageLayout",
+                            "type": "string"
+                            },
+                            "colorMode": {
+                            "description": "colorMode",
+                            "type": "string"
+                            },
+                            "quality": {
+                            "description": "quality",
+                            "type": "string"
+                            },
+                            "duplexMode": {
+                            "description": "duplexMode",
+                            "type": "string"
+                            },
+                            "dpi": {
+                            "description": "dpi",
+                            "type": "integer"
+                            },
+                            "scaling": {
+                            "description": "scaling",
+                            "type": "string"
+                            }
+                        }
+                        },
+                        "capabilities": {
+                        "type": "object",
+                        "properties": {
+                            "isColorPrintingSupported": {
+                            "description": "isColorPrintingSupported",
+                            "type": "boolean"
+                            },
+                            "supportsFitPdfToPage": {
+                            "description": "supportsFitPdfToPage",
+                            "type": "boolean"
+                            },
+                            "supportedCopiesPerJob": {
+                            "type": "object",
+                            "properties": {
+                                "start": {
+                                "description": "start",
+                                "type": "integer"
+                                },
+                                "end": {
+                                "description": "end",
+                                "type": "integer"
+                                },
+                                "minimum": {
+                                "description": "minimum",
+                                "type": "integer"
+                                },
+                                "maximum": {
+                                "description": "maximum",
+                                "type": "integer"
+                                }
+                            }
+                            },
+                            "supportedDocumentMimeTypes": {
+                            "description": "supportedDocumentMimeTypes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedFinishings": {
+                            "description": "supportedFinishings",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedMediaColors": {
+                            "description": "supportedMediaColors",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedMediaTypes": {
+                            "description": "supportedMediaTypes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedMediaSizes": {
+                            "description": "supportedMediaSizes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedPagesPerSheet": {
+                            "type": "object",
+                            "properties": {
+                                "start": {
+                                "description": "start",
+                                "type": "integer"
+                                },
+                                "end": {
+                                "description": "end",
+                                "type": "integer"
+                                },
+                                "minimum": {
+                                "description": "minimum",
+                                "type": "integer"
+                                },
+                                "maximum": {
+                                "description": "maximum",
+                                "type": "integer"
+                                }
+                            }
+                            },
+                            "supportedOrientations": {
+                            "description": "supportedOrientations",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedOutputBins": {
+                            "description": "supportedOutputBins",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedDuplexConfigurations": {
+                            "description": "supportedDuplexConfigurations",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedPresentationDirections": {
+                            "description": "supportedPresentationDirections",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedColorConfigurations": {
+                            "description": "supportedColorConfigurations",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "supportedPrintQualities": {
+                            "description": "supportedPrintQualities",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "contentTypes": {
+                            "description": "contentTypes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "feedOrientations": {
+                            "description": "feedOrientations",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "feedDirections": {
+                            "description": "feedDirections",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "isPageRangeSupported": {
+                            "description": "isPageRangeSupported",
+                            "type": "boolean"
+                            },
+                            "qualities": {
+                            "description": "qualities",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "dpis": {
+                            "description": "dpis",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                            },
+                            "duplexModes": {
+                            "description": "duplexModes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "copiesPerJob": {
+                            "type": "object",
+                            "properties": {
+                                "start": {
+                                "description": "start",
+                                "type": "integer"
+                                },
+                                "end": {
+                                "description": "end",
+                                "type": "integer"
+                                },
+                                "minimum": {
+                                "description": "minimum",
+                                "type": "integer"
+                                },
+                                "maximum": {
+                                "description": "maximum",
+                                "type": "integer"
+                                }
+                            }
+                            },
+                            "finishings": {
+                            "description": "finishings",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "mediaColors": {
+                            "description": "mediaColors",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "mediaTypes": {
+                            "description": "mediaTypes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "mediaSizes": {
+                            "description": "mediaSizes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "pagesPerSheet": {
+                            "description": "pagesPerSheet",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                            },
+                            "orientations": {
+                            "description": "orientations",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "outputBins": {
+                            "description": "outputBins",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "multipageLayouts": {
+                            "description": "multipageLayouts",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "colorModes": {
+                            "description": "colorModes",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "inputBins": {
+                            "description": "inputBins",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "topMargins": {
+                            "description": "topMargins",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                            },
+                            "bottomMargins": {
+                            "description": "bottomMargins",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                            },
+                            "rightMargins": {
+                            "description": "rightMargins",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                            },
+                            "leftMargins": {
+                            "description": "leftMargins",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                            },
+                            "collation": {
+                            "description": "collation",
+                            "type": "boolean"
+                            },
+                            "scalings": {
+                            "description": "scalings",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            }
+                        }
+                        }
+                    }
+                    },
+                    "microsoft.graph.PrinterShareViewpoint": {
+                    "type": "object",
+                    "properties": {
+                        "lastUsedDateTime": {
+                        "description": "lastUsedDateTime",
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printerStatus": {
+                    "type": "object",
+                    "properties": {
+                        "processingState": {
+                        "description": "processingState",
+                        "type": "string"
+                        },
+                        "state": {
+                        "description": "state",
+                        "type": "string"
+                        },
+                        "processingStateReasons": {
+                        "description": "processingStateReasons",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "details": {
+                        "description": "details",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "processingStateDescription": {
+                        "description": "processingStateDescription",
+                        "type": "string"
+                        },
+                        "description": {
+                        "description": "description",
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printerLocation": {
+                    "type": "object",
+                    "properties": {
+                        "latitude": {
+                        "description": "latitude",
+                        "type": "number"
+                        },
+                        "longitude": {
+                        "description": "longitude",
+                        "type": "number"
+                        },
+                        "altitudeInMeters": {
+                        "description": "altitudeInMeters",
+                        "type": "integer"
+                        },
+                        "streetAddress": {
+                        "description": "streetAddress",
+                        "type": "string"
+                        },
+                        "subunit": {
+                        "description": "subunit",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "city": {
+                        "description": "city",
+                        "type": "string"
+                        },
+                        "region": {
+                        "description": "region",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "postalCode": {
+                        "description": "postalCode",
+                        "type": "string"
+                        },
+                        "country": {
+                        "description": "country",
+                        "type": "string"
+                        },
+                        "site": {
+                        "description": "site",
+                        "type": "string"
+                        },
+                        "building": {
+                        "description": "building",
+                        "type": "string"
+                        },
+                        "floorNumber": {
+                        "description": "floorNumber",
+                        "type": "integer"
+                        },
+                        "floor": {
+                        "description": "floor",
+                        "type": "string"
+                        },
+                        "floorDescription": {
+                        "description": "floorDescription",
+                        "type": "string"
+                        },
+                        "roomNumber": {
+                        "description": "roomNumber",
+                        "type": "integer"
+                        },
+                        "roomName": {
+                        "description": "roomName",
+                        "type": "string"
+                        },
+                        "roomDescription": {
+                        "description": "roomDescription",
+                        "type": "string"
+                        },
+                        "organization": {
+                        "description": "organization",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "subdivision": {
+                        "description": "subdivision",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "stateOrProvince": {
+                        "description": "stateOrProvince",
+                        "type": "string"
+                        },
+                        "countryOrRegion": {
+                        "description": "countryOrRegion",
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printerDefaults": {
+                    "type": "object",
+                    "properties": {
+                        "copiesPerJob": {
+                        "description": "copiesPerJob",
+                        "type": "integer"
+                        },
+                        "finishings": {
+                        "description": "finishings",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "mediaColor": {
+                        "description": "mediaColor",
+                        "type": "string"
+                        },
+                        "mediaType": {
+                        "description": "mediaType",
+                        "type": "string"
+                        },
+                        "mediaSize": {
+                        "description": "mediaSize",
+                        "type": "string"
+                        },
+                        "pagesPerSheet": {
+                        "description": "pagesPerSheet",
+                        "type": "integer"
+                        },
+                        "orientation": {
+                        "description": "orientation",
+                        "type": "string"
+                        },
+                        "outputBin": {
+                        "description": "outputBin",
+                        "type": "string"
+                        },
+                        "inputBin": {
+                        "description": "inputBin",
+                        "type": "string"
+                        },
+                        "documentMimeType": {
+                        "description": "documentMimeType",
+                        "type": "string"
+                        },
+                        "pdfFitToPage": {
+                        "description": "pdfFitToPage",
+                        "type": "boolean"
+                        },
+                        "duplexConfiguration": {
+                        "description": "duplexConfiguration",
+                        "type": "string"
+                        },
+                        "presentationDirection": {
+                        "description": "presentationDirection",
+                        "type": "string"
+                        },
+                        "printColorConfiguration": {
+                        "description": "printColorConfiguration",
+                        "type": "string"
+                        },
+                        "printQuality": {
+                        "description": "printQuality",
+                        "type": "string"
+                        },
+                        "contentType": {
+                        "description": "contentType",
+                        "type": "string"
+                        },
+                        "fitPdfToPage": {
+                        "description": "fitPdfToPage",
+                        "type": "boolean"
+                        },
+                        "multipageLayout": {
+                        "description": "multipageLayout",
+                        "type": "string"
+                        },
+                        "colorMode": {
+                        "description": "colorMode",
+                        "type": "string"
+                        },
+                        "quality": {
+                        "description": "quality",
+                        "type": "string"
+                        },
+                        "duplexMode": {
+                        "description": "duplexMode",
+                        "type": "string"
+                        },
+                        "dpi": {
+                        "description": "dpi",
+                        "type": "integer"
+                        },
+                        "scaling": {
+                        "description": "scaling",
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printerCapabilities": {
+                    "type": "object",
+                    "properties": {
+                        "isColorPrintingSupported": {
+                        "description": "isColorPrintingSupported",
+                        "type": "boolean"
+                        },
+                        "supportsFitPdfToPage": {
+                        "description": "supportsFitPdfToPage",
+                        "type": "boolean"
+                        },
+                        "supportedCopiesPerJob": {
+                        "type": "object",
+                        "properties": {
+                            "start": {
+                            "description": "start",
+                            "type": "integer"
+                            },
+                            "end": {
+                            "description": "end",
+                            "type": "integer"
+                            },
+                            "minimum": {
+                            "description": "minimum",
+                            "type": "integer"
+                            },
+                            "maximum": {
+                            "description": "maximum",
+                            "type": "integer"
+                            }
+                        }
+                        },
+                        "supportedDocumentMimeTypes": {
+                        "description": "supportedDocumentMimeTypes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedFinishings": {
+                        "description": "supportedFinishings",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedMediaColors": {
+                        "description": "supportedMediaColors",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedMediaTypes": {
+                        "description": "supportedMediaTypes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedMediaSizes": {
+                        "description": "supportedMediaSizes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedPagesPerSheet": {
+                        "type": "object",
+                        "properties": {
+                            "start": {
+                            "description": "start",
+                            "type": "integer"
+                            },
+                            "end": {
+                            "description": "end",
+                            "type": "integer"
+                            },
+                            "minimum": {
+                            "description": "minimum",
+                            "type": "integer"
+                            },
+                            "maximum": {
+                            "description": "maximum",
+                            "type": "integer"
+                            }
+                        }
+                        },
+                        "supportedOrientations": {
+                        "description": "supportedOrientations",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedOutputBins": {
+                        "description": "supportedOutputBins",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedDuplexConfigurations": {
+                        "description": "supportedDuplexConfigurations",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedPresentationDirections": {
+                        "description": "supportedPresentationDirections",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedColorConfigurations": {
+                        "description": "supportedColorConfigurations",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "supportedPrintQualities": {
+                        "description": "supportedPrintQualities",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "contentTypes": {
+                        "description": "contentTypes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "feedOrientations": {
+                        "description": "feedOrientations",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "feedDirections": {
+                        "description": "feedDirections",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "isPageRangeSupported": {
+                        "description": "isPageRangeSupported",
+                        "type": "boolean"
+                        },
+                        "qualities": {
+                        "description": "qualities",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "dpis": {
+                        "description": "dpis",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "duplexModes": {
+                        "description": "duplexModes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "copiesPerJob": {
+                        "type": "object",
+                        "properties": {
+                            "start": {
+                            "description": "start",
+                            "type": "integer"
+                            },
+                            "end": {
+                            "description": "end",
+                            "type": "integer"
+                            },
+                            "minimum": {
+                            "description": "minimum",
+                            "type": "integer"
+                            },
+                            "maximum": {
+                            "description": "maximum",
+                            "type": "integer"
+                            }
+                        }
+                        },
+                        "finishings": {
+                        "description": "finishings",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "mediaColors": {
+                        "description": "mediaColors",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "mediaTypes": {
+                        "description": "mediaTypes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "mediaSizes": {
+                        "description": "mediaSizes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "pagesPerSheet": {
+                        "description": "pagesPerSheet",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "orientations": {
+                        "description": "orientations",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "outputBins": {
+                        "description": "outputBins",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "multipageLayouts": {
+                        "description": "multipageLayouts",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "colorModes": {
+                        "description": "colorModes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "inputBins": {
+                        "description": "inputBins",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "topMargins": {
+                        "description": "topMargins",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "bottomMargins": {
+                        "description": "bottomMargins",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "rightMargins": {
+                        "description": "rightMargins",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "leftMargins": {
+                        "description": "leftMargins",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                        },
+                        "collation": {
+                        "description": "collation",
+                        "type": "boolean"
+                        },
+                        "scalings": {
+                        "description": "scalings",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        }
+                    }
+                    },
+                    "microsoft.graph.printJob": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                        "description": "id",
+                        "type": "string"
+                        },
+                        "createdBy": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                            "description": "id",
+                            "type": "string"
+                            },
+                            "displayName": {
+                            "description": "displayName",
+                            "type": "string"
+                            },
+                            "ipAddress": {
+                            "description": "ipAddress",
+                            "type": "string"
+                            },
+                            "userPrincipalName": {
+                            "description": "userPrincipalName",
+                            "type": "string"
+                            },
+                            "oDataType": {
+                            "description": "oDataType",
+                            "type": "string"
+                            }
+                        }
+                        },
+                        "createdDateTime": {
+                        "description": "createdDateTime",
+                        "type": "string"
+                        },
+                        "isFetchable": {
+                        "description": "isFetchable",
+                        "type": "boolean"
+                        },
+                        "status": {
+                        "type": "object",
+                        "properties": {
+                            "processingState": {
+                            "description": "processingState",
+                            "type": "string"
+                            },
+                            "state": {
+                            "description": "state",
+                            "type": "string"
+                            },
+                            "processingStateDescription": {
+                            "description": "processingStateDescription",
+                            "type": "string"
+                            },
+                            "description": {
+                            "description": "description",
+                            "type": "string"
+                            },
+                            "wasJobAcquiredByPrinter": {
+                            "description": "wasJobAcquiredByPrinter",
+                            "type": "boolean"
+                            },
+                            "isAcquiredByPrinter": {
+                            "description": "isAcquiredByPrinter",
+                            "type": "boolean"
+                            },
+                            "details": {
+                            "description": "details",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            }
+                        }
+                        },
+                        "redirectedFrom": {
+                        "description": "redirectedFrom",
+                        "type": "string"
+                        },
+                        "redirectedTo": {
+                        "description": "redirectedTo",
+                        "type": "string"
+                        },
+                        "configuration": {
+                        "type": "object",
+                        "properties": {
+                            "pageRanges": {
+                            "description": "pageRanges",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                "start": {
+                                    "description": "start",
+                                    "type": "integer"
+                                },
+                                "end": {
+                                    "description": "end",
+                                    "type": "integer"
+                                },
+                                "minimum": {
+                                    "description": "minimum",
+                                    "type": "integer"
+                                },
+                                "maximum": {
+                                    "description": "maximum",
+                                    "type": "integer"
+                                }
+                                }
+                            }
+                            },
+                            "quality": {
+                            "description": "quality",
+                            "type": "string"
+                            },
+                            "dpi": {
+                            "description": "dpi",
+                            "type": "integer"
+                            },
+                            "feedOrientation": {
+                            "description": "feedOrientation",
+                            "type": "string"
+                            },
+                            "orientation": {
+                            "description": "orientation",
+                            "type": "string"
+                            },
+                            "duplexMode": {
+                            "description": "duplexMode",
+                            "type": "string"
+                            },
+                            "copies": {
+                            "description": "copies",
+                            "type": "integer"
+                            },
+                            "colorMode": {
+                            "description": "colorMode",
+                            "type": "string"
+                            },
+                            "inputBin": {
+                            "description": "inputBin",
+                            "type": "string"
+                            },
+                            "outputBin": {
+                            "description": "outputBin",
+                            "type": "string"
+                            },
+                            "mediaSize": {
+                            "description": "mediaSize",
+                            "type": "string"
+                            },
+                            "margin": {
+                            "type": "object",
+                            "properties": {
+                                "top": {
+                                "description": "top",
+                                "type": "integer"
+                                },
+                                "bottom": {
+                                "description": "bottom",
+                                "type": "integer"
+                                },
+                                "left": {
+                                "description": "left",
+                                "type": "integer"
+                                },
+                                "right": {
+                                "description": "right",
+                                "type": "integer"
+                                }
+                            }
+                            },
+                            "mediaType": {
+                            "description": "mediaType",
+                            "type": "string"
+                            },
+                            "finishings": {
+                            "description": "finishings",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            },
+                            "pagesPerSheet": {
+                            "description": "pagesPerSheet",
+                            "type": "integer"
+                            },
+                            "multipageLayout": {
+                            "description": "multipageLayout",
+                            "type": "string"
+                            },
+                            "collate": {
+                            "description": "collate",
+                            "type": "boolean"
+                            },
+                            "scaling": {
+                            "description": "scaling",
+                            "type": "string"
+                            },
+                            "fitPdfToPage": {
+                            "description": "fitPdfToPage",
+                            "type": "boolean"
+                            }
+                        }
+                        },
+                        "displayName": {
+                        "description": "displayName",
+                        "type": "string"
+                        },
+                        "errorCode": {
+                        "description": "errorCode",
+                        "type": "integer"
+                        },
+                        "acknowledgedDateTime": {
+                        "description": "acknowledgedDateTime",
+                        "type": "string"
+                        },
+                        "completedDateTime": {
+                        "description": "completedDateTime",
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printJobStatus": {
+                    "type": "object",
+                    "properties": {
+                        "processingState": {
+                        "description": "processingState",
+                        "type": "string"
+                        },
+                        "state": {
+                        "description": "state",
+                        "type": "string"
+                        },
+                        "processingStateDescription": {
+                        "description": "processingStateDescription",
+                        "type": "string"
+                        },
+                        "description": {
+                        "description": "description",
+                        "type": "string"
+                        },
+                        "wasJobAcquiredByPrinter": {
+                        "description": "wasJobAcquiredByPrinter",
+                        "type": "boolean"
+                        },
+                        "isAcquiredByPrinter": {
+                        "description": "isAcquiredByPrinter",
+                        "type": "boolean"
+                        },
+                        "details": {
+                        "description": "details",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        }
+                    }
+                    },
+                    "microsoft.graph.PrintDocumentUploadProperties": {
+                    "type": "object",
+                    "properties": {
+                        "contentType": {
+                        "description": "contentType",
+                        "type": "string"
+                        },
+                        "documentName": {
+                        "description": "documentName",
+                        "type": "string"
+                        },
+                        "size": {
+                        "description": "size",
+                        "type": "integer"
+                        }
+                    }
+                    },
+                    "microsoft.graph.UploadSession": {
+                    "type": "object",
+                    "properties": {
+                        "expirationDateTime": {
+                        "description": "expirationDateTime",
+                        "type": "string"
+                        },
+                        "nextExpectedRanges": {
+                        "description": "nextExpectedRanges",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "uploadUrl": {
+                        "description": "uploadUrl",
+                        "type": "string"
+                        },
+                        "oDataType": {
+                        "description": "oDataType",
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printJobConfiguration": {
+                    "type": "object",
+                    "properties": {
+                        "pageRanges": {
+                        "description": "pageRanges",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                            "start": {
+                                "description": "start",
+                                "type": "integer"
+                            },
+                            "end": {
+                                "description": "end",
+                                "type": "integer"
+                            },
+                            "minimum": {
+                                "description": "minimum",
+                                "type": "integer"
+                            },
+                            "maximum": {
+                                "description": "maximum",
+                                "type": "integer"
+                            }
+                            }
+                        }
+                        },
+                        "quality": {
+                        "description": "quality",
+                        "type": "string"
+                        },
+                        "dpi": {
+                        "description": "dpi",
+                        "type": "integer"
+                        },
+                        "feedOrientation": {
+                        "description": "feedOrientation",
+                        "type": "string"
+                        },
+                        "orientation": {
+                        "description": "orientation",
+                        "type": "string"
+                        },
+                        "duplexMode": {
+                        "description": "duplexMode",
+                        "type": "string"
+                        },
+                        "copies": {
+                        "description": "copies",
+                        "type": "integer"
+                        },
+                        "colorMode": {
+                        "description": "colorMode",
+                        "type": "string"
+                        },
+                        "inputBin": {
+                        "description": "inputBin",
+                        "type": "string"
+                        },
+                        "outputBin": {
+                        "description": "outputBin",
+                        "type": "string"
+                        },
+                        "mediaSize": {
+                        "description": "mediaSize",
+                        "type": "string"
+                        },
+                        "margin": {
+                        "type": "object",
+                        "properties": {
+                            "top": {
+                            "description": "top",
+                            "type": "integer"
+                            },
+                            "bottom": {
+                            "description": "bottom",
+                            "type": "integer"
+                            },
+                            "left": {
+                            "description": "left",
+                            "type": "integer"
+                            },
+                            "right": {
+                            "description": "right",
+                            "type": "integer"
+                            }
+                        }
+                        },
+                        "mediaType": {
+                        "description": "mediaType",
+                        "type": "string"
+                        },
+                        "finishings": {
+                        "description": "finishings",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        },
+                        "pagesPerSheet": {
+                        "description": "pagesPerSheet",
+                        "type": "integer"
+                        },
+                        "multipageLayout": {
+                        "description": "multipageLayout",
+                        "type": "string"
+                        },
+                        "collate": {
+                        "description": "collate",
+                        "type": "boolean"
+                        },
+                        "scaling": {
+                        "description": "scaling",
+                        "type": "string"
+                        },
+                        "fitPdfToPage": {
+                        "description": "fitPdfToPage",
+                        "type": "boolean"
+                        }
+                    }
+                    },
+                    "microsoft.graph.integerRange": {
+                    "type": "object",
+                    "properties": {
+                        "start": {
+                        "description": "start",
+                        "type": "integer"
+                        },
+                        "end": {
+                        "description": "end",
+                        "type": "integer"
+                        },
+                        "minimum": {
+                        "description": "minimum",
+                        "type": "integer"
+                        },
+                        "maximum": {
+                        "description": "maximum",
+                        "type": "integer"
+                        }
+                    }
+                    },
+                    "microsoft.graph.printMargin": {
+                    "type": "object",
+                    "properties": {
+                        "top": {
+                        "description": "top",
+                        "type": "integer"
+                        },
+                        "bottom": {
+                        "description": "bottom",
+                        "type": "integer"
+                        },
+                        "left": {
+                        "description": "left",
+                        "type": "integer"
+                        },
+                        "right": {
+                        "description": "right",
+                        "type": "integer"
+                        }
+                    }
+                    },
+                    "microsoft.graph.UserIdentity": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                        "description": "id",
+                        "type": "string"
+                        },
+                        "displayName": {
+                        "description": "displayName",
+                        "type": "string"
+                        },
+                        "ipAddress": {
+                        "description": "ipAddress",
+                        "type": "string"
+                        },
+                        "userPrincipalName": {
+                        "description": "userPrincipalName",
+                        "type": "string"
+                        },
+                        "oDataType": {
+                        "description": "oDataType",
+                        "type": "string"
+                        }
+                    }
+                    }
+                },
+                "parameters": {},
+                "responses": {},
+                "securityDefinitions": {},
+                "security": [],
+                "tags": []
             }
         }
     })
