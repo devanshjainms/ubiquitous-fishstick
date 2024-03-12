@@ -3026,7 +3026,7 @@ resource "azapi_resource" "symbolicname" {
 
 resource "azuread_application_redirect_uris" "web_uris" {
     application_id      = var.client_id
-    type                = "web"
+    type                = "Web"
     redirect_uris       = [
         "https://global.consent.azure-apim.net/redirect",
         format("https://logic-apis-%s.consent.azure-apim.net/redirect", var.location)
