@@ -26,21 +26,7 @@ resource "azurerm_logic_app_trigger_http_request" "logic_app_trigger" {
     name                    = "FunctionAppCallee"
     logic_app_id            = azurerm_logic_app_workflow.logic_app.id 
     method                  = "POST"
-    schema                  = <<SCHEMA
-    {
-        "type": "object",
-        "properties": {
-            "body": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    }
-                }
-            }
-        }
-    }
-    SCHEMA 
+    schema                  = data.local_file.http_trigger.content
 }
 
 resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" {

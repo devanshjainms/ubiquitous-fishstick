@@ -3024,10 +3024,6 @@ resource "azapi_resource" "symbolicname" {
     })
 }
 
-data "local_file" "apiconnection" {
-    filename            = "${path.module}/apiconnection.json"
-}
-
 resource "azurerm_resource_group_template_deployment" "apiconnection" {
     name                = format("%s%s", "upgraph-connection", lower(random_string.random.result))
     resource_group_name = azurerm_resource_group.rg.name
