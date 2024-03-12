@@ -2957,9 +2957,21 @@
 			}
 		}
 	},
+	"securityDefinitions": {
+		"oauth2-auth": {
+			"type": "oauth2",
+			"flow": "accessCode",
+			"tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+			"scopes": {},
+			"authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize"
+		}
+	},
+	"security": [
+		{
+			"oauth2-auth": []
+		}
+	],
 	"parameters": {},
 	"responses": {},
-	"securityDefinitions": {},
-	"security": [],
 	"tags": []
 }

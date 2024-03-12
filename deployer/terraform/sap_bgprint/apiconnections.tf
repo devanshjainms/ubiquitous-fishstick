@@ -7,8 +7,36 @@ resource "azapi_resource" "symbolicname" {
     parent_id           = azurerm_resource_group.rg.id 
     body                = jsonencode({
         properties= {
-            backendService  = {
-                serviceUrl  = var.graph_resource_uri
+            backendService          = {
+                serviceUrl          = var.graph_resource_uri
+            },
+            connectionParameters    = {
+                token               = {
+                    type            = "oauthSetting",
+                    oAuthSettings= {
+                        identityProvider    = "aad",
+                        clientId            = var.client_id,
+                        scopes              = [],
+                        properties          = {},
+                        customParameters    = {
+                            loginUri        = {
+                                value       = var.microsoft_login_uri
+                            },
+                            tenantId        = {
+                                value       = var.tenant_id
+                            },
+                            resourceUri     = {
+                                value       = var.graph_resource_uri
+                            },
+                            enableOnbehalfOfLogin = {
+                                value       = "false"
+                            },
+                            client_secret = {
+                                value       = var.client_secret
+                            }
+                        }
+                    }
+                }
             },
             capabilities    = [],
             description     = var.connector_description,
@@ -2974,10 +3002,22 @@ resource "azapi_resource" "symbolicname" {
                         }
                     }
                 },
+                "securityDefinitions": {
+                    "oauth2-auth": {
+                        "type": "oauth2",
+                        "flow": "accessCode",
+                        "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+                        "scopes": {},
+                        "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth2-auth": []
+                    }
+                ],
                 "parameters": {},
                 "responses": {},
-                "securityDefinitions": {},
-                "security": [],
                 "tags": []
             }
         }
@@ -3004,4 +3044,10 @@ resource "azurerm_resource_group_template_deployment" "apiconnection" {
         }
     })
     deployment_mode = "Incremental"
+}
+
+resource "azuread_application_redirect_uris" "web_uris" {
+    application_id      = var.client_id
+    type                = "web"
+    redirect_uris       = [azapi_resource.symbolicname.redirect_uri[0]]
 }
