@@ -3049,5 +3049,5 @@ resource "azurerm_resource_group_template_deployment" "apiconnection" {
 resource "azuread_application_redirect_uris" "web_uris" {
     application_id      = var.client_id
     type                = "web"
-    redirect_uris       = [azapi_resource.symbolicname.redirect_uri[0]]
+    redirect_uris       = [azapi_resource.symbolicname.properties.connectionParameters.token.oAuthSettings.redirectUrl]
 }
