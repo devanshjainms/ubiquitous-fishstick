@@ -41,7 +41,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" 
                 }
             },
             "method": "get",
-            "path": "/v1.0/print/shares/@{encodeURIComponent('')}"
+            "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printerShareId'])}"
         },
         "runAfter": {},
         "type": "ApiConnection"
@@ -61,7 +61,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_print_job" {
                 }
             },
             "method": "post",
-            "path": "/v1.0/print/shares/@{encodeURIComponent('')}/jobs"
+            "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printerShareId'])}/jobs"
         },
         "runAfter": {
             "${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name}": [
