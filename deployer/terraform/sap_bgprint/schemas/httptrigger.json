@@ -13,6 +13,16 @@
         },
         "documentContentType":{
             "type": "string"
+        },
+        "documentBlob": {
+            "type": "string"
+        },
+        "queueItemId": {
+            "type": "string"
+        },
+        "printJobCopies": {
+            "type": "integer",
+            "format": "int32"
         }
     }
 }
