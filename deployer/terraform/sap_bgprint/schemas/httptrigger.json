@@ -8,7 +8,11 @@
             "type": "string"
         },
         "documentFileSize": {
-            "type": "integer"
+            "type": "integer",
+            "format": "int32"
+        },
+        "documentContentType":{
+            "type": "string"
         }
     }
 }
