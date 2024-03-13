@@ -94,7 +94,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_upload_sessi
                         }
                     },
                     "method": "post",
-                    "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printerShareId'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['createdBy']?['id'])}/documents/@{encodeURIComponent(items('${azurerm_logic_app_action_custom.logic_app_action_create_upload_session_for_printer_share.name}')?['id'])}/createUploadSession"
+                    "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printerShareId'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['createdBy']?['id'])}/documents/@{encodeURIComponent(items('CreateUploadSessionForPrinterShareLoop')?['id'])}/createUploadSession"
                 },
                 "runAfter": {},
                 "type": "ApiConnection"
