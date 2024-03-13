@@ -98,6 +98,26 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_upload_sessi
                 },
                 "runAfter": {},
                 "type": "ApiConnection"
+            },
+            "HttpTriggerFileUpload2MicrosoftUP": {
+                "inputs": {
+                    "body": {
+                        "bytestring": "@triggerBody()?['documentBlob']",
+                        "documentName": "@{triggerBody()?['documentName']}",
+                        "fileSize": "@{triggerBody()?['documentFileSize']}",
+                        "nextExpectedRange": "@{body('CreateUploadSessionForPrinterShare')?['nextExpectedRanges']}",
+                        "uploadUrl": "@{body('CreateUploadSessionForPrinterShare')?['uploadUrl']}"
+                    },
+                    "function": {
+                        "id": "${azurerm_linux_function_app.function_app.id}/functions/FileUpload2MicrosoftUP"
+                    }
+                },
+                "runAfter": {
+                    "CreateUploadSessionForPrinterShare": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
             }
         },
         "foreach": "@body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['documents']",
@@ -107,6 +127,30 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_upload_sessi
             ]
         },
         "type": "Foreach"
+    }
+    BODY
+}
+
+resource "azurerm_logic_app_action_custom" "logic_app_action_start_print_job" {
+    name                = "StartPrintJob"
+    logic_app_id        = azurerm_logic_app_workflow.logic_app.id
+    body                = <<BODY
+    {
+        "inputs": {
+            "host": {
+                "connection": {
+                    "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
+                }
+            },
+            "method": "post",
+            "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printerShareId'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['createdBy']?['id'])}/start"
+        },
+        "runAfter": {
+            "${azurerm_logic_app_action_custom.logic_app_action_create_upload_session_for_printer_share.name}": [
+                "Succeeded"
+            ]
+        },
+        "type": "ApiConnection"
     }
     BODY
 }
