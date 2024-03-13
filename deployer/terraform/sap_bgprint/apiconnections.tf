@@ -30,9 +30,6 @@ resource "azapi_resource" "symbolicname" {
                             },
                             enableOnbehalfOfLogin = {
                                 value       = "false"
-                            },
-                            client_secret = {
-                                value       = var.client_secret
                             }
                         }
                     }
@@ -61,6 +58,7 @@ resource "azapi_resource" "symbolicname" {
                     "/v1.0/print/shares/{printerShareId}": {
                         "get": {
                             "summary": "Get printer share by id",
+                            "x-ms-visibility": "important",
                             "description": "Get printer share by id",
                             "operationId": "PrinterShares_GetPrinterShare",
                             "produces": [
@@ -690,6 +688,7 @@ resource "azapi_resource" "symbolicname" {
                     "/v1.0/print/shares/{printerShareId}/jobs": {
                         "post": {
                             "summary": "Create printer job from printer share",
+                            "x-ms-visibility": "important",
                             "description": "Create printer job from printer share",
                             "operationId": "PrinterShares_PostToJobsFromPrinterShare",
                             "consumes": [
@@ -1185,6 +1184,7 @@ resource "azapi_resource" "symbolicname" {
                     "/v1.0/print/shares/{printerShareId}/jobs/{jobId}/start": {
                         "post": {
                             "summary": "Start printer job",
+                            "x-ms-visibility": "important",
                             "description": "Start printer job",
                             "operationId": "PrinterShares_StartPrintJob",
                             "produces": [
@@ -1267,6 +1267,7 @@ resource "azapi_resource" "symbolicname" {
                     "/v1.0/print/shares/{printerShareId}/jobs/{jobId}/documents/{documentId}/createUploadSession": {
                         "post": {
                             "summary": "Create upload session for printer share",
+                            "x-ms-visibility": "important",
                             "description": "Create upload session for printer share",
                             "operationId": "PrinterShares_CreateUploadSession",
                             "consumes": [
