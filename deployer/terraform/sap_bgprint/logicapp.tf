@@ -74,7 +74,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_print_job" {
 }
 
 resource "azurerm_logic_app_action_custom" "logic_app_action_create_upload_session_for_printer_share" {
-    name                = "CreateUploadSessionForPrinterShare"
+    name                = "CreateUploadSessionForPrinterShareLoop"
     logic_app_id        = azurerm_logic_app_workflow.logic_app.id
     body                = <<BODY
     {
