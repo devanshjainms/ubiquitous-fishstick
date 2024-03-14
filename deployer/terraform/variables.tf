@@ -60,3 +60,8 @@ variable "container_registry_url" {
     description = "The url of the container registry"
     type        = string
 }
+
+variable "container_image_name" {
+    description = "The name of the container image"
+    type        = string
+}

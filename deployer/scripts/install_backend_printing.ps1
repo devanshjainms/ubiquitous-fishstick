@@ -83,6 +83,9 @@ git pull
 az acr create --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
 az acr login --name $ACR_NAME --expose-token --only-show-errors
 
+# Assign the ACR role to the service principal
+az role assignment create --assignee $ARM_CLIENT_ID --role "AcrPull" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID/resourceGroups/$CTRL_ENV_NAME-RG/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME --output none
+
 # Build the docker image using azure container registry
 az acr build --registry $ACR_NAME --image bgprinting:latest --file ./backend-printing/Dockerfile ./backend-printing --only-show-errors
 
@@ -115,6 +118,7 @@ $Env:TF_VAR_environment = $Env:SAP_ENVIRONMENT
 $Env:TF_VAR_virtual_network_id = $Env:VIRTUAL_NETWORK_ID
 $Env:TF_VAR_subnet_address_prefixes = $Env:SUBNET_ADDRESS_PREFIX
 $Env:TF_VAR_container_registry_url = $ACR_NAME + ".azurecr.io"
+$Env:TF_VAR_container_image_name = "bgprinting"
 
 # Initialize the backend
 terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
