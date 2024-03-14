@@ -83,9 +83,8 @@ git pull
 az acr create --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
 az acr login --name $ACR_NAME --expose-token --only-show-errors
 
-# Build the docker image
-docker build -t bgprinting.azurecr.io/bgprinting:latest -f ./backend-printing/Dockerfile .
-docker push bgprinting.azurecr.io/bgprinting:latest
+# Build the docker image using azure container registry
+az acr build --registry $ACR_NAME --image bgprinting:latest --file ./backend-printing/Dockerfile ./backend-printing --only-show-errors
 
 # Create resource group
 az group create --name $RESOURCE_GROUP_NAME --location eastus --only-show-errors
