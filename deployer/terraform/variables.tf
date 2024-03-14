@@ -55,3 +55,8 @@ variable "subnet_address_prefixes" {
     description = "The address prefixes for the subnet"
     type        = string
 }
+
+variable "container_registry_url" {
+    description = "The url of the container registry"
+    type        = string
+}

@@ -73,3 +73,8 @@ variable "connector_description" {
     type        = string
     default     = "Microsoft Universal Print connector"
 }
+
+variable container_registry_url {
+    description = "The url of the container registry"
+    type        = string
+}

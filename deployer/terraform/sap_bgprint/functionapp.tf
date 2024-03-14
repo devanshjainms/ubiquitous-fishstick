@@ -30,6 +30,7 @@ resource "azurerm_linux_function_app" "function_app" {
     }
     app_settings                = {
         "FUNCTIONS_WORKER_RUNTIME" = "python"
+        "DOCKER_REGISTRY_SERVER_URL" = var.container_registry_url
         "WEBSITE_NODE_DEFAULT_VERSION" = "14"
         "AZURE_CLIENT_ID" = var.client_id
         "AZURE_CLIENT_SECRET" = var.client_secret
@@ -38,5 +39,7 @@ resource "azurerm_linux_function_app" "function_app" {
         "STORAGE_QUEUE_NAME" = azurerm_storage_queue.queue.name
         "STORAGE_CONTAINER_NAME" = azurerm_storage_container.container.name
         "LOGIC_APP_URL" = azurerm_logic_app_trigger_http_request.logic_app_trigger.callback_url
+        "KEY_VAULT_NAME" = azurerm_key_vault.kv.name
+        "STORAGE_TABLE_NAME" = azurerm_storage_table.table.name
     }
 }

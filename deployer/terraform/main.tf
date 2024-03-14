@@ -17,4 +17,5 @@ module "sap_bgprint" {
     environment             = var.environment
     object_id               = var.object_id
     resource_group_tags     = var.resource_group_tags
+    container_registry_url  = var.container_registry_url
 }
