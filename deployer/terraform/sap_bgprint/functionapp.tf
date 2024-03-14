@@ -28,7 +28,6 @@ resource "azurerm_linux_function_app" "function_app" {
                 image_tag       = "latest"
                 registry_url    = var.container_registry_url
             }
-            python_version      = 3.10
         }
     }
     auth_settings {
