@@ -20,7 +20,6 @@ resource "azurerm_linux_function_app" "function_app" {
     site_config {
         vnet_route_all_enabled  = true
         container_registry_use_managed_identity = true
-        always_on               = true 
         elastic_instance_minimum = 1
         application_stack {
             docker {
