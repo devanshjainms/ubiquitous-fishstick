@@ -81,7 +81,7 @@ resource "azurerm_role_assignment" "storage" {
 }
 
 resource "azurerm_role_assignment" "acr" {
-    scope                   = "subscriptions/${var.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.ContainerRegistry/registries/${var.container_registry_url}"
+    scope                   = format("subscriptions/%s/resourceGroups/%s/providers/Microsoft.ContainerRegistry/registries/%s", var.subscription_id, azurerm_resource_group.rg.name, var.container_registry_url)
     principal_type          = "ServicePrincipal" 
     principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
     role_definition_name    = "AcrPull"
