@@ -17,6 +17,9 @@ resource "azurerm_linux_function_app" "function_app" {
     storage_account_name        = azurerm_storage_account.storage_account.name
     storage_account_access_key  = azurerm_storage_account.storage_account.primary_access_key
     https_only                  = true
+    identity {
+        type                    = "SystemAssigned"
+    }
     site_config {
         vnet_route_all_enabled  = true
         container_registry_use_managed_identity = true
@@ -27,13 +30,6 @@ resource "azurerm_linux_function_app" "function_app" {
                 image_tag       = "latest"
                 registry_url    = var.container_registry_url
             }
-        }
-    }
-    auth_settings {
-        enabled                 = true
-        microsoft {
-            client_id           = var.client_id
-            client_secret       = var.client_secret
         }
     }
     app_settings                        = {
@@ -50,4 +46,5 @@ resource "azurerm_linux_function_app" "function_app" {
         "KEY_VAULT_NAME"                = azurerm_key_vault.kv.name
         "STORAGE_TABLE_NAME"            = azurerm_storage_table.table.name
     }
+    virtual_network_subnet_id           = azurerm_subnet.subnet.id
 }
