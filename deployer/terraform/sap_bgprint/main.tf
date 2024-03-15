@@ -68,14 +68,21 @@ resource "azurerm_key_vault" "kv" {
 #assign roles to the service principal to access the key vault and storage account
 resource "azurerm_role_assignment" "keyvault" {
     scope                   = azurerm_key_vault.kv.id
-    principal_type          = "Service Principal" 
+    principal_type          = "ServicePrincipal" 
     principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
     role_definition_name    = "Key Vault Secrets Officer"
 }
 
 resource "azurerm_role_assignment" "storage" {
     scope                   = azurerm_storage_account.storage_account.id
-    principal_type          = "Service Principal" 
+    principal_type          = "ServicePrincipal" 
     principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
     role_definition_name    = "Storage Data Contributor"
+}
+
+resource "azurerm_role_assignment" "acr" {
+    scope                   = "subscriptions/${var.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.ContainerRegistry/registries/${var.container_registry_url}"
+    principal_type          = "ServicePrincipal" 
+    principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
+    role_definition_name    = "AcrPull"
 }
