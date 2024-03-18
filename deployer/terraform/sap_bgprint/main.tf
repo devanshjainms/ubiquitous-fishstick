@@ -79,3 +79,10 @@ resource "azurerm_role_assignment" "storage" {
     principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
     role_definition_name    = "Storage Account Contributor"
 }
+
+resource "azurerm_role_assignment" "acr" {
+    scope                   = "/subscriptions/${var.subscription_id}/resourceGroups/CTRL-RG"
+    principal_type          = "ServicePrincipal" 
+    principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
+    role_definition_name    = "AcrPull"
+}
