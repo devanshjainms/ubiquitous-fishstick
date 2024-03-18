@@ -66,7 +66,6 @@ az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administ
 
 #add redirect uri to the app registration
 az ad app update --id $ARM_CLIENT_ID --web-redirect-uris "https://global.consent.azure-apim.net/redirect"
-az ad app update --id $ARM_CLIENT_ID --web-redirect-uris "https://logic-apis-eastus2.consent.azure-apim.net/redirect"
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
@@ -84,7 +83,7 @@ az acr create --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic
 az acr login --name $ACR_NAME --expose-token --only-show-errors
 
 # Assign the ACR role to the service principal
-az role assignment create --assignee $ARM_CLIENT_ID --role "AcrPull" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID/resourceGroups/$CTRL_ENV_NAME-RG/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME --output none
+az role assignment create --assignee $ARM_CLIENT_ID --role acrpull --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID/resourceGroups/$CTRL_ENV_NAME-RG/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME
 
 # Build the docker image using azure container registry
 az acr build --registry $ACR_NAME --image bgprinting:latest --file ./backend-printing/Dockerfile ./backend-printing --only-show-errors

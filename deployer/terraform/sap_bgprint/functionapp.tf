@@ -1,34 +1,36 @@
 # DO NOT MODIFY THESE RESOURCES
 # Import the existing app service plan
 resource "azurerm_service_plan" "app_service_plan" {
-    name                        = format("%s-%s-appserviceplan", lower(var.environment), lower(var.location))
-    location                    = azurerm_resource_group.rg.location
-    resource_group_name         = azurerm_resource_group.rg.name
-    os_type                     = "Linux" 
-    sku_name                    = "EP1"
+    name                                = format("%s-%s-appserviceplan", lower(var.environment), lower(var.location))
+    location                            = azurerm_resource_group.rg.location
+    resource_group_name                 = azurerm_resource_group.rg.name
+    os_type                             = "Linux" 
+    sku_name                            = "EP1"
 }
 
 # Import the existing function app
 resource "azurerm_linux_function_app" "function_app" {
-    name                        = format("%s-%s-functionapp", lower(var.environment), lower(var.location))
-    location                    = azurerm_resource_group.rg.location
-    resource_group_name         = azurerm_resource_group.rg.name
-    service_plan_id             = azurerm_service_plan.app_service_plan.id
-    storage_account_name        = azurerm_storage_account.storage_account.name
-    storage_account_access_key  = azurerm_storage_account.storage_account.primary_access_key
-    https_only                  = true
+    name                                = format("%s-%s-functionapp", lower(var.environment), lower(var.location))
+    location                            = azurerm_resource_group.rg.location
+    resource_group_name                 = azurerm_resource_group.rg.name
+    service_plan_id                     = azurerm_service_plan.app_service_plan.id
+    storage_account_name                = azurerm_storage_account.storage_account.name
+    storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
+    https_only                          = true
     identity {
-        type                    = "SystemAssigned"
+        type                            = "SystemAssigned"
     }
     site_config {
-        vnet_route_all_enabled  = true
+        vnet_route_all_enabled          = true
         container_registry_use_managed_identity = true
-        elastic_instance_minimum = 1
+        elastic_instance_minimum        = 1
         application_stack {
             docker {
-                image_name      = var.container_image_name
-                image_tag       = "latest"
-                registry_url    = var.container_registry_url
+                image_name              = var.container_image_name
+                image_tag               = "latest"
+                registry_url            = var.container_registry_url
+                registry_username       = var.client_id
+                registry_password       = var.client_secret
             }
         }
     }
