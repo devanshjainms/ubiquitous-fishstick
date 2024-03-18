@@ -5,13 +5,6 @@ resource "azurerm_resource_group" "rg" {
     tags                        = var.resource_group_tags
 }
 
-# Import the existing managed identity
-resource "azurerm_user_assigned_identity" "msi" {
-    name                        = format("%s-%s-msi", lower(var.environment), lower(var.location))
-    resource_group_name         = azurerm_resource_group.rg.name
-    location                    = azurerm_resource_group.rg.location
-}
-
 #create a subnet in the virtual network
 resource "azurerm_subnet" "subnet" {
     name                        = format("bgprint-subnet")
