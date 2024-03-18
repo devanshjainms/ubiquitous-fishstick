@@ -4,7 +4,7 @@
 import os
 from azure.identity import ClientSecretCredential
 from azure.keyvault.secrets import SecretClient
-from azure.storage.queue import QueueClient, QueueMessage
+from azure.storage.queue import QueueClient
 from azure.data.tables import TableServiceClient
 from helper.constants import KEY_VAULT_URL
 

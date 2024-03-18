@@ -5,6 +5,7 @@ Azure Function to validate connection to SAP system and store the connection det
 import json
 import azure.functions as func
 from helper.backend_print import BackendPrint
+import logging
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
@@ -15,6 +16,8 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         req (func.TimerRequest)
         context (func.Context)
     """
-
+    logging.info('Python HTTP trigger function processed a request.')
     response = BackendPrint().validation_engine(req.get_json())
+    logging.info(f'Python HTTP trigger function processed a request. {response}')
+
     return func.HttpResponse(json.dumps(response), status_code=200)
