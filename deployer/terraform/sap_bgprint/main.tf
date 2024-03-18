@@ -81,7 +81,7 @@ resource "azurerm_role_assignment" "storage" {
 }
 
 resource "azurerm_role_assignment" "acr" {
-    scope                   = var.subscription_id
+    scope                   = format("subscriptions/%s/resourceGroups/%s", var.subscription_id, azurerm_resource_group.rg.name)
     principal_type          = "ServicePrincipal" 
     principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
     role_definition_name    = "AcrPull"
