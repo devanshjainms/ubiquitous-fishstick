@@ -5,11 +5,6 @@ output "resource_group_id" {
     value       = module.sap_bgprint.resource_group_id
 }
 
-output "managed_identity_id" {
-    description = "The id of the managed identity"
-    value       = module.sap_bgprint.managed_identity_id
-}
-
 output "key_vault_id" {
     description = "The id of the key vault"
     value       = module.sap_bgprint.key_vault_id
