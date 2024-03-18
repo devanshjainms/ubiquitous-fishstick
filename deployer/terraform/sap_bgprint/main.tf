@@ -77,7 +77,7 @@ resource "azurerm_role_assignment" "storage" {
     scope                   = azurerm_storage_account.storage_account.id
     principal_type          = "ServicePrincipal" 
     principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
-    role_definition_name    = "Storage Data Contributor"
+    role_definition_name    = "Storage Account Contributor"
 }
 
 resource "azurerm_role_assignment" "acr" {
