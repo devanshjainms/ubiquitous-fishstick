@@ -24,8 +24,9 @@ resource "azurerm_linux_function_app" "function_app" {
     resource_group_name                 = azurerm_resource_group.rg.name
     service_plan_id                     = azurerm_app_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
-    storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
-    
+    storage_uses_managed_identity       = true
+    webdeploy_publish_basic_authentication_enabled = true
+    ftp_publish_basic_authentication_enabled = true
     https_only                          = true
     virtual_network_subnet_id           = azurerm_subnet.subnet.id
     identity {
@@ -33,16 +34,15 @@ resource "azurerm_linux_function_app" "function_app" {
     }
     site_config {
         ftps_state                      = "FtpsOnly"
-        scm_ip_restriction_default_action = "Deny"
-        ip_restriction_default_action   = "Deny"
         vnet_route_all_enabled          = true
-        container_registry_use_managed_identity = false
+        container_registry_use_managed_identity = true
         elastic_instance_minimum        = 1
         cors {
             allowed_origins             = ["https://portal.azure.com"]
             support_credentials         = false
         }
         application_stack {
+            python_version              = "3.10" 
             docker {
                 image_name              = var.container_image_name
                 image_tag               = "latest"
