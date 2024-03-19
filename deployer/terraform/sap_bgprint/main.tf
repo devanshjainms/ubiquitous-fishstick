@@ -5,6 +5,32 @@ resource "azurerm_resource_group" "rg" {
     tags                        = var.resource_group_tags
 }
 
+# create msi for the function app to access the key vault and storage account
+resource "azurerm_user_assigned_identity" "msi" {
+    name                        = format("%s%s%s", lower(var.environment), lower(var.location), lower("msi"))
+    location                    = azurerm_resource_group.rg.location 
+    resource_group_name         = azurerm_resource_group.rg.name
+}
+
+#assign roles to the msi to access the key vault and storage account
+resource "azurerm_role_assignment" "keyvault" {
+    scope                   = azurerm_key_vault.kv.id
+    principal_id            = azurerm_user_assigned_identity.msi.principal_id
+    role_definition_name    = "Key Vault Secrets Officer"
+}
+
+resource "azurerm_role_assignment" "storage" {
+    scope                   = azurerm_storage_account.storage_account.id
+    principal_id            = azurerm_user_assigned_identity.msi.principal_id
+    role_definition_name    = "Storage Account Contributor"
+}
+
+resource "azurerm_role_assignment" "acr" {
+    scope                   = "/subscriptions/${var.subscription_id}/resourceGroups/${var.control_plane_rg}"
+    principal_id            = azurerm_user_assigned_identity.msi.principal_id
+    role_definition_name    = "AcrPull"
+}
+
 #create a subnet in the virtual network
 resource "azurerm_subnet" "subnet" {
     name                        = format("bgprint-subnet")
@@ -27,11 +53,11 @@ resource "azurerm_key_vault" "kv" {
     location                    = azurerm_resource_group.rg.location
     enabled_for_disk_encryption = true
     purge_protection_enabled    = false
-    tenant_id                   = var.tenant_id
+    tenant_id                   = azurerm_user_assigned_identity.msi.tenant_id
     sku_name                    = "standard"
     access_policy {
-        tenant_id               = var.tenant_id
-        object_id               = var.object_id
+        tenant_id               = azurerm_user_assigned_identity.msi.tenant_id
+        object_id               = azurerm_user_assigned_identity.msi.principal_id
         secret_permissions      = [
             "Get",
             "List",
@@ -57,24 +83,3 @@ resource "azurerm_key_vault" "kv" {
 }
 
 
-#assign roles to the service principal to access the key vault and storage account
-resource "azurerm_role_assignment" "keyvault" {
-    scope                   = azurerm_key_vault.kv.id
-    principal_type          = "ServicePrincipal" 
-    principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
-    role_definition_name    = "Key Vault Secrets Officer"
-}
-
-resource "azurerm_role_assignment" "storage" {
-    scope                   = azurerm_storage_account.storage_account.id
-    principal_type          = "ServicePrincipal" 
-    principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
-    role_definition_name    = "Storage Account Contributor"
-}
-
-resource "azurerm_role_assignment" "acr" {
-    scope                   = "/subscriptions/${var.subscription_id}/resourceGroups/CTRL-RG"
-    principal_type          = "ServicePrincipal" 
-    principal_id            = azurerm_linux_function_app.function_app.identity[0].principal_id
-    role_definition_name    = "AcrPull"
-}

@@ -23,7 +23,8 @@ resource "azurerm_linux_function_app" "function_app" {
     https_only                          = true
     virtual_network_subnet_id           = azurerm_subnet.subnet.id
     identity {
-        type                            = "SystemAssigned"
+        type                            = "UserAssigned"
+        identity_ids                    = [azurerm_user_assigned_identity.msi.id]
     }
     site_config {
         container_registry_use_managed_identity = true
@@ -34,16 +35,6 @@ resource "azurerm_linux_function_app" "function_app" {
             allowed_origins             = ["https://portal.azure.com"]
             support_credentials         = false
         }
-        # ip_restriction {
-        #     action                      = "Allow"
-        #     virtual_network_subnet_id   = azurerm_subnet.subnet.id
-        # }
-        # scm_ip_restriction {
-        #     action                      = "Allow"
-        #     virtual_network_subnet_id   = azurerm_subnet.subnet.id 
-        # }
-        # ip_restriction_default_action   = "Allow"
-        # scm_ip_restriction_default_action = "Allow"
         application_stack {
             docker {
                 image_name              = var.container_image_name
@@ -67,9 +58,8 @@ resource "azurerm_linux_function_app" "function_app" {
         "DOCKER_REGISTRY_SERVER_USERNAME" = null
         "DOCKER_REGISTRY_SERVER_PASSWORD" = null
         "WEBSITE_NODE_DEFAULT_VERSION"  = "14"
-        "AZURE_CLIENT_ID"               = var.client_id
-        "AZURE_CLIENT_SECRET"           = var.client_secret
-        "AZURE_TENANT_ID"               = var.tenant_id
+        "MSI_CLIENT_ID"                 = azurerm_user_assigned_identity.msi.client_id
+        "AZURE_TENANT_ID"               = azurerm_user_assigned_identity.msi.tenant_id
         "STORAGE_ACCESS_KEY"            = azurerm_storage_account.storage_account.primary_connection_string
         "STORAGE_QUEUE_NAME"            = azurerm_storage_queue.queue.name
         "STORAGE_CONTAINER_NAME"        = azurerm_storage_container.container.name

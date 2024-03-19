@@ -19,4 +19,5 @@ module "sap_bgprint" {
     resource_group_tags     = var.resource_group_tags
     container_registry_url  = var.container_registry_url
     container_image_name    = var.container_image_name
+    control_plane_rg        = var.control_plane_rg
 }

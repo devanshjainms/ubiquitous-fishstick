@@ -83,3 +83,8 @@ variable "container_image_name" {
     description = "The name of the container image"
     type        = string
 }
+
+variable "control_plane_rg" {
+    description = "The name of the control plane resource group"
+    type        = string
+}

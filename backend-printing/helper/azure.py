@@ -2,7 +2,7 @@
 """
 
 import os
-from azure.identity import ClientSecretCredential
+from azure.identity import ManagedIdentityCredential
 from azure.keyvault.secrets import SecretClient
 from azure.storage.queue import QueueClient
 from azure.data.tables import TableServiceClient
@@ -11,10 +11,8 @@ from helper.constants import KEY_VAULT_URL
 
 class AzureClient:
     def __init__(self):
-        self._credential = ClientSecretCredential(
-            client_id=os.environ["AZURE_CLIENT_ID"],
-            client_secret=os.environ["AZURE_CLIENT_SECRET"],
-            tenant_id=os.environ["AZURE_TENANT_ID"],
+        self._credential = ManagedIdentityCredential(
+            client_id=os.environ["MSI_CLIENT_ID"]
         )
 
         self.storage_queue_client = QueueClient.from_connection_string(
