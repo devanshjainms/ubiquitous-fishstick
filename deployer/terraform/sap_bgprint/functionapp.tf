@@ -34,14 +34,16 @@ resource "azurerm_linux_function_app" "function_app" {
             allowed_origins             = ["https://portal.azure.com"]
             support_credentials         = false
         }
-        ip_restriction {
-            action                      = "Allow"
-        }
-        scm_ip_restriction {
-            action                      = "Allow"
-        }
-        ip_restriction_default_action   = "Allow"
-        scm_ip_restriction_default_action = "Allow"
+        # ip_restriction {
+        #     action                      = "Allow"
+        #     virtual_network_subnet_id   = azurerm_subnet.subnet.id
+        # }
+        # scm_ip_restriction {
+        #     action                      = "Allow"
+        #     virtual_network_subnet_id   = azurerm_subnet.subnet.id 
+        # }
+        # ip_restriction_default_action   = "Allow"
+        # scm_ip_restriction_default_action = "Allow"
         application_stack {
             docker {
                 image_name              = var.container_image_name
