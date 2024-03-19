@@ -22,7 +22,7 @@ resource "azurerm_linux_function_app" "function_app" {
     name                                = format("%s-%s-functionapp", lower(var.environment), lower(var.location))
     location                            = azurerm_resource_group.rg.location
     resource_group_name                 = azurerm_resource_group.rg.name
-    service_plan_id                     = azurerm_service_plan.app_service_plan.id
+    service_plan_id                     = azurerm_app_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
     storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
     
