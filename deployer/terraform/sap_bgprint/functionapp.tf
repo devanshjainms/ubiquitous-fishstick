@@ -51,7 +51,6 @@ resource "azurerm_linux_function_app" "function_app" {
         ip_restriction_default_action = "Allow"
         scm_ip_restriction_default_action = "Allow"
         application_stack {
-            python_version              = "3.10" 
             docker {
                 image_name              = var.container_image_name
                 image_tag               = "latest"
