@@ -1,11 +1,20 @@
 # DO NOT MODIFY THESE RESOURCES
 # Import the existing app service plan
-resource "azurerm_service_plan" "app_service_plan" {
-    name                                = format("%s-%s-appserviceplan", lower(var.environment), lower(var.location))
-    location                            = azurerm_resource_group.rg.location
-    resource_group_name                 = azurerm_resource_group.rg.name
-    os_type                             = "Linux" 
-    sku_name                            = "EP1"
+
+resource "azurerm_app_service_plan" "app_service_plan" {
+    name                = format("%s-%s-appserviceplan", lower(var.environment), lower(var.location))
+    location            = azurerm_resource_group.rg.location
+    resource_group_name = azurerm_resource_group.rg.name
+    kind                = "elastic"
+    reserved            = true
+    is_xenon            = false
+    zone_redundant      = false
+    maximum_elastic_worker_count = 5
+    sku {
+        tier = "ElasticPremium"
+        size = "EP1"
+        capacity = 1
+    }
 }
 
 # Import the existing function app
@@ -16,15 +25,23 @@ resource "azurerm_linux_function_app" "function_app" {
     service_plan_id                     = azurerm_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
     storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
-    # https_only                          = true
+    
+    https_only                          = true
     # virtual_network_subnet_id           = azurerm_subnet.subnet.id
     identity {
-        type                            = "SystemAssigned"
+        type                            = "None"
     }
     site_config {
+        ftps_state                      = "FtpsOnly"
+        scm_ip_restriction_default_action = "Deny"
+        ip_restriction_default_action   = "Deny"
         # vnet_route_all_enabled          = true
-        container_registry_use_managed_identity = true
+        container_registry_use_managed_identity = false
         elastic_instance_minimum        = 1
+        cors {
+            allowed_origins             = ["https://portal.azure.com"]
+            support_credentials         = false
+        }
         application_stack {
             docker {
                 image_name              = var.container_image_name
