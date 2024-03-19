@@ -180,6 +180,7 @@ class BackendPrint:
         Temporary work around:
         Since the authorization using SPN is not available for the universal print,
         """
+        messages = []
         try:
             messages = [
                 ast.literal_eval(message.content)

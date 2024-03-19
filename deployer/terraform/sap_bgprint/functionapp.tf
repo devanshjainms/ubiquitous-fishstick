@@ -16,26 +16,26 @@ resource "azurerm_linux_function_app" "function_app" {
     service_plan_id                     = azurerm_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
     storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
-    https_only                          = true
-    virtual_network_subnet_id           = azurerm_subnet.subnet.id
+    # https_only                          = true
+    # virtual_network_subnet_id           = azurerm_subnet.subnet.id
     identity {
         type                            = "SystemAssigned"
     }
     site_config {
-        vnet_route_all_enabled          = true
+        # vnet_route_all_enabled          = true
         container_registry_use_managed_identity = true
         elastic_instance_minimum        = 1
         application_stack {
             docker {
                 image_name              = var.container_image_name
                 image_tag               = "latest"
-                registry_url            = var.container_registry_url
+                registry_url            = format("https://%s", var.container_registry_url)
             }
         }
     }
     app_settings                        = {
         "FUNCTIONS_WORKER_RUNTIME"      = "python"
-        "DOCKER_REGISTRY_SERVER_URL"    = var.container_registry_url
+        "DOCKER_REGISTRY_SERVER_URL"    = format("https://%s", var.container_registry_url)
         "WEBSITE_NODE_DEFAULT_VERSION"  = "14"
         "AZURE_CLIENT_ID"               = var.client_id
         "AZURE_CLIENT_SECRET"           = var.client_secret
