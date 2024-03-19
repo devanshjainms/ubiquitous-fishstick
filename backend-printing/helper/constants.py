@@ -1,6 +1,6 @@
 """Constants for the project"""
 
-BASE_URL = "https://%s/sap/opu/odata/sap/API_CLOUD_PRINT_PULL_SRV/"
+BASE_URL = "%s/sap/opu/odata/sap/API_CLOUD_PRINT_PULL_SRV/"
 KEY_VAULT_URL = "https://%s.vault.azure.net/"
 
 # API methods in the API_CLOUD_PRINT_PULL_SRV
