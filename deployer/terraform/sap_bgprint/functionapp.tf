@@ -17,7 +17,7 @@ resource "azurerm_linux_function_app" "function_app" {
     resource_group_name                 = azurerm_resource_group.rg.name
     service_plan_id                     = azurerm_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
-    storage_uses_managed_identity       = azurerm_storage_account.storage_account.primary_access_key
+    storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
     functions_extension_version         = "~4"
     client_certificate_mode             = "Required"
     https_only                          = true
