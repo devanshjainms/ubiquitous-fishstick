@@ -41,11 +41,9 @@ resource "azurerm_linux_function_app" "function_app" {
             support_credentials         = false
         }
         ip_restriction {
-            ip_address                  = "Any"
             action                      = "Allow"
         }
         scm_ip_restriction {
-            ip_address                  = "Any"
             action                      = "Allow"
         }
         ip_restriction_default_action = "Allow"
