@@ -1,20 +1,15 @@
 # DO NOT MODIFY THESE RESOURCES
 # Import the existing app service plan
 
-resource "azurerm_app_service_plan" "app_service_plan" {
-    name                = format("%s-%s-appserviceplan", lower(var.environment), lower(var.location))
-    location            = azurerm_resource_group.rg.location
-    resource_group_name = azurerm_resource_group.rg.name
-    kind                = "elastic"
-    reserved            = true
-    is_xenon            = false
-    zone_redundant      = false
-    maximum_elastic_worker_count = 5
-    sku {
-        tier = "ElasticPremium"
-        size = "EP1"
-        capacity = 1
-    }
+resource "azurerm_service_plan" "app_service_plan" {
+    name                                = format("%s-%s-appserviceplan", lower(var.environment), lower(var.location))
+    location                            = azurerm_resource_group.rg.location
+    resource_group_name                 = azurerm_resource_group.rg.name
+    kind                                = "elastic"
+    reserved                            = true
+    sku_name                            = "EP1"
+    os_type                             = "Linux"
+    maximum_elastic_worker_count        = 5
 }
 
 # Import the existing function app
@@ -22,7 +17,7 @@ resource "azurerm_linux_function_app" "function_app" {
     name                                = format("%s-%s-functionapp", lower(var.environment), lower(var.location))
     location                            = azurerm_resource_group.rg.location
     resource_group_name                 = azurerm_resource_group.rg.name
-    service_plan_id                     = azurerm_app_service_plan.app_service_plan.id
+    service_plan_id                     = azurerm_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
     storage_uses_managed_identity       = true
     client_certificate_mode             = "Required"
@@ -46,7 +41,7 @@ resource "azurerm_linux_function_app" "function_app" {
         scm_ip_restriction {
             action                      = "Allow"
         }
-        ip_restriction_default_action = "Allow"
+        ip_restriction_default_action   = "Allow"
         scm_ip_restriction_default_action = "Allow"
         application_stack {
             docker {
