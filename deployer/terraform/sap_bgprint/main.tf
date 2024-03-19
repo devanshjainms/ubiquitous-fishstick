@@ -61,24 +61,15 @@ resource "azurerm_key_vault" "kv" {
         secret_permissions      = [
             "Get",
             "List",
-            "Set"
+            "Set",
+            "Delete",
+            "Purge"
         ]
-        key_permissions         = [
-            "Get",
-            "List",
-            "Create"
-        ]    
     }
     public_network_access_enabled = false
     network_acls {
         default_action          = "Deny"
         bypass                  = "AzureServices"
-    }
-    lifecycle {
-        ignore_changes = [
-            access_policy,
-            network_acls
-        ]
     }
 }
 
