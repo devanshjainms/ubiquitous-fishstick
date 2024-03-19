@@ -56,8 +56,6 @@ class SAPPrintClient:
             response_object.raise_for_status()
             return json.loads(response_object.text)
         except Exception as e:
-            if e.response.status_code == 400:
-                return ""
             raise Exception(f"Error occurred while calling SAP API: {e}")
 
     def _get_number_of_print_items(self, queue_name):
@@ -75,8 +73,6 @@ class SAPPrintClient:
             )
             return response["d"]["NrOfNewItems"] if response else 0
         except Exception as e:
-            if e.response.status_code == 400:
-                return None
             raise Exception(f"Error occurred while getting number of print items: {e}")
 
     def find_print_queue(self, queue_name):

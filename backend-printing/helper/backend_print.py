@@ -5,6 +5,7 @@ This module contains the interface for the helper module and azure functions.
 import ast
 import os
 import json
+import logging
 from dataclasses import asdict
 from marshmallow_dataclass import class_schema
 from helper.constants import SAP_CONFIG_KEY_VAULT_KEY, DOCUMENT_CONTENT_TYPE
@@ -20,8 +21,9 @@ from helper.universal_print_client import (
 
 
 class BackendPrint:
-    def __init__(self) -> None:
-        # self.logger = logger
+    def __init__(self, logger: logging, log_tag: str) -> None:
+        self.logger = logger
+        self.log_tag = log_tag
         self.sap_systems = []
 
     def _load_schema(self, sap_config: dict):
@@ -108,7 +110,9 @@ class BackendPrint:
             for queue in sap_queues:
                 if not print_client.find_print_queue(queue):
                     return {"status": "error", "message": "Incorrect queue information"}
-
+            self.logger.info(
+                f"[{self.log_tag}] SAP connection validated, saving to key vault"
+            )
             KeyVault().set_kv_secrets(
                 secret_key=SAP_CONFIG_KEY_VAULT_KEY
                 % (
@@ -119,6 +123,9 @@ class BackendPrint:
             )
             return {"status": "success", "message": "SAP connection validated"}
         except Exception as e:
+            self.logger.error(
+                f"[{self.log_tag}] Error occurred while validating SAP connection: {e}"
+            )
             return {"status": "error", "message": str(e)}
 
     def fetch_print_items_from_sap(self):
@@ -129,6 +136,7 @@ class BackendPrint:
         print_messages = []
         try:
             self._get_sap_config()
+            self.logger.info(f"[{self.log_tag}] Fetched sap config from key vault")
             for sap_system in self.sap_systems:
                 sap_client = SAPPrintClient(sap_system)
                 if sap_system.sap_print_queues is not None:
@@ -144,6 +152,10 @@ class BackendPrint:
                             else []
                         )
 
+                        self.logger.info(
+                            f"[{self.log_tag}] Fetched {len(print_items_from_queue)} items from the "
+                            + f" SAP queue for {sap_system.sap_sid}"
+                        )
                         for print_item in print_items_from_queue:
                             queue_item_params = json.loads(print_item["QItemParams"])
                             for document in json.loads(print_item["Documents"]):
@@ -173,6 +185,9 @@ class BackendPrint:
                 )
 
         except Exception as e:
+            self.logger.error(
+                f"[{self.log_tag}] Error occurred while fetching SAP config from the Key Vault: {e}"
+            )
             return {"status": "error", "message": "Error occurred while fetching items"}
 
     def send_print_items_to_universal_print(self):
@@ -186,12 +201,18 @@ class BackendPrint:
                 ast.literal_eval(message.content)
                 for message in StorageQueueClient().receive_messages()
             ]
+            self.logger.info(
+                f"[{self.log_tag}] Fetched items {len(messages)} from the storage account"
+            )
             for message in messages:
                 response = UniversalPrintUsingLogicApp.call_logic_app(
                     message["print_item"]
                 )
                 return response
-        except json.JSONDecodeError as je:
+        except json.JSONDecodeError as e:
+            self.logger.error(
+                f"[{self.log_tag}] Error occurred decoding fetched items: {e}"
+            )
             return {
                 "status": "error",
                 "message": "Error occurred decoding fetched items",
@@ -201,6 +222,9 @@ class BackendPrint:
                 print_messages=messages,
                 status=PrintItemStatus.ERROR.value,
                 error_message=str(e),
+            )
+            self.logger.error(
+                f"[{self.log_tag}] Error occurred while sending print jobs  to the storage account: {e}"
             )
             return {"status": "error", "message": "Error occurred while fetching items"}
 
@@ -216,4 +240,7 @@ class BackendPrint:
         try:
             return UniversalPrintClient().upload_document(request_body)
         except Exception as e:
+            self.logger.error(
+                f"[{self.log_tag}] Error occurred while uploading document to the universal print server: {e}"
+            )
             return {"status": "error", "message": "Error occurred while fetching items"}

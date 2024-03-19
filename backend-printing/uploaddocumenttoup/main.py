@@ -15,6 +15,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     Returns:
         func.HttpResponse: Response object sent back to the logic app
     """
-    logging.info("Python HTTP trigger function processed a request.")
+    logging.Logger.info("Python HTTP trigger function processed a request.")
 
-    BackendPrint().upload_document_to_universal_print()
+    BackendPrint(
+        logger=logging, log_tag="UploadDocumentToUP"
+    ).upload_document_to_universal_print()

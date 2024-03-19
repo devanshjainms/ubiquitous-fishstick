@@ -16,8 +16,9 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         req (func.TimerRequest)
         context (func.Context)
     """
-    logging.info('Python HTTP trigger function processed a request.')
-    response = BackendPrint().validation_engine(req.get_json())
-    logging.info(f'Python HTTP trigger function processed a request. {response}')
+    logging.info("Python HTTP trigger function processed a request.")
+    response = BackendPrint(
+        logger=logging, log_tag="Validator"
+    ).validation_engine(req.get_json())
 
     return func.HttpResponse(json.dumps(response), status_code=200)
