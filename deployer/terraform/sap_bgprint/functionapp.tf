@@ -20,16 +20,14 @@ resource "azurerm_linux_function_app" "function_app" {
     storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
     functions_extension_version         = "~4"
     client_certificate_mode             = "Required"
-    https_only                          = true
     virtual_network_subnet_id           = azurerm_subnet.subnet.id
-    ftp_publish_basic_authentication_enabled = false
-    webdeploy_publish_basic_authentication_enabled = true
     identity {
         type                            = "UserAssigned"
         identity_ids                    = [azurerm_user_assigned_identity.msi.id]
     }
     site_config {
         container_registry_use_managed_identity = true
+        container_registry_managed_identity_client_id = azurerm_user_assigned_identity.msi.client_id
         ftps_state                      = "FtpsOnly"
         vnet_route_all_enabled          = true
         elastic_instance_minimum        = 1
