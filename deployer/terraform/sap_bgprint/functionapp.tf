@@ -51,8 +51,7 @@ resource "azurerm_linux_function_app" "function_app" {
         "AzureFunctionsJobHost__Logging__Console__LogLevel__Default" = "Information"
         "FUNCTIONS_WORKER_RUNTIME"      = "python"
         "FUNCTIONS_EXTENSION_VERSION"   = "~4"
-        "WEBSITE_WEBDEPLOY_USE_SCM"     = true
-        "WEBSITES_ENABLE_APP_SERVICE_STORAGE"                        = false
+        "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = false
         "DOCKER_REGISTRY_SERVER_URL"    = format("https://%s", var.container_registry_url)
         "DOCKER_CUSTOM_IMAGE_NAME"      = "bgprinting:latest"
         "DOCKER_REGISTRY_SERVER_USERNAME" = null
