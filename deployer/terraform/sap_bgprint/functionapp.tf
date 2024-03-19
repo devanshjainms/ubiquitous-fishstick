@@ -27,15 +27,15 @@ resource "azurerm_linux_function_app" "function_app" {
     storage_account_access_key          = azurerm_storage_account.storage_account.primary_access_key
     
     https_only                          = true
-    # virtual_network_subnet_id           = azurerm_subnet.subnet.id
+    virtual_network_subnet_id           = azurerm_subnet.subnet.id
     identity {
-        type                            = "None"
+        type                            = "SystemAssigned"
     }
     site_config {
         ftps_state                      = "FtpsOnly"
         scm_ip_restriction_default_action = "Deny"
         ip_restriction_default_action   = "Deny"
-        # vnet_route_all_enabled          = true
+        vnet_route_all_enabled          = true
         container_registry_use_managed_identity = false
         elastic_instance_minimum        = 1
         cors {
