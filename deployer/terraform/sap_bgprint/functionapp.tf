@@ -25,8 +25,7 @@ resource "azurerm_linux_function_app" "function_app" {
     service_plan_id                     = azurerm_app_service_plan.app_service_plan.id
     storage_account_name                = azurerm_storage_account.storage_account.name
     storage_uses_managed_identity       = true
-    webdeploy_publish_basic_authentication_enabled = true
-    ftp_publish_basic_authentication_enabled = true
+    client_certificate_mode             = "Required"
     https_only                          = true
     virtual_network_subnet_id           = azurerm_subnet.subnet.id
     identity {
@@ -41,6 +40,16 @@ resource "azurerm_linux_function_app" "function_app" {
             allowed_origins             = ["https://portal.azure.com"]
             support_credentials         = false
         }
+        ip_restriction {
+            ip_address                  = "Any"
+            action                      = "Allow"
+        }
+        scm_ip_restriction {
+            ip_address                  = "Any"
+            action                      = "Allow"
+        }
+        ip_restriction_default_action = "Allow"
+        scm_ip_restriction_default_action = "Allow"
         application_stack {
             python_version              = "3.10" 
             docker {
