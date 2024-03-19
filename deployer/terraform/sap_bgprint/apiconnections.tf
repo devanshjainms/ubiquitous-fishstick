@@ -1,7 +1,7 @@
 # Logic app custom connector
-resource "azapi_resource" "symbolicname" {
+resource "azapi_resource" "custom_connector" {
     type                = "Microsoft.Web/customApis@2016-06-01"
-    name                = format("%s-%s", lower(random_string.random.result), lower(var.location))
+    name                = format("%s-%s", lower(var.location), lower(random_string.random.result))
     location            = var.location
     schema_validation_enabled = false
     parent_id           = azurerm_resource_group.rg.id 
@@ -2538,7 +2538,7 @@ resource "azurerm_resource_group_template_deployment" "apiconnection" {
             value       = format("%s%s", "upgraph-connection", lower(random_string.random.result))
         },
         "custom_api_resourceid" = {
-            value       = azapi_resource.symbolicname.id
+            value       = azapi_resource.custom_connector.id
         },
         "location"      = {
             value       = var.location
