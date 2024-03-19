@@ -22,6 +22,8 @@ resource "azurerm_linux_function_app" "function_app" {
     client_certificate_mode             = "Required"
     https_only                          = true
     virtual_network_subnet_id           = azurerm_subnet.subnet.id
+    ftp_publish_basic_authentication_enabled = false
+    webdeploy_publish_basic_authentication_enabled = true
     identity {
         type                            = "UserAssigned"
         identity_ids                    = [azurerm_user_assigned_identity.msi.id]
