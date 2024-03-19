@@ -47,7 +47,6 @@ resource "azurerm_key_vault" "kv" {
     network_acls {
         default_action          = "Deny"
         bypass                  = "AzureServices"
-        virtual_network_subnet_ids = [azurerm_subnet.subnet.id]
     }
     lifecycle {
         ignore_changes = [
