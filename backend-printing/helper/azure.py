@@ -11,7 +11,9 @@ from helper.constants import KEY_VAULT_URL
 
 class AzureClient:
     def __init__(self):
-        self._credential = ManagedIdentityCredential()
+        self._credential = ManagedIdentityCredential(
+            client_id=os.environ["MSI_CLIENT_ID"]
+        )
 
         self.storage_queue_client = QueueClient.from_connection_string(
             conn_str=os.environ["STORAGE_ACCESS_KEY"],
