@@ -10,7 +10,31 @@ resource "azapi_resource" "custom_connector" {
             backendService          = {
                 serviceUrl          = var.graph_resource_uri
             },
-            connectionParameters    = {},
+            connectionParameters    = {
+                token               = {
+                    type            = "oauthSetting",
+                    oAuthSettings= {
+                        identityProvider    = "aad",
+                        clientId            = var.client_id,
+                        scopes              = [],
+                        properties          = {},
+                        customParameters    = {
+                            loginUri        = {
+                                value       = var.microsoft_login_uri
+                            },
+                            tenantId        = {
+                                value       = var.tenant_id
+                            },
+                            resourceUri     = {
+                                value       = var.graph_resource_uri
+                            },
+                            enableOnbehalfOfLogin = {
+                                value       = "false"
+                            }
+                        }
+                    }
+                }
+            },
             capabilities    = [],
             description     = var.connector_description,
             displayName     = "Microsoft Universal Print Custom Connector",

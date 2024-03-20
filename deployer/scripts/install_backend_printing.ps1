@@ -1,12 +1,12 @@
 #!/bin/bash
 
-$CTRL_ENV_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_CODE
+$WORKLOAD_ENV_NAME = $Env:WORKLOAD_ENV_NAME
 $ARM_TENANT_ID = $Env:ARM_TENANT_ID
 $ARM_SUBSCRIPTION_ID = $Env:ARM_SUBSCRIPTION_ID
 $SERVICE_PRINCIPAL_NAME = $Env:SERVICE_PRINCIPAL_NAME
 $RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE + "-RG"
-$STORAGE_ACCOUNT_NAME=$Env:CONTROL_PLANE_ENVIRONMENT_CODE.ToLower() + "tstatebgprinting"
-$CONTAINER_NAME= "tfstate"
+$STORAGE_ACCOUNT_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE.ToLower() + "tstatebgprinting"
+$CONTAINER_NAME = "tfstate"
 $ACR_NAME = "bgprintingacr"
 
 if ($ARM_TENANT_ID.Length -eq 0) {
@@ -24,7 +24,6 @@ if ($ARM_SUBSCRIPTION_ID.Length -eq 0) {
 }
 
 az account set --subscription $ARM_SUBSCRIPTION_ID
-$ARM_SUBSCRIPTION_NAME = (az account show --query name -o tsv)
 
 $app_registration = (az ad sp list --all --filter "startswith(displayName,'$SERVICE_PRINCIPAL_NAME')" --query "[?displayName=='$SERVICE_PRINCIPAL_NAME'].displayName | [0]" --only-show-errors)
 
@@ -43,8 +42,7 @@ if ($app_registration.Length -gt 0) {
 
     $ARM_CLIENT_SECRET = (az ad sp credential reset --id $ARM_CLIENT_ID --append --query "password" --out tsv --only-show-errors).Replace("""", "")
   }
-  else
-  {
+  else {
     $ARM_CLIENT_SECRET = Read-Host "Please enter the Service Principal password"
   }
 
@@ -61,8 +59,18 @@ else {
   $ARM_OBJECT_ID = $ExistingData.Id
 }
 Write-Host "Service Principal Name:" $SERVICE_PRINCIPAL_NAME
+
+# Assign the Service Principal to the User Access Administrator role
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
+
+# Assign the Service Principal delegated API permissions for Print Management (IDs are hardcoded for the sake of simplicity)
+az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions ed11134d-2f3f-440d-a2e1-411efada2502=Scope --only-show-errors
+az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions 5fa075e9-b951-4165-947b-c63396ff0a37=Scope --only-show-errors
+az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions 21f0d9c0-9f13-48b3-94e0-b6b231c7d320=Scope --only-show-errors
+
+# Add redirect URIs for the Service Principal
+az ad app update --id $ARM_CLIENT_ID --add "replyUrls" "https://global.consent.azure-apim.net/redirect" --only-show-errors
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
@@ -91,7 +99,7 @@ az storage account update --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_
 # Create blob container for tfstate
 az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --only-show-errors
 
-$terraform_key = $CTRL_ENV_NAME + ".terraform.tfstate"
+$terraform_key = $WORKLOAD_ENV_NAME + ".terraform.tfstate"
 $terraform_directory = "./deployer/terraform"
 
 $Env:TF_VAR_tenant_id = $ARM_TENANT_ID
@@ -101,8 +109,8 @@ $Env:TF_VAR_client_secret = $ARM_CLIENT_SECRET
 $Env:TF_VAR_object_id = $ARM_OBJECT_ID
 $Env:TF_VAR_location = $Env:LOCATION
 $Env:TF_VAR_environment = $Env:SAP_ENVIRONMENT
-$Env:TF_VAR_virtual_network_id = $Env:VIRTUAL_NETWORK_ID
-$Env:TF_VAR_subnet_address_prefixes = $Env:SUBNET_ADDRESS_PREFIX
+$Env:TF_VAR_virtual_network_id = $Env:SAP_VIRTUAL_NETWORK_ID
+$Env:TF_VAR_subnet_address_prefixes = $Env:BGPRINT_SUBNET_ADDRESS_PREFIX
 $Env:TF_VAR_container_registry_url = $ACR_NAME + ".azurecr.io"
 $Env:TF_VAR_container_image_name = "bgprinting"
 $Env:TF_VAR_control_plane_rg = $RESOURCE_GROUP_NAME
