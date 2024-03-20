@@ -19,10 +19,22 @@ resource "azurerm_role_assignment" "keyvault" {
     role_definition_name    = "Key Vault Secrets Officer"
 }
 
-resource "azurerm_role_assignment" "storage" {
+resource "azurerm_role_assignment" "queue" {
     scope                   = azurerm_storage_account.storage_account.id
     principal_id            = azurerm_user_assigned_identity.msi.principal_id
-    role_definition_name    = "Storage Account Contributor"
+    role_definition_name    = "Storage Queue Data Contributor"
+}
+
+resource "azurerm_role_assignment" "blob" {
+    scope                   = azurerm_storage_account.storage_account.id
+    principal_id            = azurerm_user_assigned_identity.msi.principal_id
+    role_definition_name    = "Storage Blob Data Contributor"
+}
+
+resource "azurerm_role_assignment" "table" {
+    scope                   = azurerm_storage_account.storage_account.id
+    principal_id            = azurerm_user_assigned_identity.msi.principal_id
+    role_definition_name    = "Storage Table Data Contributor"
 }
 
 resource "azurerm_role_assignment" "acr" {
@@ -66,7 +78,7 @@ resource "azurerm_key_vault" "kv" {
             "Purge"
         ]
     }
-    public_network_access_enabled = false
+    public_network_access_enabled = true
     network_acls {
         default_action          = "Deny"
         bypass                  = "AzureServices"
