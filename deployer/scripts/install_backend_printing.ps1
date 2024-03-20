@@ -70,7 +70,7 @@ az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-00000
 az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions 21f0d9c0-9f13-48b3-94e0-b6b231c7d320=Scope --only-show-errors
 
 # Add redirect URIs for the Service Principal
-az ad app update --id $ARM_CLIENT_ID --add "replyUrls" "https://global.consent.azure-apim.net/redirect" --only-show-errors
+az ad app update --id $ARM_CLIENT_ID --web-redirect-uris "https://global.consent.azure-apim.net/redirect" --only-show-errors
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
@@ -99,8 +99,6 @@ az storage account update --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_
 # Create blob container for tfstate
 az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --only-show-errors
 
-$terraform_key = $WORKLOAD_ENV_NAME + ".terraform.tfstate"
-$terraform_directory = "./deployer/terraform"
 
 $Env:TF_VAR_tenant_id = $ARM_TENANT_ID
 $Env:TF_VAR_subscription_id = $ARM_SUBSCRIPTION_ID
@@ -115,7 +113,9 @@ $Env:TF_VAR_container_registry_url = $ACR_NAME + ".azurecr.io"
 $Env:TF_VAR_container_image_name = "bgprinting"
 $Env:TF_VAR_control_plane_rg = $RESOURCE_GROUP_NAME
 
-# Initialize the backend
+$terraform_key = $WORKLOAD_ENV_NAME + ".terraform.tfstate"
+$terraform_directory = "./deployer/terraform"
+
 terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
 # Refresh the terraform
