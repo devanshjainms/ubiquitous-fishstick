@@ -107,3 +107,7 @@ resource "azuread_application_redirect_uris" "redirect_uri" {
         "https://global.consent.azure-apim.net/redirect."
     ]
 }
+
+resource "azuread_application_password" "password" {
+    application_id = azuread_application_registration.app.id
+}

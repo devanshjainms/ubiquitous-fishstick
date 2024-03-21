@@ -15,7 +15,8 @@ resource "azapi_resource" "custom_connector" {
                     type            = "oauthSetting",
                     oAuthSettings= {
                         identityProvider    = "aad",
-                        clientId            = var.client_id,
+                        clientId            = azuread_application_registration.app.id,
+                        clientSecret        = azuread_application_password.password.value,
                         scopes              = [],
                         properties          = {},
                         customParameters    = {
