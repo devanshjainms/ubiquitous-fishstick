@@ -20,10 +20,14 @@ class UniversalPrintClient:
             dict: response
         """
         try:
+            range = [
+                int(num)
+                for num in re.findall(r"\d+", request_body["next_expected_range"])
+            ]
             headers = {
                 "Content-Type": "application/json",
-                "Content-Range": f"bytes 0-{len(request_body['document_file_size']) - 1}/{len(request_body['document_file_size'])}",
-                "Content-Length": str(len(request_body["document_file_size"])),
+                "Content-Range": f"bytes {str(range[0])}-{str(range[1])}/{str(request_body['document_file_size'])}",
+                "Content-Length": str(request_body["document_file_size"]),
             }
             response = requests.put(
                 url=request_body["upload_url"],
