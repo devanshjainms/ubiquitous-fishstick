@@ -19,4 +19,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     BackendPrint(
         logger=logging, log_tag="UploadDocumentToUP"
-    ).upload_document_to_universal_print()
+    ).upload_document_to_universal_print(
+        request_body=req.get_json()
+    )
