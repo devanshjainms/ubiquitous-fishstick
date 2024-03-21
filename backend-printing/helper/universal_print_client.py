@@ -9,7 +9,7 @@ class UniversalPrintClient:
     def __init__(self) -> None:
         pass
 
-    def upload_document(self, upload_url: str):
+    def upload_document(self, request_body: dict):
         """Upload the document to the Universal Print.
 
         Args:
@@ -19,11 +19,21 @@ class UniversalPrintClient:
             dict: response
         """
         try:
+            range = request_body["next_expected_range"].split("-")
             headers = {
                 "Content-Type": "application/json",
-                "Authorization": f"Bearer {os.environ('UNIVERSAL_PRINT_TOKEN')}",
+                "Content-Range": f"bytes {range[0]}-{range[1] - 1}/{range[1]}",
+                "Content-Length": str(len(request_body["document_file_size"])),
             }
-            response = requests.post(url=upload_url, headers=headers)
+            response = requests.post(
+                url=request_body["upload_url"],
+                headers=headers,
+                data=request_body["document_blob"],
+            )
+            if response.status_code != 200:
+                raise Exception(
+                    f"Error occurred while calling logic app: {response.text}"
+                )
             return response.json()
         except Exception as e:
             return {"status": "error", "message": str(e)}
@@ -35,7 +45,6 @@ class UniversalPrintUsingLogicApp:
 
     def call_logic_app(print_items) -> dict:
         """Call the logic app to print the items.
-
         Args:
             print_item: print item json message
 

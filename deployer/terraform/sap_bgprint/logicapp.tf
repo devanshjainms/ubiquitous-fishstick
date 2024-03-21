@@ -35,6 +35,9 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_get_printer_share" 
     body                = <<BODY
     {
         "inputs": {
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "host": {
                 "connection": {
                     "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
@@ -55,6 +58,9 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_print_job" {
     body                = <<BODY
     {
         "inputs": {
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "host": {
                 "connection": {
                     "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
@@ -98,7 +104,31 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_upload_sessi
                 },
                 "runAfter": {},
                 "type": "ApiConnection"
-            }
+            },
+            "UploadDocumentToUP": {
+                        "inputs": {
+                            "body": {
+                                "document_blob": "@{triggerBody()?['document_blob']}",
+                                "document_file_size": "@{triggerBody()?['document_file_size']}",
+                                "document_name": "@{triggerBody()?['document_name']}",
+                                "next_expected_range": "@{body('CreateUploadSessionForPrinterShare')?['nextExpectedRanges']}",
+                                "upload_url": "@{body('CreateUploadSessionForPrinterShare')?['uploadUrl']}"
+                            },
+                            "function": {
+                                "id": "${azurerm_linux_function_app.function_app.id}/functions/uploaddocumenttoup"
+                            },
+                            "headers": {
+                                "Content-Type": "application/json"
+                            },
+                            "method": "POST"
+                        },
+                        "runAfter": {
+                            "CreateUploadSessionForPrinterShare": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Function"
+                    }
         },
         "foreach": "@body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['documents']",
         "runAfter": {
@@ -117,6 +147,9 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_start_print_job" {
     body                = <<BODY
     {
         "inputs": {
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "host": {
                 "connection": {
                     "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
