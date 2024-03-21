@@ -11,4 +11,5 @@ output "key_vault_id" {
 output "custom_connector" {
     description = "The id of the custom connector"
     value       = azapi_resource.custom_connector
+    sensitive   = true
 }
