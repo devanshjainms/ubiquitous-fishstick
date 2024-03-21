@@ -90,7 +90,7 @@ resource "azuread_application_registration" "app" {
     display_name                = format("%s%s", upper(var.environment), " BGPRINT APP")
 }
 
-resource "azuread_application_api_access" "example_msgraph" {
+resource "azuread_application_api_access" "app_access" {
     application_id              = azuread_application_registration.app.id
     api_client_id               = "00000003-0000-0000-c000-000000000000"
     scope_ids                   = [
@@ -100,7 +100,7 @@ resource "azuread_application_api_access" "example_msgraph" {
     ]
 }
 
-resource "azuread_application_redirect_uris" "example_public" {
+resource "azuread_application_redirect_uris" "redirect_uri" {
     application_id = azuread_application_registration.app.id
     type = "Web"
     redirect_uris = [
