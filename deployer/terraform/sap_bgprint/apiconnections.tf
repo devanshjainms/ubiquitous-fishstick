@@ -6,7 +6,7 @@ resource "azapi_resource" "custom_connector" {
     schema_validation_enabled = false
     parent_id           = azurerm_resource_group.rg.id
     response_export_values =  [
-        [properties.connectionParameters.token.oAuthSettings.redirectUrl]
+        "properties.connectionParameters.token.oAuthSettings.redirectUrl"
     ]
     body                = jsonencode({
         properties= {
