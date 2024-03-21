@@ -64,11 +64,11 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_print_job" {
             "body": {
                 "configuration": {
                     "copies": 1,
-                    "dpi": "@body(${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name})?['defaults']?['dpi']",
+                    "dpi": "@body('${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name}')?['defaults']?['dpi']",
                     "duplexMode": "oneSided",
                     "fitPdfToPage": false,
                     "mediaType": "stationery",
-                    "pagesPerSheet": "@body(${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name})?['defaults']?['pagesPerSheet']",
+                    "pagesPerSheet": "@body('${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name}')?['defaults']?['pagesPerSheet']",
                     "quality": "medium",
                     "scaling": "shrinkToFit"
                 }
