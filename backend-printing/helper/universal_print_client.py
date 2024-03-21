@@ -40,7 +40,7 @@ class UniversalPrintClient:
                 )
             return response.json()
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            raise Exception(f"Error occurred while calling logic app: {e}")
 
 
 class UniversalPrintUsingLogicApp:

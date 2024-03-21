@@ -244,7 +244,10 @@ class BackendPrint:
             response object: response
         """
         try:
-            return UniversalPrintClient().upload_document(request_body)
+            UniversalPrintClient().upload_document(request_body)
+            self.logger.info(
+                f"[{self.log_tag}] Uploaded document to the universal print server"
+            )
         except Exception as e:
             self.logger.error(
                 f"[{self.log_tag}] Error occurred while uploading document to the universal print server: {e}"

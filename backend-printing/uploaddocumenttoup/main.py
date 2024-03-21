@@ -1,6 +1,7 @@
 """Http trigger that uploads a document to microsoft universal print
 """
 
+import json
 import logging
 import azure.functions as func
 from helper.backend_print import BackendPrint
@@ -17,8 +18,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     """
     logging.info("Python HTTP trigger function processed a request.")
 
-    BackendPrint(
+    response = BackendPrint(
         logger=logging, log_tag="UploadDocumentToUP"
-    ).upload_document_to_universal_print(
-        request_body=req.get_json()
-    )
+    ).upload_document_to_universal_print(request_body=req.get_json())
+    return func.HttpResponse(json.dumps(response), status_code=200)
