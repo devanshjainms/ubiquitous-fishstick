@@ -29,7 +29,7 @@ class UniversalPrintClient:
                 "Content-Range": f"bytes {range[0]}-{range[1] - 1}/{range[1]}",
                 "Content-Length": str(len(request_body["document_file_size"])),
             }
-            response = requests.post(
+            response = requests.put(
                 url=request_body["upload_url"],
                 headers=headers,
                 data=request_body["document_blob"],
