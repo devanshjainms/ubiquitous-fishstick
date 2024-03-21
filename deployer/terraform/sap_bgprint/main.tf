@@ -85,25 +85,18 @@ resource "azurerm_key_vault" "kv" {
     }
 }
 
-data "azuread_application_published_app_ids" "well_known" {}
-
-data "azuread_service_principal" "msgraph" {
-    client_id = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
-}
-
 # Azure AD Application Registration for the custom connector
 resource "azuread_application_registration" "app" {
     display_name                = format("%s%s", upper(var.environment), " BGPRINT APP")
 }
 
 resource "azuread_application_api_access" "example_msgraph" {
-    application_id = azuread_application_registration.app.id
-    api_client_id  = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
-
-    scope_ids = [
-        data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["PrinterShare.Read.All"],
-        data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["PrinterShare.ReadBasic.All"],
-        data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["PrintJob.Create"]
+    application_id              = azuread_application_registration.app.id
+    api_client_id               = "00000003-0000-0000-c000-000000000000"
+    scope_ids                   = [
+        "ed11134d-2f3f-440d-a2e1-411efada2502",
+        "5fa075e9-b951-4165-947b-c63396ff0a37",
+        "21f0d9c0-9f13-48b3-94e0-b6b231c7d320"
     ]
 }
 
