@@ -104,6 +104,5 @@ resource "azuread_application_redirect_uris" "redirect_uri" {
     application_id = azuread_application_registration.app.id
     type = "Web"
     redirect_uris = [
-        azapi_resource.custom_connector.body["redirectUrl"]
-    ]
+        jsondecode(azapi_resource.custom_connector.output).properties.redirectUrl
 }
