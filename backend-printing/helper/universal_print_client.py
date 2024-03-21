@@ -1,6 +1,7 @@
 """Azure Universal Print.
 """
 
+import re
 import requests
 import os
 
@@ -19,7 +20,10 @@ class UniversalPrintClient:
             dict: response
         """
         try:
-            range = request_body["next_expected_range"].split("-")
+            range = [
+                int(num)
+                for num in re.findall(r"\d+", request_body["next_expected_range"])
+            ]
             headers = {
                 "Content-Type": "application/json",
                 "Content-Range": f"bytes {range[0]}-{range[1] - 1}/{range[1]}",

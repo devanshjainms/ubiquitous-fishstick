@@ -61,6 +61,18 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_print_job" {
             "headers": {
                 "Content-Type": "application/json"
             },
+            "body": {
+                "configuration": {
+                    "copies": 1,
+                    "dpi": "@body(${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name})?['defaults']?['dpi']",
+                    "duplexMode": "oneSided",
+                    "fitPdfToPage": false,
+                    "mediaType": "stationery",
+                    "pagesPerSheet": "@body(${azurerm_logic_app_action_custom.logic_app_action_get_printer_share.name})?['defaults']?['pagesPerSheet']",
+                    "quality": "medium",
+                    "scaling": "shrinkToFit"
+                }
+            },
             "host": {
                 "connection": {
                     "name": "@parameters('$connections')['${azurerm_resource_group_template_deployment.apiconnection.name}']['connectionId']"
@@ -100,7 +112,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_create_upload_sessi
                         }
                     },
                     "method": "post",
-                    "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printer_share_id'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['createdBy']?['id'])}/documents/@{encodeURIComponent(items('CreateUploadSessionForPrinterShareLoop')?['id'])}/createUploadSession"
+                    "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printer_share_id'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['id'])}/documents/@{encodeURIComponent(items('CreateUploadSessionForPrinterShareLoop')?['id'])}/createUploadSession"
                 },
                 "runAfter": {},
                 "type": "ApiConnection"
