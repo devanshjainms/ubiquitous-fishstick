@@ -4,7 +4,10 @@ resource "azapi_resource" "custom_connector" {
     name                = format("%s-%s", lower(var.location), lower(random_string.random.result))
     location            = var.location
     schema_validation_enabled = false
-    parent_id           = azurerm_resource_group.rg.id 
+    parent_id           = azurerm_resource_group.rg.id
+    response_export_values =  [
+        [properties.connectionParameters.token.oAuthSettings.redirectUrl]
+    ]
     body                = jsonencode({
         properties= {
             backendService          = {
