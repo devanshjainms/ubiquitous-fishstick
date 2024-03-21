@@ -105,4 +105,5 @@ resource "azuread_application_redirect_uris" "redirect_uri" {
     type = "Web"
     redirect_uris = [
         jsondecode(azapi_resource.custom_connector.output).properties.redirectUrl
+    ]
 }
