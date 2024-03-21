@@ -32,11 +32,13 @@ class UniversalPrintClient:
             )
             if response.status_code != 200:
                 raise Exception(
-                    f"Error occurred while calling logic app: {response.text}"
+                    f"Error occurred while uploading the document to the UP URL: {response}"
                 )
-            return response.json()
+            return response
         except Exception as e:
-            raise Exception(f"Error occurred while calling logic app: {e}")
+            raise Exception(
+                f"Exception occurred while uploading the document to the UP URL: {e}"
+            )
 
 
 class UniversalPrintUsingLogicApp:

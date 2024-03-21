@@ -252,4 +252,7 @@ class BackendPrint:
             self.logger.error(
                 f"[{self.log_tag}] Error occurred while uploading document to the universal print server: {e}"
             )
-            return {"status": "error", "message": "Error occurred while fetching items"}
+            return {
+                "status": "error",
+                "message": f"Error occurred while uploading the document to the UP Server {e}",
+            }
