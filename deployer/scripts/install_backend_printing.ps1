@@ -3,7 +3,7 @@
 $WORKLOAD_ENV_NAME = $Env:WORKLOAD_ENV_NAME
 $ARM_TENANT_ID = $Env:ARM_TENANT_ID
 $ARM_SUBSCRIPTION_ID = $Env:ARM_SUBSCRIPTION_ID
-$SERVICE_PRINCIPAL_NAME = $Env:SERVICE_PRINCIPAL_NAME
+$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME = $Env:CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
 $RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE + "-RG"
 $STORAGE_ACCOUNT_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE.ToLower() + "tstatebgprinting"
 $CONTAINER_NAME = "tfstate"
@@ -25,13 +25,13 @@ if ($ARM_SUBSCRIPTION_ID.Length -eq 0) {
 
 az account set --subscription $ARM_SUBSCRIPTION_ID
 
-$app_registration = (az ad sp list --all --filter "startswith(displayName,'$SERVICE_PRINCIPAL_NAME')" --query "[?displayName=='$SERVICE_PRINCIPAL_NAME'].displayName | [0]" --only-show-errors)
+$app_registration = (az ad sp list --all --filter "startswith(displayName,'$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME')" --query "[?displayName=='$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME'].displayName | [0]" --only-show-errors)
 
 $scopes = "/subscriptions/$ARM_SUBSCRIPTION_ID"
 
 if ($app_registration.Length -gt 0) {
-  Write-Host "Found an existing Service Principal:" $SERVICE_PRINCIPAL_NAME
-  $ExistingData = (az ad sp list --all --filter "startswith(displayName,'$SERVICE_PRINCIPAL_NAME')" --query  "[?displayName=='$SERVICE_PRINCIPAL_NAME']| [0]" --only-show-errors) | ConvertFrom-Json
+  Write-Host "Found an existing Service Principal:" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
+  $ExistingData = (az ad sp list --all --filter "startswith(displayName,'$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME')" --query  "[?displayName=='$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME']| [0]" --only-show-errors) | ConvertFrom-Json
 
   $ARM_CLIENT_ID = $ExistingData.appId
   $ARM_OBJECT_ID = $ExistingData.Id
@@ -48,29 +48,21 @@ if ($app_registration.Length -gt 0) {
 
 }
 else {
-  Write-Host "Creating the Service Principal" $SERVICE_PRINCIPAL_NAME -ForegroundColor Green
-  $SPN_DATA = (az ad sp create-for-rbac --role "Contributor" --scopes $scopes --name $SERVICE_PRINCIPAL_NAME --only-show-errors) | ConvertFrom-Json
-  Write-Host "Service Principal Name:" $SERVICE_PRINCIPAL_NAME
+  Write-Host "Creating the Service Principal" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME -ForegroundColor Green
+  $SPN_DATA = (az ad sp create-for-rbac --role "Contributor" --scopes $scopes --name $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME --only-show-errors) | ConvertFrom-Json
+  Write-Host "Service Principal Name:" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
 
   $ARM_CLIENT_SECRET = $SPN_DATA.password
-  $ExistingData = (az ad sp list --all --filter "startswith(displayName,'$SERVICE_PRINCIPAL_NAME')" --query  "[?displayName=='$SERVICE_PRINCIPAL_NAME'] | [0]" --only-show-errors) | ConvertFrom-Json
+  $ExistingData = (az ad sp list --all --filter "startswith(displayName,'$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME')" --query  "[?displayName=='$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME'] | [0]" --only-show-errors) | ConvertFrom-Json
   $ARM_CLIENT_ID = $ExistingData.appId
   $ARM_TENANT_ID = $ExistingData.appOwnerOrganizationId
   $ARM_OBJECT_ID = $ExistingData.Id
 }
-Write-Host "Service Principal Name:" $SERVICE_PRINCIPAL_NAME
+Write-Host "Service Principal Name:" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
 
 # Assign the Service Principal to the User Access Administrator role
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
-
-# Assign the Service Principal delegated API permissions for Print Management (IDs are hardcoded for the sake of simplicity)
-az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions ed11134d-2f3f-440d-a2e1-411efada2502=Scope --only-show-errors
-az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions 5fa075e9-b951-4165-947b-c63396ff0a37=Scope --only-show-errors
-az ad app permission add --id $ARM_CLIENT_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions 21f0d9c0-9f13-48b3-94e0-b6b231c7d320=Scope --only-show-errors
-
-# Add redirect URIs for the Service Principal
-az ad app update --id $ARM_CLIENT_ID --web-redirect-uris "https://global.consent.azure-apim.net/redirect" --only-show-errors
 
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {

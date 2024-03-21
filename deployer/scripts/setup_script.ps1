@@ -1,19 +1,19 @@
 $Env:CONTROL_PLANE_ENVIRONMENT_CODE="CTRL"
-$Env:SAP_ENVIRONMENT="TEST"
-$Env:LOCATION="eastus2"
-$Env:ARM_TENANT_ID = "0000000-0000-0000-0000-000000000000"
-$Env:ARM_SUBSCRIPTION_ID = "0000000-0000-0000-0000-000000000000"
-$Env:VIRTUAL_NETWORK_ID = "/subscriptions/0000000-0000-0000-0000-000000000000/resourceGroups/RG/providers/Microsoft.Network/virtualNetworks/VNET"
-$Env:SUBNET_ADDRESS_PREFIX = "10.19.4.0/28"
+$Env:WORKLOAD_ENV_NAME="TEST"
+$Env:LOCATION=""
+$Env:ARM_TENANT_ID = ""
+$Env:ARM_SUBSCRIPTION_ID = ""
+$Env:SAP_VIRTUAL_NETWORK_ID = ""
+$Env:BGPRINT_SUBNET_ADDRESS_PREFIX = ""
 
-$UniqueIdentifier = Read-Host "Please provide an identifier that makes the service principal names unique, for instance a project code"
+$UniqueIdentifier = Read-Host "Please provide an identifier that makes the service principal names unique, for exaple (MGMT/CTRL)"
 
-$confirmation = Read-Host "Do you want to create a new Application registration (needed for the Web Application) y/n?"
+$confirmation = Read-Host "Do you want to create a new Application registration for Control Plane (needed for the Web Application) y/n?"
 if ($confirmation -eq 'y') {
-    $Env:SERVICE_PRINCIPAL_NAME = $UniqueIdentifier + " BG PRINTING APP"
+    $Env:CONTROL_PLANE_SERVICE_PRINCIPAL_NAME = $UniqueIdentifier + "-SAP-PRINT-APP"
 }
 else {
-    $Env:SERVICE_PRINCIPAL_NAME = Read-Host "Please provide the Application registration name"
+    $Env:CONTROL_PLANE_SERVICE_PRINCIPAL_NAME = Read-Host "Please provide the Application registration name"
 }
 
 if ( $PSVersionTable.Platform -eq "Unix") {
