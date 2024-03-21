@@ -87,7 +87,7 @@ resource "azurerm_key_vault" "kv" {
 
 # Azure AD Application Registration for the custom connector
 resource "azuread_application_registration" "app" {
-    display_name                = format("%s%s", upper(var.environment), " BGPRINT APP")
+    display_name                = format("%s%s%s", upper(var.environment), "-BGPRINT-APP-", upper(random_string.random.result))
 }
 
 resource "azuread_application_api_access" "app_access" {
