@@ -32,9 +32,9 @@ class UniversalPrintClient:
             response = requests.put(
                 url=request_body["upload_url"],
                 headers=headers,
-                data=request_body["document_blob"],
+                data={"data": request_body["document_blob"]},
             )
-            if response.status_code != 200:
+            if response.status_code != 201 or response.status_code != 200:
                 raise Exception(
                     f"Error occurred while uploading the document to the UP URL: {response}"
                 )
