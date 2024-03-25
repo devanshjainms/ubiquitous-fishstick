@@ -2,6 +2,7 @@
 """
 
 import re
+import base64
 import requests
 import os
 
@@ -21,23 +22,19 @@ class UniversalPrintClient:
         """
         try:
             range = [
-                int(num)
-                for num in re.findall(r"\d+", request_body["next_expected_range"])
+            int(num) for num in re.findall(r"\d+", request_body["next_expected_range"])
             ]
+            blob_data = base64.b64decode(request_body["document_blob"])
+            content_range = f"bytes 0-{len(blob_data) - 1}/{len(blob_data)}"
             headers = {
                 "Content-Type": "application/json",
-                "Content-Range": f"bytes {str(range[0])}-{str(range[1])}/{str(request_body['document_file_size'])}",
-                "Content-Length": str(request_body["document_file_size"]),
+                "Content-Range": content_range,
+                "Content-Length": str(len(blob_data)),
+                "Accept": "*/*",
             }
             response = requests.put(
-                url=request_body["upload_url"],
-                headers=headers,
-                data={"data": request_body["document_blob"]},
+                url=request_body["upload_url"], headers=headers, data=blob_data
             )
-            if response.status_code != 201 or response.status_code != 200:
-                raise Exception(
-                    f"Error occurred while uploading the document to the UP URL: {response}"
-                )
             return response
         except Exception as e:
             raise Exception(
