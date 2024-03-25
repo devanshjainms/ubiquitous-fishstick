@@ -12,6 +12,7 @@ class PrintQueue:
 
     queue_name: str
     print_share_id: str
+    sap_client_id: int = field(default=400, metadata={"required": False})
 
 
 @dataclass

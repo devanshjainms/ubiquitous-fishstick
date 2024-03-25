@@ -18,3 +18,7 @@ MAX_ITEMS_TO_FETCH = 10
 AUTHORIZATION_SCOPE = ["https://graph.microsoft.com/.default"]
 
 DOCUMENT_CONTENT_TYPE = "application/pdf"
+
+MESSAGE_EXPIRY_TIME = 3600
+
+NUMBER_OF_THREADS = 3

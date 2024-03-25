@@ -2,7 +2,7 @@
 
 from azure.storage.queue import QueueMessage
 from helper.azure import AzureClient
-from helper.constants import MAX_ITEMS_TO_FETCH
+from helper.constants import MAX_ITEMS_TO_FETCH, MESSAGE_EXPIRY_TIME
 
 
 class StorageQueueClient(AzureClient):
@@ -13,7 +13,9 @@ class StorageQueueClient(AzureClient):
             message (string): message to send
         """
         try:
-            return self.storage_queue_client.send_message(content=message)
+            return self.storage_queue_client.send_message(
+                content=message, time_to_live=MESSAGE_EXPIRY_TIME
+            )
         except Exception as e:
             raise Exception(f"Error occurred while sending message: {e}")
 
@@ -29,6 +31,17 @@ class StorageQueueClient(AzureClient):
             )
         except Exception as e:
             raise Exception(f"Error occurred while receiving messages: {e}")
+
+    def delete_message(self, message):
+        """Delete a message from the queue
+
+        Args:
+            message (QueueMessage): message to delete
+        """
+        try:
+            return self.storage_queue_client.delete_message(message)
+        except Exception as e:
+            raise Exception(f"Error occurred while deleting message: {e}")
 
 
 class TableStorageClient(AzureClient):

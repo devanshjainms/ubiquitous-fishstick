@@ -46,7 +46,7 @@ class UniversalPrintUsingLogicApp:
     def __init__(self) -> None:
         pass
 
-    def call_logic_app(print_items) -> dict:
+    def call_logic_app(self, print_items) -> dict:
         """Call the logic app to print the items.
         Args:
             print_item: print item json message
