@@ -6,9 +6,14 @@ import ast
 import os
 import json
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict
 from marshmallow_dataclass import class_schema
-from helper.constants import SAP_CONFIG_KEY_VAULT_KEY, DOCUMENT_CONTENT_TYPE
+from helper.constants import (
+    SAP_CONFIG_KEY_VAULT_KEY,
+    DOCUMENT_CONTENT_TYPE,
+    NUMBER_OF_THREADS,
+)
 from helper.models import PrintItemStatus
 from helper.sap_client import SAPPrintClient
 from helper.models import SAPSystem
@@ -92,51 +97,14 @@ class BackendPrint:
                 "message": "Error occurred while sending message",
             }
 
-    def validation_engine(self, sap_config: dict):
-        """Validate the connection to the SAP system.
-        Validate the queue names are present in the SAP system.
-        If the validation pass, store the connection details in the Key Vault.
+    def _fetch_print_items_from_sap_concurrent(self):
+        """Fetch print items from the SAP systems concurrently.
 
-        Args:
-            sap_config (dict): _description_
-
-        Returns:
-            _type_: _description_
-        """
-        try:
-            sap_configuration_map = self._load_schema(sap_config)
-            print_client = SAPPrintClient(sap_configuration_map)
-            sap_queues = print_client.get_print_queues()
-            for queue in sap_queues:
-                if not print_client.find_print_queue(queue):
-                    return {"status": "error", "message": "Incorrect queue information"}
-            self.logger.info(
-                f"[{self.log_tag}] SAP connection validated, saving to key vault"
-            )
-            KeyVault().set_kv_secrets(
-                secret_key=SAP_CONFIG_KEY_VAULT_KEY
-                % (
-                    sap_configuration_map.sap_environment,
-                    sap_configuration_map.sap_sid,
-                ),
-                secret_value=json.dumps(asdict(sap_configuration_map)),
-            )
-            return {"status": "success", "message": "SAP connection validated"}
-        except Exception as e:
-            self.logger.error(
-                f"[{self.log_tag}] Error occurred while validating SAP connection: {e}"
-            )
-            return {"status": "error", "message": str(e)}
-
-    def fetch_print_items_from_sap(self):
-        """Get the print items from each SAP system.
-        Create a json message for each print item.
-        Move these messages to storage queue.
+        Raises:
+            e: Exception
         """
         print_messages = []
         try:
-            self._get_sap_config()
-            self.logger.info(f"[{self.log_tag}] Fetched sap config from key vault")
             for sap_system in self.sap_systems:
                 sap_client = SAPPrintClient(sap_system)
                 if sap_system.sap_print_queues is not None:
@@ -184,12 +152,95 @@ class BackendPrint:
                     f"[{self.log_tag}] Sent {len(print_messages)} messages to the storage account"
                 )
                 self._update_print_messages_status(
-                    print_messages=print_messages, status=PrintItemStatus.NEW
+                    print_messages=print_messages, status=PrintItemStatus.NEW.value
                 )
                 self.logger.info(
                     f"[{self.log_tag}] Updated {len(print_messages)} messages status in storage table to NEW"
                 )
+        except Exception as e:
+            raise e
 
+    def _process_messages(self, messages):
+        """Process the messages and send the print job to the universal print.
+
+        Args:
+            messages (list): List of print messages
+        """
+        for message in messages:
+            try:
+                response = UniversalPrintUsingLogicApp().call_logic_app(
+                    print_items=message["print_item"]
+                )
+                if response.status_code == 200:
+                    self.logger.info(
+                        f"[{self.log_tag}] Sent print job to the storage account"
+                    )
+                    self._update_print_messages_status(
+                        print_messages=messages, status=PrintItemStatus.COMPLETED.value
+                    )
+                    StorageQueueClient().delete_message(message)
+                    self.logger.info(
+                        f"[{self.log_tag}] Deleted the message from the storage account after success"
+                    )
+            except Exception as e:
+                self.logger.error(
+                    f"[{self.log_tag}] Error occurred while sending print jobs  to the storage account: {e}"
+                )
+                self._update_print_messages_status(
+                    print_messages=messages,
+                    status=PrintItemStatus.ERROR.value,
+                    error_message=str(e),
+                )
+                raise e
+
+    def validation_engine(self, sap_config: dict):
+        """Validate the connection to the SAP system.
+        Validate the queue names are present in the SAP system.
+        If the validation pass, store the connection details in the Key Vault.
+
+        Args:
+            sap_config (dict): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        try:
+            sap_configuration_map = self._load_schema(sap_config)
+            print_client = SAPPrintClient(sap_configuration_map)
+            sap_queues = print_client.get_print_queues()
+            for queue in sap_queues:
+                if not print_client.find_print_queue(queue):
+                    return {"status": "error", "message": "Incorrect queue information"}
+            self.logger.info(
+                f"[{self.log_tag}] SAP connection validated, saving to key vault"
+            )
+            KeyVault().set_kv_secrets(
+                secret_key=SAP_CONFIG_KEY_VAULT_KEY
+                % (
+                    sap_configuration_map.sap_environment,
+                    sap_configuration_map.sap_sid,
+                ),
+                secret_value=json.dumps(asdict(sap_configuration_map)),
+            )
+            return {"status": "success", "message": "SAP connection validated"}
+        except Exception as e:
+            self.logger.error(
+                f"[{self.log_tag}] Error occurred while validating SAP connection: {e}"
+            )
+            return {"status": "error", "message": str(e)}
+
+    def fetch_print_items_from_sap(self):
+        """Get the print items from each SAP system.
+        Create a json message for each print item.
+        Move these messages to storage queue.
+        """
+        try:
+            self._get_sap_config()
+            self.logger.info(f"[{self.log_tag}] Fetched sap config from key vault")
+            with ThreadPoolExecutor(max_workers=NUMBER_OF_THREADS) as executor:
+                executor.map(
+                    self._fetch_print_items_from_sap_concurrent, self.sap_systems
+                )
         except Exception as e:
             self.logger.error(
                 f"[{self.log_tag}] Error occurred while fetching SAP config from the Key Vault: {e}"
@@ -202,6 +253,7 @@ class BackendPrint:
         Since the authorization using SPN is not available for the universal print,
         """
         messages = []
+
         try:
             messages = [
                 ast.literal_eval(message.content)
@@ -210,11 +262,10 @@ class BackendPrint:
             self.logger.info(
                 f"[{self.log_tag}] Fetched items {len(messages)} from the storage account"
             )
-            for message in messages:
-                response = UniversalPrintUsingLogicApp.call_logic_app(
-                    message["print_item"]
-                )
-                return response
+
+            with ThreadPoolExecutor(max_workers=NUMBER_OF_THREADS) as executor:
+                executor.map(self._process_messages, messages)
+
         except json.JSONDecodeError as e:
             self.logger.error(
                 f"[{self.log_tag}] Error occurred decoding fetched items: {e}"
@@ -224,14 +275,6 @@ class BackendPrint:
                 "message": "Error occurred decoding fetched items",
             }
         except Exception as e:
-            self._update_print_messages_status(
-                print_messages=messages,
-                status=PrintItemStatus.ERROR.value,
-                error_message=str(e),
-            )
-            self.logger.error(
-                f"[{self.log_tag}] Error occurred while sending print jobs  to the storage account: {e}"
-            )
             return {"status": "error", "message": "Error occurred while fetching items"}
 
     def upload_document_to_universal_print(self, request_body):
