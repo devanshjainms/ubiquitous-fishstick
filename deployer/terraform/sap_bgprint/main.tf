@@ -79,10 +79,6 @@ resource "azurerm_key_vault" "kv" {
         ]
     }
     public_network_access_enabled = true
-    network_acls {
-        default_action          = "Deny"
-        bypass                  = "AzureServices"
-    }
 }
 
 # Azure AD Application Registration for the custom connector
