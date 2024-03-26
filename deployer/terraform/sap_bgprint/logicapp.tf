@@ -168,7 +168,7 @@ resource "azurerm_logic_app_action_custom" "logic_app_action_start_print_job" {
                 }
             },
             "method": "post",
-            "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printer_share_id'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['createdBy']?['id'])}/start"
+            "path": "/v1.0/print/shares/@{encodeURIComponent(triggerBody()?['printer_share_id'])}/jobs/@{encodeURIComponent(body('${azurerm_logic_app_action_custom.logic_app_action_create_print_job.name}')?['id'])}/start"
         },
         "runAfter": {
             "${azurerm_logic_app_action_custom.logic_app_action_create_upload_session_for_printer_share.name}": [
