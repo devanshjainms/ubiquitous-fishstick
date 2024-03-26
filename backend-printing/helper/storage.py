@@ -1,7 +1,8 @@
 """Storage client to interact with the Azure Storage Account."""
 
+import ast
 from azure.storage.queue import QueueMessage
-from helper.azure import AzureClient
+from helper.azure_client import AzureClient
 from helper.constants import MAX_ITEMS_TO_FETCH, MESSAGE_EXPIRY_TIME
 
 
@@ -26,9 +27,10 @@ class StorageQueueClient(AzureClient):
             list[QueueMessage]: list of messages
         """
         try:
-            return self.storage_queue_client.receive_messages(
+            raw_messages = self.storage_queue_client.receive_messages(
                 max_messages=MAX_ITEMS_TO_FETCH
             )
+            return [ast.literal_eval(message.content) for message in raw_messages]
         except Exception as e:
             raise Exception(f"Error occurred while receiving messages: {e}")
 

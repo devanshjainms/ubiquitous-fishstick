@@ -22,7 +22,8 @@ class UniversalPrintClient:
         """
         try:
             range = [
-            int(num) for num in re.findall(r"\d+", request_body["next_expected_range"])
+                int(num)
+                for num in re.findall(r"\d+", request_body["next_expected_range"])
             ]
             blob_data = base64.b64decode(request_body["document_blob"])
             content_range = f"bytes 0-{len(blob_data) - 1}/{len(blob_data)}"
@@ -56,11 +57,10 @@ class UniversalPrintUsingLogicApp:
         """
         try:
             headers = {"Content-Type": "application/json"}
-            response = requests.post(
+            return requests.post(
                 url=os.environ["LOGIC_APP_URL"],
                 headers=headers,
                 json=print_items,
             )
-            return response.json()
         except Exception as e:
             raise Exception(f"Error occurred while calling logic app: {e}")

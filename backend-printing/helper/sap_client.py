@@ -115,7 +115,8 @@ class SAPPrintClient:
             number_of_print_items = self._get_number_of_print_items(queue_name)
             if number_of_print_items:
                 print_items = self._call_sap_api(
-                    f"{self.api_url}{GET_N_NEXT_PRINT_ITEMS}?Qname='{queue_name}'&NumberOfItems={number_of_print_items}"
+                    f"{self.api_url}{GET_N_NEXT_PRINT_ITEMS}?Qname='{queue_name}"
+                    + f"'&NumberOfItems={number_of_print_items}"
                 )
                 return print_items["d"]["results"]
         except Exception as e:

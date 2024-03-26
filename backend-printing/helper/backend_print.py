@@ -55,7 +55,6 @@ class BackendPrint:
         sap_configs = KeyVault().get_sap_config_secrets()
         for sap_config in sap_configs:
             self.sap_systems.append(self._load_schema(json.loads(sap_config.value)))
-        return self.sap_systems
 
     def _send_message_to_storage_queue(self, print_messages):
         """Send the print messages to the storage queue.
@@ -144,6 +143,9 @@ class BackendPrint:
             self.logger.info(f"[{self.log_tag}] Fetched sap config from key vault")
             for sap_system in self.sap_systems:
                 sap_client = SAPPrintClient(sap_system)
+                self.logger.info(
+                    f"[{self.log_tag}] Fetching print items from SAP system {sap_system.sap_sid}"
+                )
                 if sap_system.sap_print_queues is not None:
                     for queue in sap_system.sap_print_queues:
                         print_items_from_queue = []
@@ -156,7 +158,6 @@ class BackendPrint:
                             if response is not None
                             else []
                         )
-
                         self.logger.info(
                             f"[{self.log_tag}] Fetched {len(print_items_from_queue)} items from the "
                             + f" SAP queue for {sap_system.sap_sid}"
@@ -198,7 +199,10 @@ class BackendPrint:
             self.logger.error(
                 f"[{self.log_tag}] Error occurred while fetching SAP config from the Key Vault: {e}"
             )
-            return {"status": "error", "message": "Error occurred while fetching items"}
+            return {
+                "status": "error",
+                "message": "Error occurred while fetching items.",
+            }
 
     def send_print_items_to_universal_print(self):
         """Get the print items from storage account queue.
@@ -208,10 +212,7 @@ class BackendPrint:
         messages = []
 
         try:
-            messages = [
-                ast.literal_eval(message.content)
-                for message in StorageQueueClient().receive_messages()
-            ]
+            messages = StorageQueueClient().receive_messages()
             self.logger.info(
                 f"[{self.log_tag}] Fetched items {len(messages)} from the storage account"
             )
@@ -240,7 +241,10 @@ class BackendPrint:
                 "message": "Error occurred decoding fetched items",
             }
         except Exception as e:
-            return {"status": "error", "message": "Error occurred while fetching items"}
+            return {
+                "status": "error",
+                "message": "Error occurred while sending items to storage queue.",
+            }
 
     def upload_document_to_universal_print(self, request_body):
         """Upload the document to the Universal Print using universal print client.

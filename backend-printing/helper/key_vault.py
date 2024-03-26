@@ -3,7 +3,7 @@ This is where all the SAP config are set and get.
 """
 
 from dataclasses import asdict
-from helper.azure import AzureClient
+from helper.azure_client import AzureClient
 
 
 class KeyVault(AzureClient):
