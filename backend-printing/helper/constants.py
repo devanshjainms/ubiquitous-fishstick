@@ -22,3 +22,5 @@ DOCUMENT_CONTENT_TYPE = "application/pdf"
 MESSAGE_EXPIRY_TIME = 3600
 
 NUMBER_OF_THREADS = 3
+
+ITEM_STATUS = "[{\"ITEM_ID\":\"%s\",\"STATUS\": \"%s\"}]"

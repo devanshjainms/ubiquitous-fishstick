@@ -49,7 +49,29 @@ class BackendPrint:
         except Exception as e:
             raise Exception(f"Error occurred SAP config: {e}")
 
-    def _get_sap_config(self):
+    def _get_sap_config(self, sap_sid, sap_environment):
+        """Get the SAP config from the key vault
+
+        Args:
+            sap_sid (string): SAP system ID
+            sap_environment (string): SAP environment
+
+        Returns:
+            dict: SAP config
+        """
+        try:
+            secret = KeyVault().get_sap_config(
+                secret_name=SAP_CONFIG_KEY_VAULT_KEY
+                % (
+                    sap_environment,
+                    sap_sid,
+                ),
+            )
+            return self._load_schema(json.loads(secret.value))
+        except Exception as e:
+            raise Exception(f"Error occurred getting SAP config: {e}")
+
+    def _get_all_sap_configs(self):
         """Get the SAP config from the key vault"""
         self.sap_systems = []
         sap_configs = KeyVault().get_sap_config_secrets()
@@ -139,7 +161,7 @@ class BackendPrint:
         """
         print_messages = []
         try:
-            self._get_sap_config()
+            self._get_all_sap_configs()
             self.logger.info(f"[{self.log_tag}] Fetched sap config from key vault")
             for sap_system in self.sap_systems:
                 sap_client = SAPPrintClient(sap_system)
@@ -221,29 +243,40 @@ class BackendPrint:
                 response = UniversalPrintUsingLogicApp().call_logic_app(
                     print_items=message["print_item"]
                 )
-                if response.status_code == 200:
-                    self.logger.info(
-                        f"[{self.log_tag}] Sent print job to the storage account"
-                    )
-                    self._update_print_messages_status(
-                        print_messages=messages, status=PrintItemStatus.COMPLETED.value
-                    )
+                sap_config = self._get_sap_config(
+                    sap_sid=message["sap_sid"],
+                    sap_environment=message["sap_environment"],
+                )
+                sap_client = SAPPrintClient(sap_system_config=sap_config)
+                
+                if response.status_code == 202 or response.status_code == 201:
                     StorageQueueClient().delete_message(message)
                     self.logger.info(
                         f"[{self.log_tag}] Deleted the message from the storage account after success"
                     )
-        except json.JSONDecodeError as e:
+                    self._update_print_messages_status(
+                        print_messages=messages, status=PrintItemStatus.COMPLETED.value
+                    )
+                    sap_client.fetch_csrf_token_and_update_print_item_status(
+                        print_item_id=message["print_item"]["queue_item_id"],
+                        queue_name=message["sap_print_queue_name"],
+                        status="S",
+                    )
+        except Exception as e:
             self.logger.error(
-                f"[{self.log_tag}] Error occurred decoding fetched items: {e}"
+                f"[{self.log_tag}] Error occurred while sending items to logic app: {e}"
+            )
+            self._update_print_messages_status(
+                print_messages=messages, status=PrintItemStatus.ERROR.value
+            )
+            sap_client.fetch_csrf_token_and_update_print_item_status(
+                print_item_id=message["print_item"]["queue_item_id"],
+                queue_name=message["sap_print_queue_name"],
+                status="F",
             )
             return {
                 "status": "error",
-                "message": "Error occurred decoding fetched items",
-            }
-        except Exception as e:
-            return {
-                "status": "error",
-                "message": "Error occurred while sending items to storage queue.",
+                "message": "Error occurred while sending items to logic app.",
             }
 
     def upload_document_to_universal_print(self, request_body):

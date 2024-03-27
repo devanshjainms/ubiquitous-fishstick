@@ -7,6 +7,22 @@ from helper.azure_client import AzureClient
 
 
 class KeyVault(AzureClient):
+
+    def get_sap_config(self, secret_name):
+        """Gets the SAP config from the key vault.
+
+        Args:
+            secret_name (string): Name of the secret
+        Returns:
+            dict: SAP config
+        """
+        try:
+            return self.key_vault_client.get_secret(secret_name)
+        except Exception as e:
+            raise Exception(
+                f"Error occurred getting SAP config with name {secret_name}: {e}"
+            )
+
     def get_sap_config_secrets(self):
         """Gets the SAP config secrets from the key vault.
 
@@ -19,9 +35,7 @@ class KeyVault(AzureClient):
             for secret in secret_properties:
                 if secret.name.startswith("BGPRINT"):
                     try:
-                        sap_secrets.append(
-                            self.key_vault_client.get_secret(secret.name)
-                        )
+                        sap_secrets.append(self.get_sap_config(secret.name))
                     except Exception as e:
                         print(e)
             return sap_secrets

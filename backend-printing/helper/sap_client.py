@@ -15,6 +15,7 @@ from helper.constants import (
     GET_N_NEXT_PRINT_ITEMS,
     GET_NEXT_PRINT_ITEM,
     GET_NUMBER_OF_PRINT_ITEMS,
+    ITEM_STATUS,
 )
 
 
@@ -121,3 +122,41 @@ class SAPPrintClient:
                 return print_items["d"]["results"]
         except Exception as e:
             raise Exception(f"Error occurred while getting print items: {e}")
+
+    def fetch_csrf_token_and_update_print_item_status(
+        self, print_item_id, queue_name, status
+    ):
+        """Fetch CSRF token and update the print item status
+
+        Args:
+            print_item_id (string): Print item ID
+            queue_name (string): Queue name
+            status (string): Status to update (F/S)
+        Raises:
+            Exception: Error occurred while fetching CSRF token or
+            updating print item status
+        """
+        try:
+            response_object = requests.head(
+                headers={"Accept": "application/json", "X-CSRF-Token": "Fetch"},
+                url=f"{self.api_url}PrintItemStatusSet",
+                auth=HTTPBasicAuth(self.sap_user, self.sap_password),
+            )
+            sap_cookie = response_object.headers["Set-Cookie"].replace(",", ";")
+            x_csrf_token = response_object.headers["X-CSRF-Token"]
+            response_object = requests.post(
+                headers={
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": f"{x_csrf_token}",
+                    "Accept": "application/json",
+                },
+                cookies={"cookie": sap_cookie},
+                json={
+                    "ItemsStatus": ITEM_STATUS % (print_item_id, status),
+                    "Qname": queue_name,
+                },
+                url=f"{self.api_url}PrintItemStatusSet",
+                auth=HTTPBasicAuth(self.sap_user, self.sap_password),
+            )
+        except Exception as e:
+            raise Exception(f"Error occurred while fetching CSRF token: {e}")
