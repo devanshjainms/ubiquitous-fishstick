@@ -44,10 +44,7 @@ class UniversalPrintClient:
 
 
 class UniversalPrintUsingLogicApp:
-    def __init__(self) -> None:
-        pass
-
-    def call_logic_app(self, print_items) -> dict:
+    def call_logic_app(print_items) -> requests.Response:
         """Call the logic app to print the items.
         Args:
             print_item: print item json message
@@ -57,10 +54,11 @@ class UniversalPrintUsingLogicApp:
         """
         try:
             headers = {"Content-Type": "application/json"}
-            return requests.post(
+            response = requests.post(
                 url=os.environ["LOGIC_APP_URL"],
                 headers=headers,
                 json=print_items,
             )
+            return response
         except Exception as e:
             raise Exception(f"Error occurred while calling logic app: {e}")

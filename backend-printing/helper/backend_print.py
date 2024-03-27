@@ -240,7 +240,7 @@ class BackendPrint:
             )
 
             for message in messages:
-                response = UniversalPrintUsingLogicApp().call_logic_app(
+                response = UniversalPrintUsingLogicApp.call_logic_app(
                     print_items=message["print_item"]
                 )
                 self.logger.info(
