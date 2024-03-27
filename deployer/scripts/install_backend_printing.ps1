@@ -7,7 +7,7 @@ $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME = $Env:CONTROL_PLANE_SERVICE_PRINCIPAL_NAM
 $CONTROL_PLANE_RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE + "-RG"
 $STORAGE_ACCOUNT_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE.ToLower() + "tstatebgprinting"
 $CONTAINER_NAME = "tfstate"
-$ACR_NAME = "sapprintacr" + -join ((65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object {[char]$_})
+$ACR_NAME = "sapprintacr"
 $ENABLE_LOGGING_ON_FUNCTION_APP = $Env:ENABLE_LOGGING_ON_FUNCTION_APP
 
 if ($ARM_TENANT_ID.Length -eq 0) {
@@ -51,7 +51,6 @@ if ($app_registration.Length -gt 0) {
 else {
   Write-Host "Creating the Service Principal" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME -ForegroundColor Green
   $SPN_DATA = (az ad sp create-for-rbac --role "Contributor" --scopes $scopes --name $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME --only-show-errors) | ConvertFrom-Json
-  Write-Host "Service Principal Name:" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
 
   $ARM_CLIENT_SECRET = $SPN_DATA.password
   $ExistingData = (az ad sp list --all --filter "startswith(displayName,'$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME')" --query  "[?displayName=='$CONTROL_PLANE_SERVICE_PRINCIPAL_NAME'] | [0]" --only-show-errors) | ConvertFrom-Json
@@ -113,7 +112,7 @@ $terraform_directory = "./deployer/terraform"
 
 # Initialize the terraform
 Write-Host "######## Initializing Terraform ########" -ForegroundColor Green
-terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="CONTROL_PLANE_RESOURCE_GROUP_NAME=$CONTROL_PLANE_RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$CONTROL_PLANE_RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
 # Refresh the terraform
 Write-Host "######## Refreshing Terraform ########" -ForegroundColor Green
