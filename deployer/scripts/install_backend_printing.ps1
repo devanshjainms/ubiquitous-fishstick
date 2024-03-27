@@ -65,6 +65,9 @@ Write-Host "Service Principal Name:" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
+$bgprint_path = Join-Path -Path $Env:HOMEDRIVE -ChildPath "SAP-PRINT"
+Set-Location -Path $bgprint_path
+
 # check if the repository exists
 if (Test-Path "ubiquitous-fishstick") {
   Remove-Item "./ubiquitous-fishstick" -Recurse -Force
