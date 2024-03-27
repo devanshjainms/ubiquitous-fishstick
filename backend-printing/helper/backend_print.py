@@ -243,36 +243,39 @@ class BackendPrint:
             )
 
             for message in messages:
+                message_id, message_content, pop_receipt = message
                 self.logger.info(f"[{self.log_tag}] Logic app init for printing")
                 response = UniversalPrintUsingLogicApp.call_logic_app(
-                    print_items=message["print_item"]
-                )
-                self.logger.info(
-                    f"[{self.log_tag}] Sent items to logic app for printing {response.status_code} {type(response.status_code)}"
+                    print_items=message_content["print_item"]
                 )
                 sap_config = self._get_sap_config(
-                    sap_sid=message["sap_sid"],
-                    sap_environment=message["sap_environment"],
+                    sap_sid=message_content["sap_sid"],
+                    sap_environment=message_content["sap_environment"],
                 )
                 sap_client = SAPPrintClient(sap_system_config=sap_config)
 
                 if response.status_code == 202 or response.status_code == 201:
-                    StorageQueueClient().delete_message(message)
+                    StorageQueueClient().delete_message(
+                        message_id=message_id,
+                        pop_receipt=pop_receipt,
+                        message_content=message_content,
+                    )
                     self.logger.info(
                         f"[{self.log_tag}] Deleted the message from the storage account after success"
                     )
                     self._update_print_messages_status(
-                        print_messages=[message], status=PrintItemStatus.COMPLETED.value
+                        print_messages=[message_content],
+                        status=PrintItemStatus.COMPLETED.value,
                     )
                     sap_client.fetch_csrf_token_and_update_print_item_status(
-                        print_item_id=message["print_item"]["queue_item_id"],
-                        queue_name=message["sap_print_queue_name"],
+                        print_item_id=message_content["print_item"]["queue_item_id"],
+                        queue_name=message_content["sap_print_queue_name"],
                         status="S",
                     )
                 else:
                     sap_client.fetch_csrf_token_and_update_print_item_status(
-                        print_item_id=message["print_item"]["queue_item_id"],
-                        queue_name=message["sap_print_queue_name"],
+                        print_item_id=message_content["print_item"]["queue_item_id"],
+                        queue_name=message_content["sap_print_queue_name"],
                         status="F",
                     )
 
@@ -281,7 +284,7 @@ class BackendPrint:
                 f"[{self.log_tag}] Error occurred while sending items to logic app: {e}"
             )
             self._update_print_messages_status(
-                print_messages=messages, status=PrintItemStatus.ERROR.value
+                print_messages=message_content, status=PrintItemStatus.ERROR.value
             )
 
             return {

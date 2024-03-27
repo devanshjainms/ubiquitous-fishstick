@@ -45,18 +45,26 @@ PRINT_QUEUE_ITEM = [
 ]
 
 STORAGE_QUEUE_ITEMS = [
-    {
-        "print_item": {"queue_item_id": "id"},
-        "sap_sid": "sid",
-        "sap_environment": "DEV",
-        "sap_print_queue_name": "queue1",
-    },
-    {
-        "print_item": {"queue_item_id": "id"},
-        "sap_sid": "sid",
-        "sap_environment": "DEV",
-        "sap_print_queue_name": "queue1",
-    },
+    (
+        "id",
+        {
+            "print_item": {"queue_item_id": "id"},
+            "sap_sid": "sid",
+            "sap_environment": "DEV",
+            "sap_print_queue_name": "queue1",
+        },
+        "pop_receipt",
+    ),
+    (
+        "id",
+        {
+            "print_item": {"queue_item_id": "id"},
+            "sap_sid": "sid",
+            "sap_environment": "DEV",
+            "sap_print_queue_name": "queue1",
+        },
+        "pop_receipt",
+    ),
 ]
 
 QUEUE_RESPONSE = {

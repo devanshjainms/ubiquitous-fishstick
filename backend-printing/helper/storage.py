@@ -1,6 +1,6 @@
 """Storage client to interact with the Azure Storage Account."""
 
-import ast
+import json
 from azure.storage.queue import QueueMessage
 from helper.azure_client import AzureClient
 from helper.constants import MAX_ITEMS_TO_FETCH, MESSAGE_EXPIRY_TIME
@@ -26,22 +26,36 @@ class StorageQueueClient(AzureClient):
         Returns:
             list[QueueMessage]: list of messages
         """
+        return_messages = []
         try:
             raw_messages = self.storage_queue_client.receive_messages(
                 max_messages=MAX_ITEMS_TO_FETCH
             )
-            return [ast.literal_eval(message.content) for message in raw_messages]
+            for messages in raw_messages.by_page():
+                for message in messages:
+                    return_messages.append(
+                        (
+                            message.id,
+                            json.loads(
+                                message.content.decode("utf-8").replace("'", '"')
+                            ),
+                            message.pop_receipt,
+                        )
+                    )
+            return return_messages
         except Exception as e:
             raise Exception(f"Error occurred while receiving messages: {e}")
 
-    def delete_message(self, message):
+    def delete_message(self, message_id, pop_receipt, message_content):
         """Delete a message from the queue
 
         Args:
             message (QueueMessage): message to delete
         """
         try:
-            return self.storage_queue_client.delete_message(message)
+            return self.storage_queue_client.delete_message(
+                message_id=message_id, pop_receipt=pop_receipt, message=message_content
+            )
         except Exception as e:
             raise Exception(f"Error occurred while deleting message: {e}")
 

@@ -4,7 +4,11 @@
 import os
 from azure.identity import ManagedIdentityCredential
 from azure.keyvault.secrets import SecretClient
-from azure.storage.queue import QueueClient
+from azure.storage.queue import (
+    QueueClient,
+    BinaryBase64DecodePolicy,
+    BinaryBase64EncodePolicy,
+)
 from azure.data.tables import TableServiceClient
 from helper.constants import KEY_VAULT_URL
 
@@ -20,6 +24,8 @@ class AzureClient:
             retry_total=3,
             queue_name=os.environ["STORAGE_QUEUE_NAME"],
             credential=self._credential,
+            message_encode_policy=BinaryBase64EncodePolicy(),
+            message_decode_policy=BinaryBase64DecodePolicy(),
         )
 
         self.key_vault_client = SecretClient(
