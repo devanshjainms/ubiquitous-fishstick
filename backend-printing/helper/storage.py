@@ -15,7 +15,8 @@ class StorageQueueClient(AzureClient):
         """
         try:
             return self.storage_queue_client.send_message(
-                content=message, time_to_live=MESSAGE_EXPIRY_TIME
+                content=json.dumps(message).encode("utf-8"),
+                time_to_live=MESSAGE_EXPIRY_TIME,
             )
         except Exception as e:
             raise Exception(f"Error occurred while sending message: {e}")
