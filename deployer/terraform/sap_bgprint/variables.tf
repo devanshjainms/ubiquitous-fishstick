@@ -88,3 +88,9 @@ variable "control_plane_rg" {
     description = "The name of the control plane resource group"
     type        = string
 }
+
+variable "enable_logging_on_function_app" {
+    description = "Enable logging on the function app"
+    type        = bool
+    default     = false
+}

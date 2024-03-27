@@ -4,10 +4,11 @@ $WORKLOAD_ENV_NAME = $Env:WORKLOAD_ENV_NAME
 $ARM_TENANT_ID = $Env:ARM_TENANT_ID
 $ARM_SUBSCRIPTION_ID = $Env:ARM_SUBSCRIPTION_ID
 $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME = $Env:CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
-$RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE + "-RG"
+$CONTROL_PLANE_RESOURCE_GROUP_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE + "-RG"
 $STORAGE_ACCOUNT_NAME = $Env:CONTROL_PLANE_ENVIRONMENT_CODE.ToLower() + "tstatebgprinting"
 $CONTAINER_NAME = "tfstate"
 $ACR_NAME = "bgprintingacr"
+$ENABLE_LOGGING_ON_FUNCTION_APP = $Env:ENABLE_LOGGING_ON_FUNCTION_APP
 
 if ($ARM_TENANT_ID.Length -eq 0) {
   az login --output none --only-show-errors
@@ -69,28 +70,26 @@ if (Test-Path "ubiquitous-fishstick") {
   Remove-Item "./ubiquitous-fishstick" -Recurse -Force
 }
 
+Write-Host "######## Cloning the code repo ########" -ForegroundColor Green
 # Clone the git repository
 git clone https://github.com/devanshjainms/ubiquitous-fishstick.git
 cd "./ubiquitous-fishstick"
 git checkout experimental
 
 # Create resource group
-az group create --name $RESOURCE_GROUP_NAME --location eastus --only-show-errors
+az group create --name $CONTROL_PLANE_RESOURCE_GROUP_NAME --location eastus --only-show-errors
 
 # Create the Azure container registry and build the docker image
-az acr create --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
+Write-Host "######## Build the docker image and push it to the ACR registry ########" -ForegroundColor Green
+az acr create --resource-group $CONTROL_PLANE_RESOURCE_GROUP_NAME --name $ACR_NAME --sku Basic --only-show-errors
 az acr login --name $ACR_NAME --expose-token --only-show-errors
 az acr build --registry $ACR_NAME --image bgprinting:latest --file ./backend-printing/Dockerfile ./backend-printing --only-show-errors
 
+Write-Host "######## Creating storage account to store the terraform state ########" -ForegroundColor Green
 # Create storage account
-az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --sku Standard_LRS --encryption-services blob --only-show-errors
-
-# Enable limited access to the storage account
-az storage account update --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --https-only true --allow-blob-public-access false --only-show-errors
-
-# Create blob container for tfstate
+az storage account create --resource-group $CONTROL_PLANE_RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --sku Standard_LRS --encryption-services blob --only-show-errors
+az storage account update --resource-group $CONTROL_PLANE_RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --https-only true --allow-blob-public-access false --only-show-errors
 az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --only-show-errors
-
 
 $Env:TF_VAR_tenant_id = $ARM_TENANT_ID
 $Env:TF_VAR_subscription_id = $ARM_SUBSCRIPTION_ID
@@ -103,18 +102,24 @@ $Env:TF_VAR_virtual_network_id = $Env:SAP_VIRTUAL_NETWORK_ID
 $Env:TF_VAR_subnet_address_prefixes = $Env:BGPRINT_SUBNET_ADDRESS_PREFIX
 $Env:TF_VAR_container_registry_url = $ACR_NAME + ".azurecr.io"
 $Env:TF_VAR_container_image_name = "bgprinting"
-$Env:TF_VAR_control_plane_rg = $RESOURCE_GROUP_NAME
+$Env:TF_VAR_control_plane_rg = $CONTROL_PLANE_RESOURCE_GROUP_NAME
+$ENV:TF_VAR_enable_logging_on_function_app = $ENABLE_LOGGING_ON_FUNCTION_APP
 
 $terraform_key = $WORKLOAD_ENV_NAME + ".terraform.tfstate"
 $terraform_directory = "./deployer/terraform"
 
-terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
+# Initialize the terraform
+Write-Host "######## Initializing Terraform ########" -ForegroundColor Green
+terraform -chdir="$terraform_directory" init -reconfigure -upgrade -backend-config="key=$terraform_key" -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME"  -backend-config="CONTROL_PLANE_RESOURCE_GROUP_NAME=$CONTROL_PLANE_RESOURCE_GROUP_NAME"  -backend-config="container_name=$CONTAINER_NAME"  -backend-config="tenant_id=$ARM_TENANT_ID" -backend-config="client_id=$ARM_CLIENT_ID" -backend-config="client_secret=$ARM_CLIENT_SECRET" -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID"
 
 # Refresh the terraform
+Write-Host "######## Refreshing Terraform ########" -ForegroundColor Green
 terraform -chdir="$terraform_directory"  refresh
 
 # Plan the terraform
+Write-Host "######## Planning the Terraform ########" -ForegroundColor Green
 terraform -chdir="$terraform_directory" plan -compact-warnings -json -no-color -parallelism=5 -out=tfplan.tfstate 
 
 # Apply the terraform
+Write-Host "######## Applying the Terraform ########" -ForegroundColor Green
 terraform -chdir="$terraform_directory" apply -auto-approve -compact-warnings -json -no-color -parallelism=5

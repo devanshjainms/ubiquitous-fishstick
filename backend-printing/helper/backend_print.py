@@ -6,7 +6,6 @@ import ast
 import os
 import json
 import logging
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict
 from marshmallow_dataclass import class_schema
 from helper.constants import (

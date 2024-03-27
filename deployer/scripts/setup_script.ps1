@@ -5,6 +5,7 @@ $Env:ARM_TENANT_ID = ""
 $Env:ARM_SUBSCRIPTION_ID = ""
 $Env:SAP_VIRTUAL_NETWORK_ID = ""
 $Env:BGPRINT_SUBNET_ADDRESS_PREFIX = ""
+$Env:ENABLE_LOGGING_ON_FUNCTION_APP = $false
 
 $UniqueIdentifier = Read-Host "Please provide an identifier that makes the service principal names unique, for exaple (MGMT/CTRL)"
 
