@@ -243,7 +243,7 @@ class BackendPrint:
             )
 
             for message in messages:
-                message_id, message_content, pop_receipt = message
+                queue_message, message_content = message
                 self.logger.info(f"[{self.log_tag}] Logic app init for printing")
                 response = UniversalPrintUsingLogicApp.call_logic_app(
                     print_items=message_content["print_item"]
@@ -255,11 +255,7 @@ class BackendPrint:
                 sap_client = SAPPrintClient(sap_system_config=sap_config)
 
                 if response.status_code == 202 or response.status_code == 201:
-                    StorageQueueClient().delete_message(
-                        message_id=message_id,
-                        pop_receipt=pop_receipt,
-                        message_content=message_content,
-                    )
+                    StorageQueueClient().delete_message(message=queue_message)
                     self.logger.info(
                         f"[{self.log_tag}] Deleted the message from the storage account after success"
                     )
