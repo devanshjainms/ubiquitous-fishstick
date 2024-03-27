@@ -243,12 +243,15 @@ class BackendPrint:
                 response = UniversalPrintUsingLogicApp().call_logic_app(
                     print_items=message["print_item"]
                 )
+                self.logger.info(
+                    f"[{self.log_tag}] Sent items to logic app for printing {response.status_code} {type(response.status_code)}"
+                )
                 sap_config = self._get_sap_config(
                     sap_sid=message["sap_sid"],
                     sap_environment=message["sap_environment"],
                 )
                 sap_client = SAPPrintClient(sap_system_config=sap_config)
-                
+
                 if response.status_code == 202 or response.status_code == 201:
                     StorageQueueClient().delete_message(message)
                     self.logger.info(
