@@ -74,8 +74,9 @@ if (Test-Path "ubiquitous-fishstick") {
 
 Write-Host "######## Cloning the code repo ########" -ForegroundColor Green
 # Clone the git repository
+Set-Location -Path $bgprint_path
 git clone https://github.com/devanshjainms/ubiquitous-fishstick.git
-cd "./ubiquitous-fishstick"
+Set-Location -Path $bgprint_path + "./ubiquitous-fishstick"
 git checkout experimental
 
 # Create resource group
