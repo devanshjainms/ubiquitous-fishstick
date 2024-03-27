@@ -238,8 +238,12 @@ class BackendPrint:
             self.logger.info(
                 f"[{self.log_tag}] Fetched items {len(messages)} from the storage account"
             )
+            self._update_print_messages_status(
+                print_messages=messages, status=PrintItemStatus.IN_PROGRESS.value
+            )
 
             for message in messages:
+                self.logger.info(f"[{self.log_tag}] Logic app init for printing")
                 response = UniversalPrintUsingLogicApp.call_logic_app(
                     print_items=message["print_item"]
                 )
@@ -258,13 +262,20 @@ class BackendPrint:
                         f"[{self.log_tag}] Deleted the message from the storage account after success"
                     )
                     self._update_print_messages_status(
-                        print_messages=messages, status=PrintItemStatus.COMPLETED.value
+                        print_messages=[message], status=PrintItemStatus.COMPLETED.value
                     )
                     sap_client.fetch_csrf_token_and_update_print_item_status(
                         print_item_id=message["print_item"]["queue_item_id"],
                         queue_name=message["sap_print_queue_name"],
                         status="S",
                     )
+                else:
+                    sap_client.fetch_csrf_token_and_update_print_item_status(
+                        print_item_id=message["print_item"]["queue_item_id"],
+                        queue_name=message["sap_print_queue_name"],
+                        status="F",
+                    )
+
         except Exception as e:
             self.logger.error(
                 f"[{self.log_tag}] Error occurred while sending items to logic app: {e}"
@@ -272,11 +283,7 @@ class BackendPrint:
             self._update_print_messages_status(
                 print_messages=messages, status=PrintItemStatus.ERROR.value
             )
-            sap_client.fetch_csrf_token_and_update_print_item_status(
-                print_item_id=message["print_item"]["queue_item_id"],
-                queue_name=message["sap_print_queue_name"],
-                status="F",
-            )
+
             return {
                 "status": "error",
                 "message": "Error occurred while sending items to logic app.",

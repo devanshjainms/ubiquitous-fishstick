@@ -93,19 +93,34 @@ class TestBackendPrint(unittest.TestCase):
     @patch("helper.storage.StorageQueueClient.receive_messages")
     @patch("helper.storage.StorageQueueClient.delete_message")
     @patch("helper.storage.AzureClient.__init__")
+    @patch("helper.key_vault.AzureClient.__init__")
     @patch("helper.universal_print_client.UniversalPrintUsingLogicApp.call_logic_app")
     @patch("helper.storage.TableStorageClient.put_entity")
+    @patch(
+        "helper.sap_client.SAPPrintClient.fetch_csrf_token_and_update_print_item_status"
+    )
+    @patch("helper.key_vault.KeyVault.get_sap_config")
     def test_send_print_items_to_universal_print(
         self,
+        mock_get_sap_config_kv,
+        mock_fetch_csrf_token_and_update_print_item_status,
         mock_put_entity,
         mock_call_logic_app,
+        mock_kv_client_storage,
         mock_azure_client_storage,
         mock_delete_message,
         mock_receive_messages,
     ):
+        def response():
+            res = requests.Response()
+            res.status_code = 202
+            return res
+
+        mock_get_sap_config_kv.return_value = SAP_CONFIG_KV[0]
+        mock_fetch_csrf_token_and_update_print_item_status.return_value = None
         mock_azure_client_storage.return_value = None
-        mock_call_logic_app = MagicMock()
-        type(mock_call_logic_app).status_code = PropertyMock(return_value=200)
+        mock_kv_client_storage.return_value = None
+        mock_call_logic_app.return_value = response()
         mock_put_entity.return_value = True
         mock_receive_messages.return_value = STORAGE_QUEUE_ITEMS
         mock_delete_message.return_value = True
