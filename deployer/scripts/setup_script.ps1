@@ -18,14 +18,15 @@ else {
 }
 
 if ( $PSVersionTable.Platform -eq "Unix") {
-    if ( Test-Path "BGPRINT") {
+    if ( Test-Path "SAP-PRINT") {
     }
     else {
-        $bgprint_path = New-Item -Path "BGPRINT" -Type Directory
+        $bgprint_path = New-Item -Path "SAP-PRINT" -Type Directory
     }
 }
 else {
-    $bgprint_path = Join-Path -Path $Env:HOMEDRIVE -ChildPath "BGPRINT"
+    Write-Host "Creating SAP-PRINT directory in $Env:HOMEDRIVE" -ForegroundColor Green
+    $bgprint_path = Join-Path -Path $Env:HOMEDRIVE -ChildPath "SAP-PRINT"
     if ( Test-Path $bgprint_path) {
     }
     else {
