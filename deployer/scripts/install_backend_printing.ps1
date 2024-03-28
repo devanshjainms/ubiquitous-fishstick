@@ -74,7 +74,7 @@ if (Test-Path "ubiquitous-fishstick") {
 # Clone the git repository
 Write-Host "######## Cloning the code repo ########" -ForegroundColor Green
 git clone https://github.com/devanshjainms/ubiquitous-fishstick.git
-Set-Location -Path "$ENV:SAPPRINT_PATH/ubiquitous-fishstick"
+Set-Location -Path "./ubiquitous-fishstick"
 git checkout experimental
 
 # Create resource group
