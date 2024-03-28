@@ -53,7 +53,7 @@ resource "azurerm_linux_function_app" "function_app" {
         }
     }
     app_settings = {
-        "APPINSIGHTS_INSTRUMENTATIONKEY"                             = var.enable_logging_on_function_app ? "${azurerm_application_insights.app_insights.instrumentation_key}" : ""
+        "APPINSIGHTS_INSTRUMENTATIONKEY"                             = var.enable_logging_on_function_app ? "${azurerm_application_insights.app_insights[0].instrumentation_key}" : ""
         "AzureWebJobsStorage"                                        = azurerm_storage_account.storage_account.primary_connection_string
         "AzureWebJobsDashboard"                                      = azurerm_storage_account.storage_account.primary_connection_string
         "WEBSITE_LOGGING_LOG_LEVEL"                                  = "Information"
