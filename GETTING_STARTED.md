@@ -57,7 +57,7 @@ Managed Identity: The backstage pass for the Function App, granting access to th
 2. **Script Time**: Create a new file in the Cloud Shell editor. Copy and paste the below script (setup.ps1) into it. Make sure to tweak the parameters so they fit your SAP environment like a glove. This script is the magic wand that sets up your control plane and gets the backend print worker up and running. Once the script does its thing, you’ll have both the control plane and the backend print worker neatly deployed in your Azure subscription.
 
 ```powershell
-$Env:CONTROL_PLANE_ENVIRONMENT_CODE="SAPPRINT-CTRL"
+$Env:CONTROL_PLANE_ENVIRONMENT_CODE="CTRL"
 $Env:WORKLOAD_ENV_NAME="PROD"
 $Env:LOCATION="eastus"
 $Env:ARM_TENANT_ID = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -124,4 +124,21 @@ Repeat step 4 and 5 for each SAP environment you want to connect to the backend 
 
 ## Ready, Set, Print!
 With everything in place, you’re ready to start printing from SAP to Azure’s Universal Print. It’s a game-changer for large-scale printing needs!
+
+### Naming convention followed for the resources deployed:
+Control Plane:
+Resource Group Name: $CONTROL_PLANE_ENVIRONMENT_CODE-RG
+Storage Account Name: $CONTROL_PLANE_ENVIRONMENT_CODEtstatebgprinting
+Container Registry: sapprintacr
+
+Workload Plane:
+Resource Group Name: $WORKLOAD_ENV_NAME-$LOCATION-RG
+App Server Plan: $WORKLOAD_ENV_NAME-$LOCATION-APPSERVICEPLAN
+Function App: $WORKLOAD_ENV_NAME-$LOCATION-FUNCTIONAPP
+Storage Account: $WORKLOAD_ENV_NAME$LOCATION$GUID
+Key Vault: $WORKLOAD_ENV_NAME$LOCATIONKV
+Logic App: $WORKLOAD_ENV_NAME$LOCATIONMSI
+Logic App Custom Connector: $WORKLOAD_ENV_NAME$LOCATION-$GUID
+API Connection: UPGRAPH-CONNECTION$GUID
+
 
