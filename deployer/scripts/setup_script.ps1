@@ -6,6 +6,7 @@ $Env:ARM_SUBSCRIPTION_ID = ""
 $Env:SAP_VIRTUAL_NETWORK_ID = ""
 $Env:BGPRINT_SUBNET_ADDRESS_PREFIX = ""
 $Env:ENABLE_LOGGING_ON_FUNCTION_APP = $false
+$Env:HOMEDRIVE = ""
 
 $UniqueIdentifier = Read-Host "Please provide an identifier that makes the service principal names unique, for exaple (MGMT/CTRL)"
 
@@ -17,27 +18,18 @@ else {
     $Env:CONTROL_PLANE_SERVICE_PRINCIPAL_NAME = Read-Host "Please provide the Application registration name"
 }
 
-if ( $PSVersionTable.Platform -eq "Unix") {
-    if ( Test-Path "SAP-PRINT") {
-    }
-    else {
-        $bgprint_path = New-Item -Path "SAP-PRINT" -Type Directory
-    }
-}
-else {
-    Write-Host "Creating SAP-PRINT directory in $Env:HOMEDRIVE" -ForegroundColor Green
-    $bgprint_path = Join-Path -Path $Env:HOMEDRIVE -ChildPath "SAP-PRINT"
-    if ( Test-Path $bgprint_path) {
-    }
-    else {
-        New-Item -Path $bgprint_path -Type Directory
-    }
+$ENV:SAPPRINT_PATH = Join-Path -Path $Env:HOMEDRIVE -ChildPath "SAP-PRINT"
+if (-not (Test-Path -Path $ENV:SAPPRINT_PATH)) {
+    New-Item -Path $ENV:SAPPRINT_PATH -Type Directory | Out-Null
 }
 
-Set-Location -Path $bgprint_path
+Set-Location -Path $ENV:SAPPRINT_PATH
 
-if ( Test-Path "install_backend_printing.ps1") {
-    remove-item .\install_backend_printing.ps1
-}
+Get-ChildItem -Path $ENV:SAPPRINT_PATH -Recurse | Remove-Item -Force -Recurse
 
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/devanshjainms/ubiquitous-fishstick/experimental/deployer/scripts/install_backend_printing.ps1 -OutFile .\install_backend_printing.ps1 ; .\install_backend_printing.ps1
+$scriptUrl = "https://raw.githubusercontent.com/devanshjainms/ubiquitous-fishstick/experimental/deployer/scripts/install_backend_printing.ps1"
+$scriptPath = Join-Path -Path $ENV:SAPPRINT_PATH -ChildPath "install_backend_printing.ps1"
+
+Invoke-WebRequest -Uri $scriptUrl -OutFile $scriptPath
+
+Invoke-Expression -Command $scriptPath

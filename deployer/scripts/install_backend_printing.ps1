@@ -64,8 +64,7 @@ Write-Host "Service Principal Name:" $CONTROL_PLANE_SERVICE_PRINCIPAL_NAME
 az role assignment create --assignee $ARM_CLIENT_ID --role "Contributor" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 az role assignment create --assignee $ARM_CLIENT_ID --role "User Access Administrator" --subscription $ARM_SUBSCRIPTION_ID --scope /subscriptions/$ARM_SUBSCRIPTION_ID --output none
 
-$sap_print_path = Join-Path -Path $Env:HOMEDRIVE -ChildPath "SAP-PRINT"
-Set-Location -Path $sap_print_path
+Set-Location -Path $ENV:SAPPRINT_PATH
 
 # check if the repository exists, if it does, remove it
 if (Test-Path "ubiquitous-fishstick") {
@@ -74,9 +73,8 @@ if (Test-Path "ubiquitous-fishstick") {
 
 # Clone the git repository
 Write-Host "######## Cloning the code repo ########" -ForegroundColor Green
-Set-Location -Path $sap_print_path
 git clone https://github.com/devanshjainms/ubiquitous-fishstick.git
-Set-Location -Path "$sap_print_path/ubiquitous-fishstick"
+Set-Location -Path "$ENV:SAPPRINT_PATH/ubiquitous-fishstick"
 git checkout experimental
 
 # Create resource group
